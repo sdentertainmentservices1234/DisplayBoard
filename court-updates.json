@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T04:18:39.521364Z",
+  "generated_at": "2026-08-10T06:04:39.506742Z",
   "parser_version": 8,
   "window": [
     "2026-08-10",
@@ -2183,7 +2183,7 @@
           },
           "7": {
             "coram": "HON'BLE MR. JUSTICE SANJAY KAROL HON'BLE MR. JUSTICE AUGUSTINE GEORGE MASIH",
-            "total": "52",
+            "total": "53",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. THE STATE OF KARNATAKA AND ANR. VERSUS SHAKIL ANSARI SARKAR @ SARKAR AND ANR.",
@@ -2245,6 +2245,7 @@
               "48": "CONMT.PET.(C) No. KRISHNA SWAROOP AGARWAL (DEAD) THROUGH VERSUS ARVIND KUMAR",
               "49": "SLP(C) No. 17612/2026 SHRITIKA AMITKUMAR BAGDIA VERSUS AMITKUMAR MADHUSUDAN BAGDIA",
               "50": "CONMT.PET.(C) No. LAXMIKANT SHARMA VERSUS P. NARAHARI AND ORS.",
+              "1501": "SLP(C) No. 2370/2016 MAHENDRA PRASAD VERSUS JAG PATTI DEVI",
               "51": "SLP(Crl) No. UNION OF INDIA AND ANR. VERSUS ABID PERVEZ @ AZAD PERVEZ",
               "52": "Diary No. 34296-2026 VISHNU PRASAD MAHTO @ VISHNU DEO MAHTO VERSUS THE STATE OF WEST BENGAL"
             },
@@ -2452,6 +2453,9 @@
               "50": {
                 "pet": "MRIGANK PRABHAKAR"
               },
+              "1501": {
+                "pet": "NITIN SALUJA"
+              },
               "51": {
                 "pet": "N. VISAKAMURTHY"
               },
@@ -2460,7 +2464,7 @@
               }
             },
             "main": 50,
-            "supp": 2
+            "supp": 3
           },
           "8": {
             "coram": "HON'BLE MR. JUSTICE SANJAY KUMAR HON'BLE MR. JUSTICE SANJEEV SACHDEVA",
@@ -19362,7 +19366,7 @@
   "sources": {
     "2026-08-10": {
       "M_J_1": 927590,
-      "M_J_2": 567639,
+      "M_J_2": 569593,
       "M_C_1": 545999,
       "M_C_2": 530903,
       "M_S_1": 524910,
