@@ -178,10 +178,19 @@ select.mini{appearance:none}
 .am-form{display:flex;flex-direction:column;gap:11px;margin-top:4px}
 .am-row{display:flex;gap:10px}
 .am-fld{flex:1;display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
-.am-fld input{font:inherit;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink);
-  padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);font-size:15px}
-.am-fld input:focus{outline:none;border-color:var(--accent);background:var(--panel);box-shadow:0 0 0 3px rgba(47,85,150,.13)}
+.am-fld input,.am-fld select{font:inherit;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink);
+  padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);font-size:15px;width:100%}
+.am-fld select{appearance:none;-webkit-appearance:none;padding-right:34px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7783' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center}
+.am-fld input:focus,.am-fld select:focus{outline:none;border-color:var(--accent);background-color:var(--panel);box-shadow:0 0 0 3px rgba(47,85,150,.13)}
 .am-err{color:var(--now);font-size:12.5px;min-height:16px}
+.sh-btn.ghost2{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.am-preview{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-top:4px;font-size:13px}
+.pv-row{display:flex;gap:8px;padding:3px 0;align-items:flex-start}
+.pv-k{flex:none;width:96px;color:var(--mut);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.pv-v{flex:1;font-weight:500}
+.pv-miss{color:#8a6410;font-size:12.5px;line-height:1.5}
 .am-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
 .am-ci{font-family:'IBM Plex Mono';font-weight:700;font-size:13px;color:var(--accent);flex:none}
 .am-t{flex:1;min-width:0;font-size:13px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1739,6 +1748,7 @@ const _titleCase = s => String(s||"").toLowerCase().replace(/\b([a-z])/g,(_,c)=>
 function titleFromCauseLine(line){
   if(!line) return "";
   let s=String(line).replace(/\s+/g," ").trim();
+  s=s.replace(/^\s*connected\s*(?:with\s*)?/i,"");   // drop a leading "Connected" (sub-item / connected-matter marker)
   s=s.replace(/^\s*(?:diary\s*no\.?|[a-z][a-z().\/]*\s*no\.?)?\s*\d{2,6}\s*[-\/]\s*\d{4}\s+/i,"");
   const parts=s.split(/\s+VERSUS\s+/i);
   const clean=x=>String(x||"").replace(/\s*&?\s*(AND\s+)?(ORS?\.?|ANR\.?|OTHERS?)\.?\s*$/i,"").replace(/[,.\s]+$/,"").trim();
@@ -1758,9 +1768,13 @@ function lookupItem(date,type,court,item){
   if(!day) return {found:false, reason:"No cause list fetched for "+date+" yet."};
   const rec=day.lists?.[type]?.[String(court)];
   if(!rec) return {found:false, reason:"Court "+court+" isn't in the "+type+" list for "+date+"."};
+  // Match the item both ways: exact key, then the parent (62.1 → 62), then — if the
+  // list only carries connected sub-items — the first sub-item under it (62 → 62.1).
   const it=String(item), n=String(Math.floor(parseFloat(item)));
-  const line=(rec.items&&(rec.items[it]||rec.items[n]))||"";
-  const adv=(rec.advocates&&(rec.advocates[it]||rec.advocates[n]))||{};
+  let key = (rec.items&&rec.items[it]!=null) ? it : (rec.items&&rec.items[n]!=null) ? n : null;
+  if(key==null && rec.items){ const subs=Object.keys(rec.items).filter(k=>Math.floor(parseFloat(k))===parseInt(n,10)).sort((a,b)=>parseFloat(a)-parseFloat(b)); key=subs[0]||null; }
+  const line=(key&&rec.items)?rec.items[key]:"";
+  const adv=(key&&rec.advocates&&rec.advocates[key])||{};
   if(!line) return {found:false, reason:"Item "+item+" not in the "+type+" list.", bench:cleanCoram(rec.coram)};
   return {found:true, title:titleFromCauseLine(line), bench:cleanCoram(rec.coram), aorPet:_titleCase(adv.pet||""), aorResp:_titleCase(adv.resp||"")};
 }
@@ -1783,18 +1797,26 @@ function closeModal(){ $("modalRoot").innerHTML=""; }
 // "Track a matter": a user adds their own case by court + item. Stored privately in
 // usermatters/{uid} and merged into myMatters(), so it tracks live against the board
 // exactly like a chamber matter (position, rail, flash, and — once enabled — push).
+// "Track a matter": pick the list + item and we fetch the cause title / bench / AoR
+// from the SC cause list (same enrichment as CourtReach). Stored privately in
+// usermatters/{uid} and tracked live against the board.
 function addMatterForm(){
   const own=(myOwn||[]).slice();
+  let fetched=null;
   $("modalRoot").innerHTML=`<div class="ovl" data-close><div class="sheet"><button class="sh-x" data-close>&times;</button>
     <div class="sheet-grab"></div>
     <h2>Track a matter</h2>
-    <div class="sh-sub">Add your case by court &amp; item — it's tracked live against the board, and stays private to you.</div>
+    <div class="sh-sub">Pick the list &amp; item — we fetch the cause title, bench and AoR from the SC cause list. Stays private to you.</div>
     <div class="am-form">
+      <label class="am-fld">Date<input type="date" id="am_date" value="${todayISO()}"></label>
+      <label class="am-fld">Causelist type<select id="am_type">${CAUSELIST_TYPES.map(t=>`<option>${esc(t)}</option>`).join("")}</select></label>
       <div class="am-row">
         <label class="am-fld">Court<input id="am_court" inputmode="numeric" autocomplete="off" placeholder="e.g. 5"></label>
-        <label class="am-fld">Item<input id="am_item" inputmode="numeric" autocomplete="off" placeholder="e.g. 32"></label>
+        <label class="am-fld">Item<input id="am_item" inputmode="decimal" autocomplete="off" placeholder="e.g. 32 or 62.1"></label>
       </div>
-      <label class="am-fld">Label <span style="color:var(--mut);font-weight:400">(optional)</span><input id="am_title" autocomplete="off" placeholder="e.g. Sharma v. State"></label>
+      <label class="am-fld">Appearing for<select id="am_party"><option>Petitioner</option><option>Respondent</option></select></label>
+      <button class="sh-btn ghost2" id="am_fetch"><i class="ti ti-search"></i> Fetch details</button>
+      <div id="am_preview" class="am-preview hidden"></div>
       <div class="am-err" id="am_err"></div>
       <button class="sh-btn navy" id="am_save">Add matter</button>
     </div>
@@ -1803,18 +1825,37 @@ function addMatterForm(){
       <span class="am-t">${esc(m.title||"")}</span>
       <button class="am-del" data-del="${esc(m.id)}">Remove</button></div>`).join("")}`:''}
   </div></div>`;
+  const readForm=()=>({court:($("am_court").value||"").trim(), item:($("am_item").value||"").trim(),
+    date:$("am_date").value||todayISO(), type:$("am_type").value, party:$("am_party").value});
+  const valid=f=>{ if(!/^\d{1,2}$/.test(f.court)||+f.court<1||+f.court>17){ $("am_err").textContent="Enter a court number (1–17)."; return false; }
+    if(!/^\d{1,4}(\.\d+)?$/.test(f.item)){ $("am_err").textContent="Enter an item number (e.g. 32 or 62.1)."; return false; } $("am_err").textContent=""; return true; };
+  const doFetch=async()=>{
+    const f=readForm(); if(!valid(f)) return;
+    $("am_fetch").innerHTML="Fetching…"; await loadCourtUpdates();
+    const r=lookupItem(f.date,f.type,f.court,f.item);
+    $("am_fetch").innerHTML='<i class="ti ti-search"></i> Fetch again';
+    const pv=$("am_preview"); pv.classList.remove("hidden");
+    if(r.found){
+      fetched={title:r.title, bench:r.bench, aor:(f.party==="Petitioner"?r.aorPet:r.aorResp)};
+      pv.innerHTML=`<div class="pv-row"><span class="pv-k">Cause title</span><span class="pv-v">${esc(r.title||"—")}</span></div>
+        <div class="pv-row"><span class="pv-k">Bench</span><span class="pv-v">${esc(r.bench||"—")}</span></div>
+        <div class="pv-row"><span class="pv-k">AoR · ${esc(f.party)}</span><span class="pv-v">${esc((f.party==="Petitioner"?r.aorPet:r.aorResp)||"—")}</span></div>`;
+    } else {
+      fetched=null;
+      pv.innerHTML=`<div class="pv-miss">${esc(r.reason||"Not found.")}${r.bench?`<br><b>Bench:</b> ${esc(r.bench)}`:""}<br><span style="color:var(--mut)">You can still track it — the details fill once the list is published.</span></div>`;
+    }
+  };
   const save=async()=>{
-    const court=($("am_court").value||"").trim(), item=($("am_item").value||"").trim();
-    if(!/^\d{1,3}$/.test(court)){ $("am_err").textContent="Enter a court number (1–17)."; return; }
-    if(!item){ $("am_err").textContent="Enter your item number."; return; }
+    const f=readForm(); if(!valid(f)) return;
     const id="m"+Date.now().toString(36);
-    const matters=[...(myOwn||[]).filter(m=>!(String(m.court)===court&&String(m.item)===item)),
-                   {id, court, item, title:($("am_title").value||"").trim()}];
+    const rec={id, court:f.court, item:f.item, date:f.date, listType:f.type, appearingFor:f.party,
+      title:(fetched&&fetched.title)||($("am_title")?($("am_title").value||"").trim():""), bench:(fetched&&fetched.bench)||"", aor:(fetched&&fetched.aor)||""};
+    const matters=[...(myOwn||[]).filter(m=>!(String(m.court)===f.court&&String(m.item)===f.item)), rec];
     try{ await db.set("usermatters/"+me.uid,{matters,updatedAt:db.now()},true); addMatterForm(); }
     catch(e){ $("am_err").textContent="Could not save — "+(e.message||e); }
   };
-  $("am_save").onclick=save;
-  $("am_item").onkeydown=e=>{ if(e.key==="Enter") save(); };
+  $("am_fetch").onclick=doFetch; $("am_save").onclick=save;
+  $("am_item").onkeydown=e=>{ if(e.key==="Enter") doFetch(); };
   $("modalRoot").querySelectorAll("[data-del]").forEach(x=>x.onclick=async()=>{
     const matters=(myOwn||[]).filter(m=>m.id!==x.dataset.del);
     try{ await db.set("usermatters/"+me.uid,{matters,updatedAt:db.now()},true); addMatterForm(); }catch(e){}
