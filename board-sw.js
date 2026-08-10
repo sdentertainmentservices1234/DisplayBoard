@@ -3,7 +3,7 @@
    (cache is the offline fallback). Firebase SDK + fonts + icons are CACHE-FIRST
    so the login button is armed instantly. Live data (the SC board relay,
    Firestore, Auth) is NEVER cached. */
-const CACHE = "sdboard-v30";
+const CACHE = "sdboard-v31";
 const SHELL = ["./board.html", "./board-manifest.json",
   "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 

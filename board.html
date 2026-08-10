@@ -241,6 +241,27 @@ main{flex:1;min-height:0;overflow-y:auto;padding:10px 12px calc(64px + env(safe-
 .cell.ours.later{border-color:var(--later);background:var(--later-bg)}
 .cell.ours.passed{border-color:var(--passed);background:var(--idle-bg)}
 .cell.ours.idle{border-color:var(--idle)}
+/* COLLABORATION — an AoR's own briefed case, spotlighted on the senior's board so it
+   doesn't get lost among his many matters: gold ring, a ribbon, and a banner. */
+.mycasebar{background:linear-gradient(90deg,#fbf3dd,#f7ead0);border:1px solid var(--gold);
+  color:#6b551f;border-radius:12px;padding:9px 13px;margin-bottom:9px;font-size:13.5px;line-height:1.3}
+.mycasebar i{color:var(--gold);margin-right:5px}
+.mycasebar b{font-family:'IBM Plex Mono';color:#4d3f16}
+.cell.mycase{border-color:var(--gold)!important;box-shadow:var(--shadow),0 0 0 2.5px rgba(176,148,86,.55)}
+.cell.mycase .mycase-rib{display:flex;align-items:center;justify-content:center;gap:4px;
+  background:linear-gradient(90deg,#b09456,#caa968);color:#fff;font-size:9.5px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.5px;border-radius:8px;padding:2px 6px;margin-bottom:4px;align-self:stretch}
+.cell.mycase .mycase-rib i{font-size:10px}
+.cell.mini .mycase-rib{font-size:8px;padding:1px 4px;gap:2px;margin-bottom:3px}
+.cell .oi .myit{color:#8a6d1f}
+/* request modal — the AoR's added cases */
+.bq-case{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:11px;padding:9px 11px;margin-top:7px}
+.bq-nm{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bq-de{font-size:11.5px;color:var(--mut);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bq-rm{flex:none;background:none;border:1px solid var(--line);color:var(--mut);border-radius:8px;
+  padding:5px 9px;font-size:12px;cursor:pointer}
+.bq-rm:active{transform:scale(.96)}
 @keyframes blink{0%,100%{box-shadow:var(--shadow),0 0 0 0 rgba(193,54,43,0)}50%{box-shadow:var(--shadow),0 0 0 5px rgba(193,54,43,.28)}}
 .cell-ours{margin-top:6px;font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;border-radius:9px;padding:4px 5px;line-height:1.3;color:#fff;box-shadow:0 1px 3px rgba(0,0,0,.14)}
 .cell-ours .oi{font-family:'IBM Plex Mono';font-size:12.5px;letter-spacing:0}
@@ -1315,6 +1336,15 @@ const isCourtroom = n => { const x=parseInt(n,10); return x>=1 && x<=17; };
 // so board + rail + flash + alerts all follow it. Chamber members are unaffected.
 const myApprovedLinks = () => briefLinks.filter(l=>l.aorUid===me?.uid && l.status==="approved");
 const isBriefAoR      = () => BRIEFING && !!me && myApprovedLinks().length>0;
+// The case(s) an AoR is briefing the senior in — carried on the brieflink (matters[]),
+// with a fallback to the legacy single court/item. Used to FLAG those courts on the
+// senior's board so the AoR finds their matter instead of getting lost in his many.
+const linkMatters = l => (l && l.matters && l.matters.length)
+  ? l.matters.filter(m=>m&&m.court&&m.item).map(m=>({court:String(m.court),item:String(m.item),title:m.title||"",listType:m.listType||"",party:m.party||"",bench:m.bench||"",aor:m.aor||""}))
+  : (l && l.court && l.item ? [{court:String(l.court),item:String(l.item),title:l.title||"",listType:l.listType||"",party:"",bench:"",aor:""}] : []);
+const myBriefMatters   = () => myApprovedLinks().flatMap(linkMatters);
+const isBriefCaseCourt = court => BRIEFING && isBriefAoR() && boardView==="senior" && myBriefMatters().some(m=>String(m.court)===String(court));
+const briefCaseItemsIn = court => myBriefMatters().filter(m=>String(m.court)===String(court)).map(m=>m.item);
 const ownMattersList  = () => (myOwn||[]).filter(m=>m.court&&m.item).map(m=>({courtNo:String(m.court),itemNo:String(m.item),caseTitle:m.title||"",juniorUids:me?[me.uid]:[],_own:m.id}));
 const seniorMattersList = () => (daysheet?.entries||[]).filter(e=>e.courtNo).map(e=>({courtNo:String(e.courtNo),itemNo:String(e.itemNo),caseTitle:e.caseTitle||"",listType:e.listType||"",juniorUids:e.juniorUids||[],bench:e.bench,counsel:e.counsel,time:e.time}));
 function boardSourceMatters(){
@@ -1445,22 +1475,29 @@ function renderRail(){
 function boardCell(c, senCourt, senMode){
   const idle=/not in session/i.test(c.status||"");
   const ours=courtMatters().filter(e=>String(e.courtNo)===String(c.court));
+  const mine=isBriefCaseCourt(c.court);                    // an AoR's briefed case sits in this court
+  const myItems=new Set(mine?briefCaseItemsIn(c.court).map(String):[]);
   const sen = senCourt && String(senCourt)===String(c.court);
   const live = sen && senMode==="confirmed";
   const senCls = sen ? " sen"+(live?" senlive":"") : "";
   const pin = sen ? `<span class="senpin${live?"":" inferred"}"><i class="ti ti-user-check"></i><span class="lab">${live?"Senior here":"Likely here"}</span></span>` : "";
-  if(!ours.length){
+  const rib = mine ? `<div class="mycase-rib"><i class="ti ti-star-filled"></i> Your case</div>` : "";
+  if(!ours.length && !mine){
     return `<div class="cell mini ${idle?"idle":""}${senCls}" data-court="${esc(c.court)}">
       ${pin}
       <div class="cell-ct">Court <span class="ctn">${esc(c.court)}</span></div>
       <div class="cell-item">${idle?"—":esc(c.item||"·")}</div></div>`;
   }
-  const ks=ours.map(e=>({e,k:classify(e,c)})).sort((a,b)=>(TIER_RANK[a.k.tier]-TIER_RANK[b.k.tier])||((a.k.gap??999)-(b.k.gap??999)));
+  // build the item set: the senior's matters here, plus (if this is my case court) any
+  // of my briefed items the senior isn't separately listed on — so my item always shows
+  let src=ours.slice();
+  if(mine){ const have=new Set(src.map(e=>String(e.itemNo))); briefCaseItemsIn(c.court).forEach(it=>{ if(!have.has(String(it))) src.push({courtNo:String(c.court),itemNo:String(it),caseTitle:""}); }); }
+  const ks=src.map(e=>({e,k:classify(e,c)})).sort((a,b)=>(TIER_RANK[a.k.tier]-TIER_RANK[b.k.tier])||((a.k.gap??999)-(b.k.gap??999)));
   const tier=ks[0].k.tier;
-  // a matter marked over (attended / not attended) is struck through here
-  const items=ks.map(x=> x.k.done ? `<s>${esc(x.e.itemNo)}</s>` : esc(x.e.itemNo)).join(" · ");
-  return `<div class="cell ours ${tier} ${idle?"idle":""}${senCls}" data-court="${esc(c.court)}">
-    ${pin}
+  // a matter marked over (attended / not attended) is struck through here; my own briefed item is bolded
+  const items=ks.map(x=>{ let t=x.k.done?`<s>${esc(x.e.itemNo)}</s>`:esc(x.e.itemNo); return myItems.has(String(x.e.itemNo))?`<b class="myit">${t}</b>`:t; }).join(" · ");
+  return `<div class="cell ours ${tier} ${idle?"idle":""}${senCls}${mine?" mycase":""}" data-court="${esc(c.court)}">
+    ${rib}${pin}
     <div class="cell-ct">Court <span class="ctn">${esc(c.court)}</span></div>
     <div class="cell-item">${idle?"—":esc(c.item||"·")}</div>
     <div class="cell-sub">${idle?"not sitting":esc(c.status||"hearing")}</div>
@@ -1492,10 +1529,22 @@ function renderBoard(){
   // they're viewing a senior's board they've been approved to track (not their own).
   const showSen = !(isStandalone() && boardView!=="senior");
   const ss=seniorState(), senCourt=showSen?ss.court:null, senMode=ss.mode;
+  // When an AoR is viewing the senior's board, spotlight the court(s) holding THEIR
+  // briefed matter — floated first, gold-ringed, and listed in a banner — so they
+  // don't get lost among the senior's many cases.
+  const mineOnSenior = BRIEFING && isBriefAoR() && boardView==="senior" ? myBriefMatters() : [];
+  if(mineOnSenior.length){
+    const seen=new Set(), lab=[];
+    mineOnSenior.forEach(m=>{ const k=String(m.court)+"|"+String(m.item); if(!seen.has(k)){ seen.add(k); lab.push(`Ct ${esc(m.court)} · ${esc(m.item)}`); } });
+    h+=`<div class="mycasebar"><i class="ti ti-star-filled"></i> Your case${lab.length>1?"s":""}: <b>${lab.join("</b>, <b>")}</b></div>`;
+  }
   const shown=[...board].filter(c=>isCourtroom(c.court));
   const byNo=(a,b)=>(parseInt(a.court)||999)-(parseInt(b.court)||999);
-  const full=shown.filter(c=>ourCourts.has(String(c.court))).sort(byNo);
-  const mini=shown.filter(c=>!ourCourts.has(String(c.court))).sort(byNo);
+  const isFull=c=>ourCourts.has(String(c.court))||isBriefCaseCourt(c.court);
+  // my-case courts sort before the senior's other courts within the full grid
+  const fullSort=(a,b)=>((isBriefCaseCourt(b.court)?1:0)-(isBriefCaseCourt(a.court)?1:0))||byNo(a,b);
+  const full=shown.filter(isFull).sort(fullSort);
+  const mini=shown.filter(c=>!isFull(c)).sort(byNo);
   h+=`<div class="grid">`+full.map(c=>boardCell(c,senCourt,senMode)).join("")+`</div>`;
   if(mini.length) h+=`<div class="grid" style="margin-top:7px">`+mini.map(c=>boardCell(c,senCourt,senMode)).join("")+`</div>`;
   $("main").innerHTML=h;
@@ -1665,6 +1714,43 @@ async function loadCourtUpdates(){
       if(r.ok){ courtUpdates=await r.json(); return; } }catch(e){}
   }
 }
+// SC cause-list enrichment (ported from CourtReach) — used by the collaboration
+// request form to fetch a briefed case's title / bench / AoR by date+type+court+item.
+const CAUSELIST_TYPES = ["Miscellaneous","Regular","Chamber","Single Judge","Registrar","Curative & Review"];
+const _titleCase = s => String(s||"").toLowerCase().replace(/\b([a-z])/g,(_,c)=>c.toUpperCase()).replace(/\bM\/s\b/,"M/s");
+function titleFromCauseLine(line){
+  if(!line) return "";
+  let s=String(line).replace(/\s+/g," ").trim();
+  s=s.replace(/^\s*(?:diary\s*no\.?|[a-z][a-z().\/]*\s*no\.?)?\s*\d{2,6}\s*[-\/]\s*\d{4}\s+/i,"");
+  const parts=s.split(/\s+VERSUS\s+/i);
+  const clean=x=>String(x||"").replace(/\s*&?\s*(AND\s+)?(ORS?\.?|ANR\.?|OTHERS?)\.?\s*$/i,"").replace(/[,.\s]+$/,"").trim();
+  const pet=clean(parts[0]), resp=clean(parts[1]||"");
+  return resp ? _titleCase(pet)+" vs "+_titleCase(resp) : _titleCase(pet);
+}
+function cleanCoram(coram){
+  if(!coram) return "";
+  return String(coram).split(/HON'BLE/i).map(x=>x.trim()).filter(Boolean).map(p=>{
+    if(/CHIEF\s+JUSTICE/i.test(p)) return "C.J.I.";
+    p=p.replace(/\b(THE|MR|MRS|MS|DR|JUSTICE)\b\.?/gi," ").replace(/^[.\s]+/,"").replace(/\s+/g," ").trim();
+    return p ? _titleCase(p) : "";
+  }).filter(Boolean).join(", ");
+}
+function lookupItem(date,type,court,item){
+  const day=courtUpdates?.by_date?.[date];
+  if(!day) return {found:false, reason:"No cause list fetched for "+date+" yet."};
+  const rec=day.lists?.[type]?.[String(court)];
+  if(!rec) return {found:false, reason:"Court "+court+" isn't in the "+type+" list for "+date+"."};
+  const it=String(item), n=String(Math.floor(parseFloat(item)));
+  const line=(rec.items&&(rec.items[it]||rec.items[n]))||"";
+  const adv=(rec.advocates&&(rec.advocates[it]||rec.advocates[n]))||{};
+  if(!line) return {found:false, reason:"Item "+item+" not in the "+type+" list.", bench:cleanCoram(rec.coram)};
+  return {found:true, title:titleFromCauseLine(line), bench:cleanCoram(rec.coram), aorPet:_titleCase(adv.pet||""), aorResp:_titleCase(adv.resp||"")};
+}
+async function fetchBriefCase(f){
+  await loadCourtUpdates(); const r=lookupItem(f.date,f.type,f.court,f.item);
+  return { court:String(f.court), item:String(f.item), date:f.date, listType:f.type, party:f.party,
+    title:r.title||"", bench:r.bench||"", aor: r.found?(f.party==="Petitioner"?r.aorPet:r.aorResp):"", found:!!r.found, reason:r.reason||"" };
+}
 function totalsFor(court){
   const lists=courtUpdates?.by_date?.[todayISO()]?.lists||{};
   const out=[];
@@ -1809,7 +1895,12 @@ const threadMsgs   = id => briefMsgs.filter(m=>m.linkId===id).sort((a,b)=>tsMs(a
 const threadLast   = id => { const m=threadMsgs(id); return m[m.length-1]||null; };
 const threadUnread = id => threadMsgs(id).filter(m=>m.by!==me?.uid && tsMs(m.at)>(briefSeen[id]||0)).length;
 function markThreadSeen(id){ briefSeen[id]=Date.now(); try{ localStorage.setItem("briefSeen",JSON.stringify(briefSeen)); }catch(e){} }
-const linkProx = l => classify({courtNo:String(l.court),itemNo:String(l.item),listType:l.listType||""}, boardByCourt()[String(l.court)]);
+// proximity chip = the SOONEST of the AoR's briefed matters (multi-case aware)
+const linkProx = l => { const bc=boardByCourt();
+  const ks=linkMatters(l).map(m=>classify({courtNo:m.court,itemNo:m.item,listType:m.listType||""}, bc[m.court]));
+  if(!ks.length) return {gap:null,short:"—"};
+  return ks.slice().sort((a,b)=>((a.gap??999)-(b.gap??999)))[0]; };
+const linkMattersLabel = l => linkMatters(l).map(m=>`Ct ${esc(m.court)} · item ${esc(m.item)}${m.title?` — ${esc(m.title)}`:''}`).join("<br>");
 const proxBand = k => { if(!k||k.gap==null) return "far"; const g=k.gap; return g<=2?"red":g<=4?"amber":g<=7?"green":"far"; };
 function updateBriefBadge(){
   const b=$("briefBadge"); if(!b) return; let cnt=0;
@@ -1856,12 +1947,12 @@ function renderBriefAoR(){
   if(!mine.length) h+=`<div class="bempty">No requests yet — ask a senior's chamber for access to see his whole board while your matter reaches, and message his team.</div>`;
   else h+=mine.map(l=>{
     if(l.status==="approved") return `<div class="bcard bhi">
-      <div class="brow"><span class="bval">${esc(CHAMBER.seniorName)} · Ct ${esc(l.court)} item ${esc(l.item)}</span>${briefStatusChip(l.status)}</div>
-      ${l.title?`<div class="bttl">${esc(l.title)}</div>`:''}
+      <div class="brow"><span class="bval">${esc(CHAMBER.seniorName)}</span>${briefStatusChip(l.status)}</div>
+      <div class="bsub">${linkMattersLabel(l)}</div>
       <button class="sh-btn" style="margin-top:10px" data-viewboard="1"><i class="ti ti-layout-grid"></i> View ${esc(srName)}'s board</button>
       ${threadHtml(l)}${composeHtml(l,true)}</div>`;
-    return `<div class="bcard"><div class="brow"><span class="bval">${esc(CHAMBER.seniorName)} · Ct ${esc(l.court)} item ${esc(l.item)}</span>${briefStatusChip(l.status)}</div>
-      ${l.title?`<div class="bttl">${esc(l.title)}</div>`:''}${l.status==="pending"?`<div class="bsub">Waiting for the chamber to approve.</div>`:''}</div>`;
+    return `<div class="bcard"><div class="brow"><span class="bval">${esc(CHAMBER.seniorName)}</span>${briefStatusChip(l.status)}</div>
+      <div class="bsub">${linkMattersLabel(l)}</div>${l.status==="pending"?`<div class="bsub">Waiting for the chamber to approve.</div>`:''}</div>`;
   }).join("");
   h+=`</div>`; $("main").innerHTML=h;
   wireBriefCommon();
@@ -1876,7 +1967,7 @@ function renderBriefInbox(){
   if(pend.length){ h+=`<div class="bsec-h">Requests to approve</div>`;
     h+=pend.map(l=>`<div class="bcard">
       <div class="brow"><span class="bval">${esc(l.aorName)}</span>${briefStatusChip(l.status)}</div>
-      <div class="bsub">wants to track the senior for <b>Ct ${esc(l.court)} · item ${esc(l.item)}</b>${l.title?` — ${esc(l.title)}`:''}${l.note?`<br>“${esc(l.note)}”`:''}</div>
+      <div class="bsub">wants to track the senior for:<br><b>${linkMattersLabel(l)}</b>${l.note?`<br>“${esc(l.note)}”`:''}</div>
       <div class="bmsgs"><button class="bmsg ok" data-bdec="${esc(l.id)}|approved">Approve</button><button class="bmsg no" data-bdec="${esc(l.id)}|declined">Decline</button></div>
     </div>`).join(""); }
   h+=`<div class="bsec-h" style="margin-top:${pend.length?16:2}px">Collaboration inbox${appr.length?` · ${appr.length}`:''}</div>`;
@@ -1887,9 +1978,10 @@ function renderBriefInbox(){
     h+=rows.map(({l,k,unread,last})=>{ const band=proxBand(k);
       const initials=(l.aorName||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
       const lastTxt=last?`${last.by===me?.uid?"You: ":""}${last.text}`:"No messages yet";
+      const ms=linkMatters(l); const mlab=ms.length?`Ct ${esc(ms[0].court)} · item ${esc(ms[0].item)}${ms.length>1?` +${ms.length-1} more`:(ms[0].title?` — ${esc(ms[0].title)}`:'')}`:"—";
       return `<div class="bcard binbox" data-open="${esc(l.id)}"><div class="binbox-row">
         <span class="bavatar">${esc(initials)}</span>
-        <span class="bmeta"><span class="bnm">${esc(l.aorName)}</span><span class="bmatter">Ct ${esc(l.court)} · item ${esc(l.item)}${l.title?` — ${esc(l.title)}`:''}</span><span class="blast">${esc(lastTxt)}</span></span>
+        <span class="bmeta"><span class="bnm">${esc(l.aorName)}</span><span class="bmatter">${mlab}</span><span class="blast">${esc(lastTxt)}</span></span>
         <span class="bright"><span class="bprox ${band}">${esc(k.short||"—")}</span>${unread?`<span class="bunread">${unread}</span>`:''}</span>
       </div></div>`;
     }).join("");
@@ -1906,7 +1998,7 @@ function renderBriefThread(id){
     <button class="bback" id="bBack"><i class="ti ti-chevron-left"></i> Collaboration inbox</button>
     <div class="bcard bhi">
       <div class="brow"><span class="bval">${esc(l.aorName)}</span><span class="bprox ${band}">${esc(k.short||"—")}</span></div>
-      <div class="bsub">Their matter: <b>Ct ${esc(l.court)} · item ${esc(l.item)}</b>${l.title?` — ${esc(l.title)}`:''}</div>
+      <div class="bsub">Their matter${linkMatters(l).length>1?"s":""}:<br><b>${linkMattersLabel(l)}</b></div>
       <div class="bsub">Senior: ${esc(CHAMBER.seniorName)} — ${senTxt}</div>
       ${threadHtml(l)}${composeHtml(l,false)}
       <button class="bmsg no small" style="margin-top:10px" data-bdec="${esc(l.id)}|revoked">Revoke access</button>
@@ -1914,37 +2006,64 @@ function renderBriefThread(id){
   markThreadSeen(id); updateBriefBadge(); wireBriefCommon();
   const bk=$("bBack"); if(bk) bk.onclick=()=>{ briefOpenThread=null; renderBrief(); };
 }
+// Multi-case request: an AoR may be briefing the senior in several matters. Each case
+// is entered by date + causelist type + court + item (decimals like 62.1, and 4-digit
+// mentioning/pronouncement items) + party, then fetched for title / bench / AoR. The
+// cases ride on the brieflink so they can be flagged on the senior's board.
 function briefRequestForm(){
   const own=(myOwn||[]).slice();
-  $("modalRoot").innerHTML=`<div class="ovl" data-close><div class="sheet"><button class="sh-x" data-close>&times;</button>
-    <div class="sheet-grab"></div>
-    <h2>Request to track the senior</h2>
-    <div class="sh-sub">Ask ${esc(CHAMBER.seniorName)}'s chamber to let you see his board position for your matter. They approve before anything is shared.</div>
-    <div class="am-form">
-      <div class="am-row">
-        <label class="am-fld">Court<input id="bq_court" inputmode="numeric" autocomplete="off" placeholder="e.g. 6"></label>
-        <label class="am-fld">Item<input id="bq_item" inputmode="numeric" autocomplete="off" placeholder="e.g. 4"></label>
+  let cases=[], note="";
+  const draw=()=>{
+    $("modalRoot").innerHTML=`<div class="ovl" data-close><div class="sheet"><button class="sh-x" data-close>&times;</button>
+      <div class="sheet-grab"></div>
+      <h2>Request to track the senior</h2>
+      <div class="sh-sub">Add the case(s) you're briefing ${esc(CHAMBER.seniorName)} in — we fetch the details, and your cases are flagged on his board. The chamber approves before anything is shared.</div>
+      <div class="am-form">
+        <label class="am-fld">Date<input type="date" id="bq_date" value="${todayISO()}"></label>
+        <label class="am-fld">Causelist type<select id="bq_type">${CAUSELIST_TYPES.map(t=>`<option>${esc(t)}</option>`).join("")}</select></label>
+        <div class="am-row">
+          <label class="am-fld">Court<input id="bq_court" inputmode="numeric" autocomplete="off" placeholder="e.g. 6"></label>
+          <label class="am-fld">Item<input id="bq_item" inputmode="decimal" autocomplete="off" placeholder="e.g. 4 or 62.1"></label>
+        </div>
+        <label class="am-fld">Appearing for<select id="bq_party"><option>Petitioner</option><option>Respondent</option></select></label>
+        <button class="sh-btn" id="bq_add"><i class="ti ti-plus"></i> Fetch &amp; add case</button>
+        <div class="am-err" id="bq_err"></div>
+        ${cases.length?`<div class="sh-sec">Your cases (${cases.length})</div>`+cases.map((c,i)=>`<div class="bq-case">
+          <div style="flex:1;min-width:0"><div class="bq-nm">${esc(c.title||("Ct "+c.court+" · item "+c.item))}</div>
+            <div class="bq-de">Ct ${esc(c.court)} · item ${esc(c.item)} · ${esc(c.listType)} · for ${esc(c.party)}${c.bench?" · "+esc(c.bench):""}</div></div>
+          <button class="bq-rm" data-rm="${i}">Remove</button></div>`).join(""):""}
+        <label class="am-fld" style="margin-top:10px">Note to the chamber <span style="color:var(--mut);font-weight:400">(optional)</span><input id="bq_note" autocomplete="off" value="${esc(note)}" placeholder="e.g. briefing on the SLP tomorrow"></label>
+        <button class="sh-btn navy" id="bq_save" style="margin-top:8px">${cases.length?`Send request with ${cases.length} case${cases.length>1?"s":""}`:"Send request"}</button>
       </div>
-      <label class="am-fld">Your matter <span style="color:var(--mut);font-weight:400">(optional)</span><input id="bq_title" autocomplete="off" placeholder="e.g. Mahabanoo v. Kalikund"></label>
-      <label class="am-fld">Note to the chamber <span style="color:var(--mut);font-weight:400">(optional)</span><input id="bq_note" autocomplete="off" placeholder="e.g. briefing on the SLP tomorrow"></label>
-      <div class="am-err" id="bq_err"></div>
-      <button class="sh-btn navy" id="bq_save">Send request</button>
-    </div>
-    ${own.length?`<div class="sh-sec">Your matters</div>${own.map(m=>`<div class="am-item" data-bqpick="${esc(m.court)}|${esc(m.item)}|${esc(m.title||"")}">
-      <span class="am-ci">Ct ${esc(m.court)} · #${esc(m.item)}</span><span class="am-t">${esc(m.title||"")}</span></div>`).join("")}`:''}
-  </div></div>`;
-  $("modalRoot").querySelectorAll("[data-bqpick]").forEach(x=>x.onclick=()=>{
-    const [c,i,t]=x.dataset.bqpick.split("|"); $("bq_court").value=c; $("bq_item").value=i; $("bq_title").value=t; });
-  $("bq_save").onclick=async()=>{
-    const court=($("bq_court").value||"").trim(), item=($("bq_item").value||"").trim();
-    if(!/^\d{1,3}$/.test(court)){ $("bq_err").textContent="Enter a court number (1–17)."; return; }
-    if(!item){ $("bq_err").textContent="Enter your item number."; return; }
-    try{ await db.add("brieflinks",{aorUid:me.uid, aorName:me.name||"Advocate", aorDesig:me.designation||"Advocate",
-        court, item, date:todayISO(), title:($("bq_title").value||"").trim(), note:($("bq_note").value||"").trim(),
-        status:"pending", at:db.now()}); closeModal(); curTab="brief";
-      document.querySelectorAll("nav.botnav button").forEach(x=>x.classList.toggle("on",x.dataset.tab==="brief")); render(); }
-    catch(e){ $("bq_err").textContent="Could not send — "+(e.message||e); }
+      ${own.length?`<div class="sh-sec">Your matters</div>${own.map(m=>`<div class="am-item" data-bqpick="${esc(m.court)}|${esc(m.item)}">
+        <span class="am-ci">Ct ${esc(m.court)} · #${esc(m.item)}</span><span class="am-t">${esc(m.title||"")}</span></div>`).join("")}`:''}
+    </div></div>`;
+    $("modalRoot").querySelectorAll("[data-bqpick]").forEach(x=>x.onclick=()=>{ const [c,i]=x.dataset.bqpick.split("|"); $("bq_court").value=c; $("bq_item").value=i; });
+    $("bq_add").onclick=async()=>{
+      note=$("bq_note")?.value||note;
+      const court=($("bq_court").value||"").trim(), item=($("bq_item").value||"").trim();
+      $("bq_err").textContent="";
+      if(!/^\d{1,2}$/.test(court)||+court<1||+court>17){ $("bq_err").textContent="Enter a court number (1–17)."; return; }
+      if(!/^\d{1,4}(\.\d+)?$/.test(item)){ $("bq_err").textContent="Enter an item number (e.g. 4 or 62.1)."; return; }
+      $("bq_add").innerHTML="Fetching…";
+      const c=await fetchBriefCase({court,item,date:$("bq_date").value||todayISO(),type:$("bq_type").value,party:$("bq_party").value});
+      cases.push(c); draw();
+      if(!c.found) $("bq_err").textContent="Added — but not found in that list yet; details will fill later.";
+    };
+    $("modalRoot").querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{ note=$("bq_note")?.value||note; cases.splice(+b.dataset.rm,1); draw(); });
+    $("bq_save").onclick=async()=>{
+      note=$("bq_note")?.value||note;
+      if(!cases.length){ $("bq_err").textContent="Add at least one case first."; return; }
+      const first=cases[0];
+      try{ await db.add("brieflinks",{aorUid:me.uid, aorName:me.name||"Advocate", aorDesig:me.designation||"Advocate",
+          matters:cases, court:first.court, item:first.item, title:first.title||"", listType:first.listType||"",
+          date:first.date||todayISO(), note:note.trim(), status:"pending", at:db.now()});
+        closeModal(); curTab="brief";
+        document.querySelectorAll("nav.botnav button").forEach(x=>x.classList.toggle("on",x.dataset.tab==="brief")); render(); }
+      catch(e){ $("bq_err").textContent="Could not send — "+(e.message||e); }
+    };
   };
+  draw();
 }
 async function decideBrief(id,status){
   try{ await db.update("brieflinks/"+id,{status,decidedBy:me.uid,decidedAt:db.now()});
