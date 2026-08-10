@@ -318,18 +318,23 @@ body.kb-open nav.botnav{display:none}
 #flashHost.single .flash-on{font-size:clamp(30px,9vw,56px)}
 #flashHost.single .fl-k{font-size:clamp(12px,2.8vw,16px)} #flashHost.single .fl-v{font-size:clamp(34px,10vw,58px)}
 /* --- SEVERAL courts: LIGHT backdrop + islands each washed in their band colour --- */
-#flashHost.multi{background:rgba(244,246,249,.9);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+/* EQUAL-SIZE islands: cluster them in the centre (place-content) and make each fill its
+   equal 1fr cell (justify/align-items:stretch) with a shared min-height, so an island is
+   the SAME size whether its matter is "on" (short) or "N away" (taller). */
+#flashHost.multi{background:rgba(244,246,249,.9);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  place-content:center;justify-items:stretch;align-items:stretch}
 #flashHost.multi.n2,#flashHost.multi.n3,#flashHost.multi.n4{grid-template-columns:1fr 1fr}
 #flashHost.multi.n5,#flashHost.multi.n6{grid-template-columns:1fr 1fr 1fr}
-#flashHost.multi .flash-cell{border-radius:22px;max-width:340px;color:#fff;
-  padding:clamp(16px,3vh,30px) clamp(14px,4.5vw,26px);animation:flashpulse 1.1s ease-in-out infinite}
+#flashHost.multi .flash-cell{border-radius:22px;color:#fff;width:100%;max-width:440px;margin:0 auto;
+  min-height:clamp(240px,33vh,340px);justify-content:center;
+  padding:clamp(20px,3.6vh,38px) clamp(16px,4.5vw,30px);animation:flashpulse 1.1s ease-in-out infinite}
 #flashHost.multi .flash-cell.b-green{background:linear-gradient(160deg,#33935a,#1e5d37);box-shadow:0 16px 40px rgba(30,93,55,.34)}
 #flashHost.multi .flash-cell.b-amber{background:linear-gradient(160deg,#ca9827,#876010);box-shadow:0 16px 40px rgba(135,96,16,.32)}
 #flashHost.multi .flash-cell.b-red{background:linear-gradient(160deg,#d1453a,#a5231a);box-shadow:0 16px 40px rgba(165,35,26,.34)}
-#flashHost.multi .flash-ct{font-size:clamp(24px,7.5vw,44px)}
-#flashHost.multi .flash-dist{font-size:clamp(15px,4.6vw,26px);padding:5px 18px;background:rgba(255,255,255,.95);color:#161a1f}
-#flashHost.multi .flash-on{font-size:clamp(19px,5.5vw,32px)}
-#flashHost.multi .fl-k{font-size:clamp(10px,2.3vw,13px)} #flashHost.multi .fl-v{font-size:clamp(24px,6.5vw,40px)}
+#flashHost.multi .flash-ct{font-size:clamp(28px,8vw,52px)}
+#flashHost.multi .flash-dist{font-size:clamp(17px,5vw,30px);padding:6px 20px;background:rgba(255,255,255,.95);color:#161a1f}
+#flashHost.multi .flash-on{font-size:clamp(22px,6vw,38px)}
+#flashHost.multi .fl-k{font-size:clamp(11px,2.5vw,14px)} #flashHost.multi .fl-v{font-size:clamp(28px,7vw,46px)}
 /* shared island bits */
 .flash-cell{width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(9px,2vh,18px);color:#fff;text-align:center}
 .flash-ct{font-family:Fraunces,serif;font-weight:600;line-height:.95;letter-spacing:.4px}
