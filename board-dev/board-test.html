@@ -1,0 +1,2162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#141a22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SD Court App">
+<title>Chamber Display Board</title>
+<link rel="manifest" href="board-manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+/* ---- SD Court Display Board — the familiar SC board (all courts + current
+   item), light theme, with our chamber's matters colour-coded on it. ---- */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+:root{
+  --bg:#eceef1; --panel:#ffffff; --panel2:#f4f6f8; --ink:#161a1f; --mut:#6b7783;
+  --line:#dde1e6; --navy:#141a22; --accent:#2f5596; --gold:#b09456;
+  /* tier: deeper, calmer tones with soft tints (elegance pass) */
+  --now:#c1362b;  --now-bg:#fbeeec;
+  --soon:#ac7a13; --soon-bg:#fbf4e4;
+  --later:#3a7d50; --later-bg:#eef5f0;
+  --idle:#98a2ac; --idle-bg:#eef1f4; --passed:#7a8591;
+  /* layered soft shadow for real depth */
+  --shadow:0 1px 2px rgba(20,26,34,.04),0 6px 20px rgba(20,26,34,.07);
+  --shadow-lg:0 2px 6px rgba(20,26,34,.05),0 18px 44px rgba(20,26,34,.13);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overscroll-behavior:none;
+  -webkit-text-size-adjust:100%;touch-action:manipulation;background:var(--panel)}
+/* NORMAL-FLOW shell (matches the chamber app, which fills the iOS home-indicator
+   area correctly). A position:fixed body does NOT reach the physical bottom in an
+   iOS standalone PWA — that was the persistent bottom gap. Here the body is not
+   fixed; #app is exactly one viewport tall and only <main> scrolls inside it, and
+   the fixed bottom nav anchors to the real screen edge. */
+body{color:var(--ink);font-family:Inter,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.mono{font-family:'IBM Plex Mono',monospace}
+button{font-family:inherit;cursor:pointer}
+.hidden{display:none!important}
+
+/* ---- login ---- */
+#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#f5f7f9,#e4e8ec);padding:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+  padding:30px 26px;width:min(400px,100%);box-shadow:var(--shadow)}
+.seal{width:60px;height:60px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+  font-family:Fraunces,serif;color:var(--gold);font-weight:600;font-size:24px}
+.card h1{font-family:Fraunces,serif;font-weight:600;font-size:22px;margin:0 0 2px;text-align:center;color:var(--ink)}
+.card .sub{color:var(--mut);text-align:center;font-size:13px;margin-bottom:20px}
+.card label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px;font-weight:500}
+.card input{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
+  background:var(--panel2);color:var(--ink);font-size:15px}
+.card input:focus{outline:none;border-color:var(--accent)}
+.card select{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
+  background:var(--panel2);color:var(--ink);font-size:15px;appearance:none;-webkit-appearance:none}
+.card select:focus{outline:none;border-color:var(--accent)}
+.lg-alt{text-align:center;font-size:13px;color:var(--mut);margin-top:16px}
+.lg-alt button{background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;padding:0}
+.btn{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;
+  font-weight:600;font-size:15px;margin-top:18px}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--mut);margin-top:9px}
+.err{color:var(--now);font-size:13px;margin-top:12px;min-height:16px;text-align:center}
+
+/* ---- app shell ---- */
+/* Fixed app shell: header + bottom nav never move; only <main> scrolls.
+   100dvh tracks the phone's dynamic viewport so nothing is left blank. */
+/* #app fills the fixed, full-screen <body> via flex — no vh/dvh (which iOS
+   standalone PWAs report short, leaving a blank strip). Header + nav are flex:none,
+   only <main> scrolls; the nav therefore sits on the true screen bottom. */
+#app{display:flex;flex-direction:column;height:100vh;
+  max-width:760px;width:100%;margin-inline:auto;background:var(--bg);overflow:hidden}
+@media(min-width:761px){ body{background:#d3d8dd} #app{border-inline:1px solid var(--line)} }
+
+header.top{display:flex;align-items:center;gap:8px;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 12px 12px;
+  background:linear-gradient(180deg,#1a222c,#12171e);color:#fff;flex:none;
+  border-bottom:1px solid rgba(176,148,86,.4);box-shadow:0 2px 10px rgba(9,12,16,.18)}
+.top .brand{display:flex;align-items:center;gap:9px;min-width:0}
+.top .seal.sm{width:32px;height:32px;margin:0;border-width:1.5px;font-size:12.5px;flex:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.28)}
+.top .ttl{display:flex;flex-direction:column;min-width:0}
+.top .ttl-main{font-family:Fraunces,serif;font-weight:600;font-size:15.5px;letter-spacing:.1px;line-height:1.1;
+  color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .ttl small{font-family:Inter;color:#9fb0c0;font-size:9.5px;font-weight:500;letter-spacing:.4px;
+  text-transform:uppercase;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .spacer{flex:1;min-width:4px}
+.top .acts{display:flex;align-items:center;gap:0;flex:none}
+.top .acts .iconbtn{font-size:17px;padding:4px}
+.freshpill{font-size:11px;color:#aeb9c4;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.freshdot{width:7px;height:7px;border-radius:50%;background:#4bbd6b;box-shadow:0 0 0 0 rgba(75,189,107,.6);animation:pulse 2s infinite}
+.freshdot.stale{background:var(--soon);animation:none}
+.freshdot.off{background:#7d8894;animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(75,189,107,.5)}70%{box-shadow:0 0 0 7px rgba(75,189,107,0)}100%{box-shadow:0 0 0 0 rgba(75,189,107,0)}}
+.iconbtn{background:transparent;border:none;color:#cdd6df;font-size:21px;padding:5px;line-height:1;border-radius:8px}
+.iconbtn.on{color:var(--gold)}
+@keyframes bellpulse{0%,100%{opacity:1}50%{opacity:.45}}
+.iconbtn.on i{animation:bellpulse 2s ease-in-out infinite}
+.iconbtn:active{background:rgba(255,255,255,.1)}
+.iconbtn.spin i{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* board-tab header strip: the ROUTE RAIL — your stops in order */
+#paneTop{flex:none;padding:9px 12px 0}
+@keyframes pulsepill{0%,100%{opacity:1}50%{opacity:.5}}
+/* Route rail: a horizontal strip of small court "stops" in the order to visit them —
+   soonest-to-reach first (proximity uses our item + the court's sequence + live data),
+   with the walk time between each shown on the connector. Replaces the old directive
+   balloon. Scrolls sideways when there are many. */
+/* WRAPS into 2–3 rows so every stop fits on one screen — no sideways scroll. Small,
+   colour-coded by distance band (red ≤2 · amber 3–4 · green 5–7 · neutral beyond). */
+.route-rail{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:2px 0 4px}
+.rail-arrow{display:inline-flex;align-items:center;color:var(--mut);flex:none}
+.rail-arrow i{font-size:15px;line-height:1}
+.rail-stop{flex:0 1 auto;display:flex;align-items:baseline;gap:5px;
+  background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:5px 9px;cursor:pointer;
+  transition:transform .1s;line-height:1.1}
+.rail-stop:active{transform:scale(.96)}
+.rail-stop.red{border-color:var(--now);background:var(--now-bg)}
+.rail-stop.amber{border-color:#e2c07a;background:var(--soon-bg)}
+.rail-stop.green{border-color:#a9d0b7;background:var(--later-bg)}
+.rail-ct{font-family:Fraunces,serif;font-weight:600;font-size:13.5px;color:var(--ink)}
+.rail-ct b{font-family:'IBM Plex Mono';font-weight:800}
+.rail-dist{font-size:11px;font-weight:800;letter-spacing:.2px;color:var(--mut);white-space:nowrap}
+.rail-stop.red .rail-ct b,.rail-stop.red .rail-dist{color:var(--now)}
+.rail-stop.amber .rail-dist{color:#8a6112}
+.rail-stop.green .rail-ct b,.rail-stop.green .rail-dist{color:#2f7048}
+.rail-stop.red .rail-dist{animation:pulsepill 1.25s ease-in-out infinite}
+.rail-empty{font-size:12.5px;color:var(--mut);padding:6px 2px}
+
+.seniorbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:9px;
+  background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:8px 11px}
+.seniorbar .lab{font-size:12px;color:var(--mut)}
+.seniorbar .loc{font-weight:700;font-size:14px}
+.seniorbar .tag{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;padding:2px 7px;border-radius:20px;font-weight:700}
+.tag.inferred{background:#f3ead0;color:#8a6d1a}
+.tag.confirmed{background:#e0f0e6;color:#2c6b41}
+.tag.stale{background:#f6ecd6;color:#946a12}
+.seniorbar .spacer{flex:1}
+.mini{font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.mini.gold{border-color:var(--gold);color:#7a6320;background:#fbf6ea;font-weight:600}
+select.mini{appearance:none}
+
+/* status row (date + freshness) */
+.statusrow{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--mut);padding:2px 3px 0}
+
+/* ===== bottom sheet (court / matter details) ===== */
+#modalRoot:empty{display:none}
+.ovl{position:fixed;inset:0;background:rgba(12,16,22,.5);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--panel);width:100%;max-width:760px;max-height:88%;border-radius:24px 24px 0 0;
+  overflow-y:auto;padding:14px 18px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow-lg),0 -1px 0 rgba(176,148,86,.35) inset}
+.sheet-grab{width:40px;height:4px;border-radius:4px;background:var(--line-2);margin:2px auto 14px}
+.sheet h2{font-family:Fraunces,serif;font-size:20px;font-weight:600;margin:0 0 2px;display:flex;align-items:center;gap:9px}
+.sheet h2 .chip{font-family:'IBM Plex Mono';font-size:13px;background:var(--navy);color:#e9c982;border:none;border-radius:9px;padding:3px 10px}
+.sheet .sh-sub{color:var(--mut);font-size:12.5px;margin-bottom:12px}
+.sh-sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);font-weight:700;margin:15px 0 7px}
+.sh-box{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.5}
+.sh-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.sh-row:last-child{border-bottom:none}
+.sh-row .k{color:var(--mut);min-width:86px;flex:none}
+.sh-matter{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);
+  border-radius:13px;padding:11px 13px;margin-bottom:8px;cursor:pointer;box-shadow:var(--shadow);transition:box-shadow .15s,transform .1s}
+.sh-matter:hover{box-shadow:var(--shadow-lg)}
+.sh-matter:active{transform:scale(.98)}
+.sh-matter .mi{font-family:'IBM Plex Mono';font-weight:700;font-size:17px;min-width:34px;text-align:center;color:var(--accent)}
+.sh-matter .mt{flex:1;min-width:0;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sh-btn{display:block;width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);
+  color:var(--ink);font-weight:600;font-size:14px;margin-top:9px;transition:box-shadow .15s,transform .05s}
+.sh-btn:active{transform:translateY(1px)}
+.sh-btn.navy{background:linear-gradient(180deg,#1c242e,#12171e);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(13,16,20,.24),0 1px 0 rgba(255,255,255,.06) inset}
+.sh-btn.warn2{background:var(--soon-bg);border-color:#e6d29a;color:#7a4f0d}
+.po-row{display:flex;gap:7px;margin-top:8px}
+.po-row select,.po-row input{flex:1;padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel);font-size:14px;color:var(--ink)}
+/* Track-a-matter form */
+.am-form{display:flex;flex-direction:column;gap:11px;margin-top:4px}
+.am-row{display:flex;gap:10px}
+.am-fld{flex:1;display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.am-fld input{font:inherit;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink);
+  padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);font-size:15px}
+.am-fld input:focus{outline:none;border-color:var(--accent);background:var(--panel);box-shadow:0 0 0 3px rgba(47,85,150,.13)}
+.am-err{color:var(--now);font-size:12.5px;min-height:16px}
+.am-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.am-ci{font-family:'IBM Plex Mono';font-weight:700;font-size:13px;color:var(--accent);flex:none}
+.am-t{flex:1;min-width:0;font-size:13px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.am-del{flex:none;border:none;background:none;color:var(--now);font-size:12.5px;font-weight:600;cursor:pointer;padding:4px 2px}
+.sh-x{position:sticky;float:right;top:0;background:transparent;border:none;font-size:20px;color:var(--mut);padding:2px}
+/* senior-here ribbon across the top of a court island (never covers the number) */
+.senpin{display:flex;align-items:center;justify-content:center;gap:4px;align-self:stretch;
+  background:var(--navy);color:#fff;border-radius:7px;margin-bottom:4px;padding:2.5px 6px;
+  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;line-height:1.15}
+.senpin i{font-size:11px}
+.senpin.inferred{background:#fff;color:var(--navy);box-shadow:inset 0 0 0 1.5px var(--navy)}
+.cell.mini .senpin{font-size:8px;padding:2px 4px;border-radius:5px;gap:2px;margin-bottom:3px}
+.cell.mini .senpin .lab{display:none}
+.cell.sen{box-shadow:var(--shadow),0 0 0 2px var(--navy)}
+.cell.sen.senlive{animation:senglow 1.9s ease-in-out infinite}
+@keyframes senglow{0%,100%{box-shadow:var(--shadow),0 0 0 2px var(--navy)}50%{box-shadow:var(--shadow),0 0 0 5px rgba(16,20,24,.30)}}
+.cell[data-setcourt]{cursor:pointer}
+.cell[data-setcourt]:active{transform:scale(.97)}
+
+main{flex:1;min-height:0;overflow-y:auto;padding:10px 12px calc(64px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+
+/* legend */
+.legend{display:flex;gap:12px;font-size:10px;color:var(--mut);margin:0 2px 8px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+
+/* ===== the display board — adaptive islands, all 17 on one screen =====
+   Courts with our matters keep the full tile; the rest shrink to minis. */
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.cell{background:var(--panel);border:1px solid var(--line);border-radius:15px;
+  padding:8px 6px 9px;text-align:center;position:relative;min-height:78px;
+  display:flex;flex-direction:column;box-shadow:var(--shadow);cursor:pointer;
+  transition:box-shadow .18s,transform .1s;
+  flex:1 1 calc(33.33% - 6px);max-width:calc(33.33% - 6px)}
+.cell:active{transform:scale(.98)}
+.cell-ct{font-size:13.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;
+  background:var(--navy);color:#fff;border-radius:20px;padding:3px 13px;align-self:center;line-height:1.15}
+.cell-ct .ctn{font-family:'IBM Plex Mono';font-size:16px;font-weight:800;margin-left:2px;color:#e9c982}
+.cell-item{font-family:'IBM Plex Mono';font-size:24px;font-weight:700;color:var(--ink);line-height:1.02;margin-top:4px}
+.cell-sub{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.cell.idle{background:var(--idle-bg)}
+.cell.idle .cell-item{color:var(--idle);font-weight:600}
+.cell.idle .cell-ct{background:var(--idle)}
+/* mini tile — no chamber matter in this court */
+/* 5-up: each = (100% − 4×8px gap)/5 = 20% − 6.4px. The old −6px overflowed by ~2px,
+   dropping to 4-up and leaving a vacant right column — use 6.5px so all 5 fit. */
+.cell.mini{flex:1 1 calc(20% - 6.5px);max-width:calc(20% - 6.5px);min-height:0;padding:6px 2px 7px}
+.cell.mini .cell-ct{font-size:12px;padding:2px 9px}
+.cell.mini .cell-ct .ctn{font-size:13px}
+.cell.mini .cell-item{font-size:16px;margin-top:2px}
+.cell.mini .cell-sub{display:none}
+/* our courts — colour-coded, shifts as our item nears. Softer tint + a refined,
+   slightly-recessed status bar carries the tier colour (calmer than a loud block). */
+.cell.ours{border-width:1.5px}
+.cell.ours.now{border-color:var(--now);background:var(--now-bg);box-shadow:var(--shadow),0 0 0 0 rgba(193,54,43,0);animation:blink 1.4s ease-in-out infinite}
+.cell.ours.soon{border-color:var(--soon);background:var(--soon-bg)}
+.cell.ours.later{border-color:var(--later);background:var(--later-bg)}
+.cell.ours.passed{border-color:var(--passed);background:var(--idle-bg)}
+.cell.ours.idle{border-color:var(--idle)}
+@keyframes blink{0%,100%{box-shadow:var(--shadow),0 0 0 0 rgba(193,54,43,0)}50%{box-shadow:var(--shadow),0 0 0 5px rgba(193,54,43,.28)}}
+.cell-ours{margin-top:6px;font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;border-radius:9px;padding:4px 5px;line-height:1.3;color:#fff;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.cell-ours .oi{font-family:'IBM Plex Mono';font-size:12.5px;letter-spacing:0}
+.cell.ours.now  .cell-ours{background:linear-gradient(180deg,#cd4034,#b62a20)}
+.cell.ours.soon .cell-ours{background:linear-gradient(180deg,#bd8a1f,#9c6c0d)}
+.cell.ours.later .cell-ours{background:linear-gradient(180deg,#448c5c,#337046)}
+.cell.ours.passed .cell-ours{background:var(--passed)}
+.cell.ours.idle  .cell-ours{background:var(--idle)}
+
+/* our list (causelist) */
+.li{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px 14px;
+  margin-bottom:10px;display:flex;gap:13px;box-shadow:var(--shadow);transition:box-shadow .16s,transform .1s}
+.li:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+.li .ci{flex:none;text-align:center;min-width:50px}
+.li .ci .c{font-family:'IBM Plex Mono';font-size:11px;color:var(--mut);letter-spacing:.3px}
+.li .ci .i{font-family:'IBM Plex Mono';font-size:22px;font-weight:700}
+.li .badge2{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;border-radius:7px;padding:3px 7px;margin-top:4px;color:#fff;display:inline-block;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.li .badge2.now{background:linear-gradient(180deg,#cd4034,#b62a20)} .li .badge2.soon{background:linear-gradient(180deg,#bd8a1f,#9c6c0d)}
+.li .badge2.later{background:linear-gradient(180deg,#448c5c,#337046)} .li .badge2.passed{background:var(--passed)}
+.li .badge2.idle{background:var(--idle)} .li .badge2.unknown{background:var(--idle)}
+.li .d{flex:1;min-width:0}
+.li .t{font-weight:700;font-size:13.5px;margin-bottom:2px}
+.li .m{font-size:11.5px;color:var(--mut);line-height:1.5}
+.li .m b{color:var(--ink);font-weight:600}
+/* per-matter status dropdown (mark passed over / over) */
+.li-stat{margin-top:8px;font:inherit;font-size:12px;color:var(--ink);background:var(--panel2);
+  border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:220px;width:100%}
+/* a matter marked OVER (attended / not) is struck through here and on the island */
+.li.struck .i,.li.struck .t{text-decoration:line-through}
+.li.struck{opacity:.6}
+.cell-ours s{opacity:.7}
+
+/* chat */
+#chatWrap{display:flex;flex-direction:column;height:100%}
+#chatList{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:8px}
+.chat-day{align-self:center;font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--mut);background:var(--panel);border:1px solid var(--line);padding:3px 13px;border-radius:20px;margin:2px 0 8px;position:sticky;top:4px;z-index:1;box-shadow:var(--shadow)}
+.msg{max-width:82%;padding:7px 12px 6px;border-radius:14px;background:var(--panel);border:1px solid var(--line);align-self:flex-start;box-shadow:var(--shadow);border-bottom-left-radius:5px}
+.msg.mine{align-self:flex-end;background:#e7effb;border-color:#c9dcf3;border-radius:14px;border-bottom-right-radius:5px}
+/* grouped runs from the same sender: tighter, softer top corner, no repeated name */
+.msg.grp{margin-top:-5px;border-top-left-radius:6px}
+.msg.mine.grp{border-top-right-radius:6px}
+.msg .who{font-size:11px;color:#8a6d1a;font-weight:700;margin-bottom:2px}
+.msg.mine .who{color:var(--accent)}
+.msg .tx{font-size:14px;line-height:1.35;word-wrap:break-word;overflow-wrap:anywhere;white-space:pre-wrap;color:var(--ink)}
+.msg .tm{font-size:10px;color:var(--mut);margin-top:2px;text-align:right}
+.chatbar{display:flex;gap:8px;padding-top:8px;border-top:1px solid var(--line);flex:none}
+.chatbar input{flex:1;padding:11px 14px;border-radius:22px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px}
+.chatbar input:focus{outline:none;border-color:var(--accent)}
+.chatbar button{border:none;background:var(--accent);color:#fff;width:44px;height:44px;border-radius:50%;font-size:19px;flex:none}
+/* Keyboard-aware chat: when the chat tab is open we pin #chatWrap to the VISUAL
+   viewport (JS sets --chat-top/--chat-h from window.visualViewport), so the composer
+   always sits just above the on-screen keyboard and only the message list scrolls —
+   the box itself never grows or scrolls. Bottom nav hides while typing. */
+body.chat-vv #chatWrap{position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:760px;
+  top:var(--chat-top,0);height:var(--chat-h,100%);padding:8px 12px;box-sizing:border-box;background:var(--bg);z-index:25}
+body.kb-open nav.botnav{display:none}
+
+/* APPROACH FLASH — fires when a matter is ≤7 away and again each item closer. Bands:
+   5–7 GREEN · 3–4 AMBER · 0–2 RED. TWO modes:
+   • ONE court reaching → the WHOLE SCREEN washes in that court's band colour, info on top.
+   • SEVERAL courts → a LIGHT backdrop with a small ISLAND per court, each island itself
+     washed in its band colour, red-first. Momentary (~2.8s). */
+#flashHost{position:fixed;inset:0;z-index:60;cursor:pointer;animation:flashin .22s ease-out;
+  display:grid;gap:14px;padding:20px;place-items:center;overflow-y:auto}
+@keyframes flashin{from{opacity:0}to{opacity:1}}
+@keyframes flashpulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.13)}}
+/* --- SINGLE court: full-screen colour wash --- */
+#flashHost.single{animation:flashin .22s ease-out, flashpulse 1.1s ease-in-out infinite}
+#flashHost.single.b-green{background:linear-gradient(160deg,#33935a,#1e5d37)}
+#flashHost.single.b-amber{background:linear-gradient(160deg,#ca9827,#876010)}
+#flashHost.single.b-red{background:linear-gradient(160deg,#d1453a,#a5231a)}
+#flashHost.single .flash-cell{max-width:600px}
+#flashHost.single .flash-ct{font-size:clamp(40px,13vw,84px)}
+#flashHost.single .flash-dist{font-size:clamp(22px,7vw,46px);padding:8px 28px;background:rgba(255,255,255,.95);color:#161a1f}
+#flashHost.single .flash-on{font-size:clamp(30px,9vw,56px)}
+#flashHost.single .fl-k{font-size:clamp(12px,2.8vw,16px)} #flashHost.single .fl-v{font-size:clamp(34px,10vw,58px)}
+/* --- SEVERAL courts: LIGHT backdrop + islands each washed in their band colour --- */
+#flashHost.multi{background:rgba(244,246,249,.9);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#flashHost.multi.n2,#flashHost.multi.n3,#flashHost.multi.n4{grid-template-columns:1fr 1fr}
+#flashHost.multi.n5,#flashHost.multi.n6{grid-template-columns:1fr 1fr 1fr}
+#flashHost.multi .flash-cell{border-radius:22px;max-width:340px;color:#fff;
+  padding:clamp(16px,3vh,30px) clamp(14px,4.5vw,26px);animation:flashpulse 1.1s ease-in-out infinite}
+#flashHost.multi .flash-cell.b-green{background:linear-gradient(160deg,#33935a,#1e5d37);box-shadow:0 16px 40px rgba(30,93,55,.34)}
+#flashHost.multi .flash-cell.b-amber{background:linear-gradient(160deg,#ca9827,#876010);box-shadow:0 16px 40px rgba(135,96,16,.32)}
+#flashHost.multi .flash-cell.b-red{background:linear-gradient(160deg,#d1453a,#a5231a);box-shadow:0 16px 40px rgba(165,35,26,.34)}
+#flashHost.multi .flash-ct{font-size:clamp(24px,7.5vw,44px)}
+#flashHost.multi .flash-dist{font-size:clamp(15px,4.6vw,26px);padding:5px 18px;background:rgba(255,255,255,.95);color:#161a1f}
+#flashHost.multi .flash-on{font-size:clamp(19px,5.5vw,32px)}
+#flashHost.multi .fl-k{font-size:clamp(10px,2.3vw,13px)} #flashHost.multi .fl-v{font-size:clamp(24px,6.5vw,40px)}
+/* shared island bits */
+.flash-cell{width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(9px,2vh,18px);color:#fff;text-align:center}
+.flash-ct{font-family:Fraunces,serif;font-weight:600;line-height:.95;letter-spacing:.4px}
+.flash-ct b{color:#fff}
+.flash-dist{font-weight:800;letter-spacing:1.4px;text-transform:uppercase;border-radius:44px;box-shadow:0 4px 14px rgba(0,0,0,.26)}
+.flash-on{font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#fff}
+.flash-on b{font-family:var(--mono)}
+.flash-rows{display:flex;flex-direction:column;gap:clamp(6px,1.3vh,12px);width:100%}
+.flash-rows>div{display:flex;gap:14px;justify-content:center;align-items:baseline}
+.fl-k{color:rgba(255,255,255,.72);font-weight:700;letter-spacing:1.3px;text-transform:uppercase}
+.fl-v{color:#fff;font-family:var(--mono);font-weight:800;line-height:1}
+
+/* BRIEFING FEATURE */
+.board-switch{display:flex;gap:6px;margin:2px 0 8px}
+.board-switch button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel);
+  color:var(--mut);font-size:12.5px;font-weight:700;letter-spacing:.2px}
+.board-switch button.on{background:linear-gradient(180deg,#1c242e,#12171e);color:#fff;border-color:transparent}
+.bthread{display:flex;flex-direction:column;gap:7px;margin-top:11px;max-height:46vh;overflow-y:auto;padding:2px}
+.bbub{max-width:82%;padding:8px 11px;border-radius:13px;font-size:13.5px;line-height:1.35;position:relative}
+.bbub .bn{display:block;font-size:10.5px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.bbub .bt{display:block;font-size:9.5px;color:var(--mut);text-align:right;margin-top:3px}
+.bbub.them{align-self:flex-start;background:#fff;border:1px solid var(--line)}
+.bbub.me{align-self:flex-end;background:#e7eef7;border:1px solid #cfe0f2}
+.bcompose{display:flex;gap:7px;margin-top:10px;align-items:flex-end}
+.bcompose textarea{flex:1;resize:none;min-height:40px;max-height:110px;padding:9px 12px;border-radius:12px;
+  border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:14px;font-family:inherit}
+.bsend{flex:none;width:44px;height:44px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center}
+.bquick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.bquick button{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:12px;font-weight:600}
+.bcard.binbox{cursor:pointer;padding:11px 12px}
+.binbox-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left}
+.binbox-row .bavatar{flex:none;width:38px;height:38px;border-radius:50%;background:var(--navy);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-family:Fraunces,serif;font-size:14px}
+.binbox-row .bmeta{flex:1;min-width:0;display:flex;flex-direction:column}
+.binbox-row .bnm{display:block;font-size:14px;font-weight:600;color:var(--ink)}
+.binbox-row .bmatter{display:block;font-size:11.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.binbox-row .blast{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.binbox-row .bright{flex:none;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.bprox{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 8px;border-radius:20px}
+.bprox.red{color:#a5231a;background:#f6dcd8} .bprox.amber{color:#8a6410;background:#f6eccf} .bprox.green{color:#1e5d37;background:#dceee2} .bprox.far{color:#555;background:#e7e9eb}
+.bunread{background:var(--now);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:18px;text-align:center}
+.bback{display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-weight:600;font-size:13px;margin-bottom:8px;background:none;border:none;padding:4px 0}
+.bwrap{padding:2px 2px 20px}
+.bsec-h{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mut);margin:6px 2px 8px}
+.bcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:9px;box-shadow:0 1px 2px rgba(13,16,20,.04)}
+.bcard.bhi{border-color:#b9c6d6;box-shadow:0 6px 18px rgba(20,40,70,.08)}
+.brow{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.blab{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);font-weight:700;flex:none}
+.bval{font-size:14px;font-weight:600;color:var(--ink)}
+.bsub,.bnote{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.4}
+.bttl{font-size:12.5px;color:var(--mut);margin-top:2px}
+.bdesig{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);font-weight:700;margin-left:4px}
+.bchip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;flex:none}
+.bempty{text-align:center;color:var(--mut);font-size:13px;padding:16px 12px;border:1px dashed var(--line);border-radius:12px;margin-bottom:9px}
+.bmsgs{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.bmsg{flex:1 1 46%;padding:10px 8px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:12.5px;font-weight:600}
+.bmsg:active{transform:translateY(1px)}
+.bmsg.ok{background:linear-gradient(180deg,#2f8a54,#1e5d37);color:#fff;border-color:transparent}
+.bmsg.no{background:#fff;color:#8a2a20;border-color:#e6c9c4}
+.bmsg.small{flex:0 0 auto;padding:6px 12px}
+#bNew{margin-bottom:12px}
+.btoast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);background:#12171e;color:#fff;
+  padding:10px 16px;border-radius:22px;font-size:13px;font-weight:600;z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.28);opacity:1;transition:opacity .3s}
+.btoast.out{opacity:0}
+.empty{text-align:center;color:var(--mut);padding:40px 20px;font-size:14px}
+.notice{background:var(--soon-bg);border:1px solid #e6d29a;color:#8a6410;border-radius:11px;padding:11px 13px;font-size:12.5px;margin-bottom:12px;line-height:1.45}
+
+/* ===== bottom navigation (mobile-standard) ===== */
+/* Fixed to the real screen bottom. A flex child of the fixed-inset body stops at
+   the iOS home-indicator boundary (leaving a thumb-wide blank strip in standalone
+   PWAs); a directly position:fixed;bottom:0 bar reaches the physical edge on both
+   iOS and Android (same pattern as the chamber app). No safe-inset reserve, so the
+   buttons sit flush; the translucent home-indicator bar floats over them. */
+nav.botnav{position:fixed;bottom:0;left:0;right:0;max-width:760px;margin-inline:auto;
+  display:flex;z-index:30;
+  background:var(--panel);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.botnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:transparent;border:none;color:var(--mut);font-size:11px;font-weight:600;
+  padding:9px 4px 8px;position:relative}
+nav.botnav button i{font-size:22px;line-height:1}
+nav.botnav button.on{color:var(--accent)}
+nav.botnav .badge{position:absolute;top:4px;left:calc(50% + 8px);background:var(--now);color:#fff;
+  border-radius:20px;font-size:9px;padding:1px 5px;min-width:15px;line-height:1.4}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="card">
+    <div class="seal">SD</div>
+    <h1 id="lgName">Court Display Board</h1>
+    <div class="sub" id="lgSub">Live Supreme Court board</div>
+    <!-- SIGN IN -->
+    <div id="signinForm">
+      <label>Email</label>
+      <input id="lgEmail" type="email" autocomplete="username" placeholder="you@example.com">
+      <label>Password</label>
+      <input id="lgPass" type="password" autocomplete="current-password" placeholder="••••••••">
+      <button class="btn" id="lgGo">Sign in</button>
+      <button class="btn ghost" id="lgReset">Forgot password</button>
+      <div class="err" id="lgErr"></div>
+      <div class="lg-alt">New here? <button type="button" id="lgToReg">Create an account</button></div>
+    </div>
+    <!-- CREATE ACCOUNT -->
+    <div id="regForm" class="hidden">
+      <label>Full name</label>
+      <input id="rgName" autocomplete="name" placeholder="e.g. Rohan Mehta">
+      <label>Mobile number</label>
+      <input id="rgPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile">
+      <label>Email</label>
+      <input id="rgEmail" type="email" autocomplete="email" placeholder="you@example.com">
+      <label>Designation</label>
+      <select id="rgDesig">
+        <option value="Advocate">Advocate</option>
+        <option value="Advocate-on-Record">Advocate-on-Record</option>
+        <option value="Senior Advocate">Senior Advocate</option>
+        <option value="Clerk">Clerk</option>
+        <option value="Law Clerk / Intern">Law Clerk / Intern</option>
+        <option value="Office Staff">Office Staff</option>
+      </select>
+      <label>Password</label>
+      <input id="rgPass" type="password" autocomplete="new-password" placeholder="choose a password">
+      <button class="btn" id="rgGo">Create account</button>
+      <button class="btn ghost" id="lgToSignin">Back to sign in</button>
+      <div class="err" id="rgErr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header class="top">
+    <div class="brand">
+      <span class="seal sm">SD</span>
+      <span class="ttl"><span class="ttl-main">Chamber Display Board</span><small id="hdrSub">Supreme Court of India</small></span>
+    </div>
+    <div class="spacer"></div>
+    <div class="acts">
+      <button class="iconbtn" id="btnAdd" title="Track a matter — add your case by court & item"><i class="ti ti-plus"></i></button>
+      <button class="iconbtn" id="btnNotify" title="Alerts — get pinged when a matter is reaching"><i class="ti ti-bell"></i></button>
+      <button class="iconbtn" id="btnRefresh" title="Refresh"><i class="ti ti-refresh"></i></button>
+      <button class="iconbtn" id="btnOut" title="Sign out"><i class="ti ti-logout"></i></button>
+    </div>
+  </header>
+
+  <div id="paneTop">
+    <div class="statusrow"><span class="freshdot off" id="freshDot"></span><span id="statusTxt">connecting…</span></div>
+    <div class="board-switch hidden" id="boardSwitch"></div>
+    <div class="route-rail" id="routeRail"></div>
+  </div>
+
+  <main id="main"></main>
+
+  <nav class="botnav">
+    <button data-tab="board" class="on"><i class="ti ti-layout-grid"></i>Board</button>
+    <button data-tab="list"><i class="ti ti-list-details"></i>Our list</button>
+    <button data-tab="chat"><i class="ti ti-messages"></i>Chat<span class="badge hidden" id="chatBadge">0</span></button>
+    <button data-tab="brief" id="tabBrief" class="hidden"><i class="ti ti-users-group"></i>Collaborate<span class="badge hidden" id="briefBadge">0</span></button>
+  </nav>
+</div>
+
+<div id="modalRoot"></div>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("board-sw.js").catch(function(){});});}</script>
+
+<script type="module">
+/* ============================================================
+   SD Court Display Board — configuration (mirrors index.html)
+   ============================================================ */
+const DEMO = true;
+const BOARD_PROXY = "https://sd-board.sdentertainmentservices.workers.dev";
+const BOARD_SAMPLE = "./get_board_sample_2026-07-13.html";
+// Push (closed-phone notifications). PASTE the VAPID *public* key you generate for
+// the worker here (see CAUSELIST-SETUP / push steps). Empty = push disabled (the app
+// still does in-app alerts while open). The matching PRIVATE key stays a worker secret.
+const VAPID_PUBLIC = "";
+
+// The OLD SC display board publishes a court-wise SEQUENCE line (a scrolling
+// marquee) from ~9:30am — BEFORE courts start calling matters. When on, the app
+// pulls it (worker ?seq) and plans the route from it the moment it's up, instead
+// of waiting for a court to begin. Set false to fully regress to live-only order.
+const SEQ_LINE = true;
+
+// BRIEFING (regressible): an Advocate-on-Record briefing this senior can, with the
+// chamber's approval, TRACK the senior's board position for their matter and send
+// quick messages to the team ("my matter is reaching", "bench is calling you").
+// One isolated block (search "BRIEFING FEATURE"); set false to hide it entirely.
+const BRIEFING = true;
+
+const CHAMBER = {
+  seniorName: "Shyam Divan",
+  designation: "Senior Advocate",
+  court: "Supreme Court of India",
+  adminEmail: "adithdeshmukh@gmail.com"
+};
+const firebaseConfig = {
+  apiKey: "AIzaSyAagQ_-1LLvKtmsfJwSPJvURHWB-FkO-NQ",
+  authDomain: "sd-chamber-1aa78.firebaseapp.com",
+  projectId: "sd-chamber-1aa78",
+  storageBucket: "sd-chamber-1aa78.firebasestorage.app",
+  messagingSenderId: "287957629475",
+  appId: "1:287957629475:web:9c7804acf3060c73abcf96"
+};
+
+/* ---- helpers ---- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayISO = () => new Date().toLocaleDateString('en-CA');
+const emailKey = e => (e||"").trim().toLowerCase();
+const tsMs = x => x?._t ?? (x?.toDate ? x.toDate().getTime() : (typeof x==="number"?x:0)) ?? 0;
+const agoTxt = ms => { const s=Math.max(0,Math.round((Date.now()-ms)/1000));
+  if(s<60) return s+"s ago"; const m=Math.round(s/60); if(m<60) return m+"m ago"; return Math.round(m/60)+"h ago"; };
+
+// Mentioning ("MM") matters are called in the first ~10 min after 10:30 and are
+// done by 10:40 — never flash them; drop them from the directive once past.
+const MENT_START=630, MENT_END=640;                 // 10:30 – 10:40, minutes IST
+function nowMinsIST(){
+  try{ const t=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour12:false,hour:'2-digit',minute:'2-digit'});
+    const [h,m]=t.split(':').map(Number); return h*60+m; }
+  catch(e){ const d=new Date(); return d.getHours()*60+d.getMinutes(); }
+}
+const isMentioning = item => { const s=String(item||"").trim(); return s!=="" && !/^\d/.test(s); };
+
+/* ============================================================
+   BOARD ENGINES — validated offline against the live SC sample
+   ============================================================ */
+function parseBoard(html){
+  const strip = s => s.replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&")
+    .replace(/&#039;|&apos;/g,"'").replace(/&quot;/g,'"').replace(/&gt;/g,">").replace(/&lt;/g,"<")
+    .replace(/\s+/g," ").trim();
+  const rows = html.split(/<tr class="record">/i).slice(1);
+  const courts = [];
+  for (let raw of rows){
+    raw = raw.split(/<\/tr>/i)[0];
+    let court=""; let m=raw.match(/btn-primary[^>]*>\s*([0-9]+)/i); if(m) court=m[1];
+    if(!court){ const im=raw.match(/id="cl_(\d+)"/i); if(im) court=im[1]; }
+    const cl=raw.match(/id="cl_\d+"[^>]*>(.*?)<\/td>/is); const cltext=cl?strip(cl[1]):"";
+    let item="", status=cltext; const im2=cltext.match(/^(\d+(?:\.\d+)?)\s+(.*)$/);
+    if(im2){ item=im2[1]; status=im2[2].trim(); }
+    const cn=raw.match(/id="cn_\d+"[^>]*>(.*?)<\/td>/is);
+    const cz=raw.match(/id="cnbz_\d+"[^>]*>(.*?)<\/td>/is);
+    const seqm=raw.match(/title="([^"]*(?:SEQUENCE|SEQ|sequence)[^"]*)"/i);
+    if(!court) continue;
+    // Per-court detail link — the FULL cause list for this court, whose last
+    // (remark) column carries the authoritative OVER / PASS OVER per item. Only
+    // some benches populate it. We capture the link token here; the relay fetches
+    // + parses that heavy page and hands us a small item→remark map (refreshRemarks
+    // / remarksByCourt). The main board's own status rarely carries "pass over".
+    const tok=raw.match(/display_court_all_cases\.php\?([A-Za-z0-9.]+)/i);
+    const token=tok?tok[1]:"";
+    const passover=/pass\s*over/i.test(status);
+    courts.push({ court, item, status, token, passover, caseNo:cn?strip(cn[1]):"", title:cz?strip(cz[1]):"",
+      sequence:seqm?strip(seqm[1]):"" });
+  }
+  return { courts };
+}
+// Expand a declared sequence; also note WHERE passovers are taken up (the
+// "PASS OVER IF ANY" / "fresh passover then" marker) as an index in that order.
+function seqInfo(text){
+  if(!text) return {seq:[],passIdx:null};
+  // A hyphen/dash between two numbers ("1-15", "20 – 25") is a range, same as "TO".
+  const norm=String(text).replace(/(\d)\s*[-–—]\s*(\d)/g,"$1 TO $2");
+  const toks=norm.toUpperCase().replace(/[^0-9A-Z. ]/g," ").split(/\s+/).filter(Boolean);
+  const out=[], seen=new Set(); let passIdx=null;
+  const push=n=>{ if(!seen.has(n)){seen.add(n);out.push(n);} };
+  for(let i=0;i<toks.length;i++){
+    const t=toks[i];
+    if(passIdx==null && (t==="PASSOVER"||t==="PASSOVERS"||t==="PO"||(t==="PASS"&&(toks[i+1]==="OVER"||toks[i+1]==="OVERS")))) passIdx=out.length;
+    const num=t.match(/^(\d+)(?:\.\d+)?$/); if(!num) continue;
+    const a=parseInt(num[1],10);
+    if(toks[i+1]==="TO" && /^\d+$/.test(toks[i+2]||"")){
+      const b=parseInt(toks[i+2],10);
+      if(b>=a && b-a<600){ for(let k=a;k<=b;k++) push(k); } else push(a); i+=2;
+    } else push(a);
+  }
+  return {seq:out, passIdx};
+}
+const expandSequence = text => seqInfo(text).seq;
+/* ---- The old board's SEQUENCE marquee (one line, ALL courts) ----
+   The worker (?seq) hands us the raw marquee text. It reads court-by-court, e.g.
+   "COURT NO.1 :- 1 TO 6, 9, 12 …  COURT NO.2 :- 1-15 …". We split it on each
+   "COURT [NO.] <n>" anchor and keep the text after it as that court's sequence,
+   which seqInfo() then expands exactly like a per-row sequence. Tolerant of the
+   usual spellings (COURT / COURT NO. / COURT NO / COURT NUMBER). Returns a
+   { "<court>": "<raw sequence text>" } map; empty when the marquee is blank. */
+let seqByCourt = {}, seqLineText = "", seqLineAt = 0;
+function parseSequenceLine(text){
+  const out={};
+  if(!text) return out;
+  const T=" "+String(text).toUpperCase().replace(/\s+/g," ")+" ";
+  const re=/COURT\s*(?:NO\.?|NUMBER|ROOM)?\s*(\d{1,2})\b/g;
+  const anchors=[]; let m;
+  while((m=re.exec(T))) anchors.push({court:String(parseInt(m[1],10)), afterNum:re.lastIndex});
+  for(let i=0;i<anchors.length;i++){
+    const a=anchors[i];
+    // slice from just after this court's number up to where the next "COURT n" begins
+    const nextStart = (i+1<anchors.length) ? T.lastIndexOf("COURT", anchors[i+1].afterNum) : T.length;
+    let seg=T.slice(a.afterNum, nextStart).trim();
+    seg=seg.replace(/^[:\-–.\s]+/,"");                    // drop a leading ":-", "-", "." etc.
+    if(seg && seqInfo(seg).seq.length) out[a.court]=seg;   // keep only if it yields real items
+  }
+  return out;
+}
+// Position in the day's published order BEFORE the court starts: how many matters
+// are ahead of ours in the declared sequence (0 = ours is first up). null when the
+// court has no published sequence, or ours isn't in it.
+function preStartGap(seqTxt, ours){
+  const {seq}=seqInfo(seqTxt); if(!seq.length) return null;
+  const op=orderPos(seq, ours); return op==null ? null : op;
+}
+function preStartResult(g){
+  const short = g===0 ? "up next" : g+" ahead";
+  const lab   = g===0 ? "opens · you're up first" : "opens · ~"+g+" ahead in the sequence";
+  return {tier: g<=4?"soon":"later", label:lab, short, gap:g, preStart:true};
+}
+// NOTE: the sequence text never enumerates which items are passed over — a phrase
+// like "…ITEM 85 PASS OVER THEN ITEM 12…" only marks WHERE passed-over matters are
+// recalled (after item 85). Which items are actually passed over comes from the
+// remark column (isPassOver), the live board status, or a manual chamber mark. The
+// recall point is captured by seqInfo().passIdx.
+function proximity(seq,current,ours){
+  current=parseInt(current,10); ours=Math.floor(parseFloat(ours));
+  if(!seq.length||isNaN(current)||isNaN(ours)) return null;
+  const curPos=seq.indexOf(current), ourPos=seq.indexOf(ours);
+  if(curPos<0||ourPos<0) return {gap:null,of:seq.length,ourPos,curPos};
+  return {gap:ourPos-curPos,of:seq.length,ourPos,curPos};
+}
+// Position of `item` in the court's FULL expected call order: the declared sequence
+// first (in its given order), then every OTHER item in ascending number ("…then the
+// rest of the matters"). So with a sequence "1-17, 21, 30, …", after 17 the court
+// takes 21 — items 18/19/20 are NOT over, they wait for "the rest". Returns an index;
+// the gap between two items is the difference of their indices. (No sequence → the
+// caller falls back to a plain numeric distance.)
+function orderPos(seq, item){
+  item=Math.floor(parseFloat(item)); if(isNaN(item)) return null;
+  const i=seq.indexOf(item); if(i>=0) return i;             // an explicit-sequence item keeps its slot
+  const seqSet=new Set(seq); let before=0;
+  for(let n=1;n<item;n++){ if(!seqSet.has(n)) before++; }   // non-sequence items numerically below it
+  return seq.length + before;                               // the "rest", after the whole sequence
+}
+/* ---- Passover marks: shared live via config/live.po (any colleague marks;
+   auto-cleared when the date turns). Board-declared passovers merge in. ---- */
+const poKey=(court,item)=>String(court)+"_"+String(item);
+const poMarks=()=>(live?.po && live.po.date===todayISO() && live.po.marks)||{};
+const poFor=(court,item)=>poMarks()[poKey(court,item)]||null;
+async function setPO(court,item,mode,after){
+  const marks={...poMarks()}; marks[poKey(court,item)]={mode,after:after||null,by:me.uid,at:Date.now()};
+  await db.set("config/live",{po:{date:todayISO(),marks}},true);
+}
+async function clearPO(court,item){
+  // Tombstone (null), NOT delete: prod Firestore set(...,{merge:true}) DEEP-merges the
+  // marks map, so a removed key would persist. Writing null clears it (poFor reads it
+  // as falsy) and works in both the demo and Firestore.
+  const marks={...poMarks()}; marks[poKey(court,item)]=null;
+  await db.set("config/live",{po:{date:todayISO(),marks}},true);
+}
+/* ---- Matter OVER marks (attended / did-not-attend) — shared live via
+   config/live.done, any member sets it. A matter marked over is done for the day
+   and shows struck through on the board + list. (Passover is separate — that
+   matter isn't over, it's recalled later, so it is NOT struck.) ---- */
+const doneMarks=()=>(live?.done && live.done.date===todayISO() && live.done.marks)||{};
+const doneOf=(court,item)=>doneMarks()[poKey(court,item)]||null;   // {v:"att"|"abs",by,at} | null
+async function setDone(court,item,v){
+  const marks={...doneMarks()}; marks[poKey(court,item)]={v,by:me.uid,at:Date.now()};
+  await db.set("config/live",{done:{date:todayISO(),marks}},true);
+  if(poFor(court,item)) await clearPO(court,item);   // it's over now, not deferred
+}
+async function clearDone(court,item){
+  // Tombstone (null), NOT delete — see clearPO: prod Firestore merge won't drop a
+  // removed nested key, so cancelling "over" would silently do nothing (strike-through
+  // stays, court untracked). Writing null clears it; doneOf reads null as "not over".
+  const marks={...doneMarks()}; marks[poKey(court,item)]=null;
+  await db.set("config/live",{done:{date:todayISO(),marks}},true);
+}
+/* Board-observed passovers. The board flashes "Pass Over" on an item only while
+   it's being deferred, then moves on — so we REMEMBER each one we see (per court,
+   today only). When the passed-over item is one of OUR matters we also push it to
+   the shared marks so a colleague opening the app later still sees it. */
+let boardPO={date:todayISO(),marks:{}};
+function recordBoardPO(){
+  if(boardPO.date!==todayISO()) boardPO={date:todayISO(),marks:{}};
+  for(const c of board){
+    if(!c.passover || !c.item) continue;
+    const k=poKey(c.court,c.item);
+    if(boardPO.marks[k]) continue;
+    boardPO.marks[k]=true;
+    // share only OUR items (rare, high-value) — avoids write storms on other courts
+    if(!DEMO && me && !poFor(c.court,c.item) && courtMatters().some(e=>String(e.courtNo)===String(c.court)&&String(e.itemNo)===String(c.item)))
+      setPO(c.court,c.item,"slot").catch(()=>{});
+  }
+}
+const boardPOhas=(court,item)=>boardPO.date===todayISO() && !!boardPO.marks[poKey(court,item)];
+
+/* ---- Per-court REMARK column (authoritative OVER / PASS OVER) ----
+   The court-wise board shows only the item currently on. Each court's FULL cause
+   list (display_court_all_cases.php) carries a remark against every item — OVER
+   (matter finished), PASS OVER (deferred), or blank. Only some benches keep it
+   current, but where they do it is ground truth. That page is heavy (~0.5 MB), so
+   the relay parses it and returns a small { item: remark } map; we cache per court
+   and refresh only our own courts, on a slow cadence (remarks change far slower
+   than the live item). */
+let remarksByCourt={};                                     // court -> { at, items:{ "5":"OVER", "7":"PASS OVER" } }
+let _remarkAt={};                                          // court -> last fetch attempt ms (throttle)
+const REMARK_TTL=40000;
+function detailRemark(court,item){
+  const r=remarksByCourt[String(court)]; if(!r||!r.items) return "";
+  const s=String(item); if(r.items[s]) return r.items[s];
+  const n=String(Math.floor(parseFloat(item)));            // "12.1" -> "12"
+  return (n!=="NaN"&&r.items[n])||"";
+}
+const isOver     = (court,item)=>/^over$/i.test(detailRemark(court,item));
+const isPassOver = (court,item)=>/pass\s*over/i.test(detailRemark(court,item));
+// Items the court has already finished (OVER) that sit numerically AHEAD of ours,
+// i.e. between the item now on and our item — they were disposed out of turn, so
+// they aren't really ahead of us. Used only to tighten the "how far" count; the
+// list of over items is never shown.
+function overAhead(court,curItem,ours){
+  const r=remarksByCourt[String(court)]; if(!r||!r.items) return 0;
+  const c=parseFloat(curItem), o=parseFloat(ours); if(isNaN(c)||isNaN(o)) return 0;
+  let n=0;
+  for(const k in r.items){
+    if(!/^over$/i.test(r.items[k])) continue;
+    const v=parseFloat(k); if(!isNaN(v) && v>c && v<o) n++;
+  }
+  return n;
+}
+// Every item this court has PASSED OVER (deferred), with any recall hint. Sources:
+// the authoritative remark column, colleagues' shared marks (config/live.po) and
+// passovers we saw flash live on the board — deduped by item number.
+function passoverItemsFor(court){
+  const out={};                                            // itemNo(int) -> {after:int|null}
+  const add=(item,after)=>{ const n=Math.floor(parseFloat(item)); if(isNaN(n))return;
+    const a=(after!=null&&after!=="")?Math.floor(parseFloat(after)):null;
+    if(!(n in out)) out[n]={after:a}; else if(a!=null&&out[n].after==null) out[n].after=a; };
+  const r=remarksByCourt[String(court)];
+  if(r&&r.items) for(const k in r.items){ if(/pass\s*over/i.test(r.items[k])) add(k,null); }
+  const pm=poMarks(); for(const key in pm){ const i=key.indexOf("_");
+    if(i>0 && key.slice(0,i)===String(court)) add(key.slice(i+1), pm[key]&&pm[key].after); }
+  if(boardPO.date===todayISO()) for(const key in boardPO.marks){ const i=key.indexOf("_");
+    if(i>0 && key.slice(0,i)===String(court)) add(key.slice(i+1),null); }
+  return out;
+}
+// Net change to the count of items AHEAD of ours, caused by passovers:
+//   − an item currently ahead of us but recalled AFTER us is no longer ahead
+//   + a passed-over item recalled BEFORE us lands ahead of us and adds to the wait
+// Sequence space when the bench declares a sequence, else item-number space. A
+// passover's recall point = its own "after N" hint, else the sequence's declared
+// passover slot (passIdx), else the end of the board (recalled after everyone).
+function poAdjust(court, curItem, ours, seq, passIdx){
+  const po=passoverItemsFor(court); const keys=Object.keys(po); if(!keys.length) return 0;
+  const useSeq=!!(seq&&seq.length);
+  const pos=n=>{ n=Math.floor(parseFloat(n)); if(isNaN(n))return null; return useSeq?seq.indexOf(n):n; };
+  const curP=pos(curItem), ourP=pos(ours);
+  if(curP==null||ourP==null) return 0;
+  if(useSeq&&(curP<0||ourP<0)) return 0;
+  if(ourP<=curP) return 0;                                 // our item already reached — nothing ahead to adjust
+  const endP=useSeq?seq.length:Infinity;                   // "after everyone"
+  const ourN=Math.floor(parseFloat(ours));
+  let delta=0;
+  for(const k of keys){
+    if(parseInt(k,10)===ourN) continue;                    // our own item is handled in the passover branch
+    const xp=pos(k); if(xp==null||(useSeq&&xp<0)) continue;
+    let rp;
+    if(po[k].after!=null){ const ap=pos(po[k].after); rp=(ap!=null&&!(useSeq&&ap<0))?ap+1:endP; }
+    else rp=(useSeq&&passIdx!=null&&passIdx>curP)?passIdx:endP;
+    const aheadOrig=xp>curP&&xp<ourP;                      // was it counted as ahead in the base gap?
+    const recallAhead=rp>curP&&rp<ourP;                    // does its recalled slot sit ahead of us?
+    if(aheadOrig&&!recallAhead) delta--;                   // deferred to behind us → drop from the count
+    else if(!aheadOrig&&recallAhead) delta++;              // recalled ahead of us → add to the wait
+  }
+  return delta;
+}
+async function fetchRemarksFor(court,token,force){
+  if(!token || BOARD_SAMPLE || !BOARD_PROXY) return;       // demo seeds remarksByCourt directly
+  const now=Date.now();
+  if(!force && _remarkAt[court] && now-_remarkAt[court]<REMARK_TTL) return;
+  _remarkAt[court]=now;
+  try{
+    const r=await fetch(BOARD_PROXY+"?remarks="+encodeURIComponent(token),{cache:"no-store"});
+    if(!r.ok) return;
+    const j=await r.json();
+    if(j&&j.items) remarksByCourt[String(court)]={at:now, items:j.items};
+  }catch(e){}
+}
+// Pull remarks for the courts we actually have matters in (keeps it light).
+function refreshRemarks(){
+  const want=new Set(courtMatters().map(e=>String(e.courtNo)));
+  for(const c of board){ if(want.has(String(c.court)) && c.token) fetchRemarksFor(c.court,c.token); }
+}
+
+/* ---- Regular list sits BEHIND the Miscellaneous list ----
+   A court finishes its whole Miscellaneous list (main + supplementary) before it
+   takes up the Regular list. So a Regular matter's real distance = the Misc
+   matters still pending + its own place in the Regular order. Misc total comes
+   from the chamber's fetched causelist; we detect when the court has actually
+   reached its Regular list (note: Regular can be LONGER than Misc, so item-number
+   size alone can't tell the lists apart — we use "past the whole Misc list" or a
+   downward item reset instead). */
+// Regular-list matters are numbered in the 101+ series, so an item's PLACE in the
+// Regular list is itemNo − 100 (item 101 = the 1st Regular matter). But the
+// Miscellaneous list runs 1 … 200+ and can itself reach into the 101 range, so a
+// bare item number can't tell the two lists apart — we use the Misc TOTAL plus
+// the tell-tale reset (the item drops from the end of Misc back to 101).
+const REG_BASE=101;
+function miscTotalFor(court){
+  const rec=courtUpdates?.by_date?.[todayISO()]?.lists?.["Miscellaneous"]?.[String(court)];
+  if(!rec) return null;
+  const t=parseInt(rec.total,10); if(!isNaN(t)&&t>0) return t;
+  const m=parseInt(rec.main,10), s=parseInt(rec.supp,10);
+  return isNaN(m)?null:(m+(isNaN(s)?0:s));
+}
+let itemHi={date:todayISO(),max:{}};   // highest raw item seen per court today (Misc→Regular reset detector)
+function noteItemHi(){
+  if(itemHi.date!==todayISO()) itemHi={date:todayISO(),max:{}};
+  for(const c of board){ const n=parseInt(c.item,10); if(!isNaN(n)) itemHi.max[c.court]=Math.max(itemHi.max[c.court]||0,n); }
+}
+// Has the court moved off its Miscellaneous list onto its Regular list?
+function onRegularList(court, miscTotal){
+  const bc=boardByCourt()[court]; const cur=bc?parseInt(bc.item,10):NaN;
+  if(isNaN(cur)) return false;
+  if(miscTotal==null) return false;                      // no Misc size → can't tell; treat as behind-Misc
+  if(cur>miscTotal+2) return true;                       // item beyond the whole Misc list → Regular (Misc < 101)
+  // Misc itself reaches into the 101+ range: Regular shows as the item RESETTING
+  // from near the end of Misc (≈ miscTotal) back down to the 101 series.
+  const hi=itemHi.max[court]||0;
+  if(hi>=miscTotal-3 && cur>=REG_BASE && cur<hi-5) return true;
+  return false;
+}
+
+// classify our matter against its board court -> {tier,label,short,gap,approx,ment,po}
+function classify(e, bc){
+  const ours=e.itemNo;
+  // Manually marked OVER for the whole chamber (attended / did-not-attend) — done
+  // for the day, struck through. Wins over everything else.
+  const dn=doneOf(e.courtNo,ours);
+  if(dn) return {tier:"passed", label:dn.v==="att"?"over — attended":"over — not attended",
+                 short:dn.v==="att"?"over ✓":"over ✗", over:true, done:true};
+  if(!bc) return {tier:"unknown",label:"court not on the board",short:"—"};
+  // The day's published sequence for this court: the board row's own SEQUENCE title
+  // if it ever carries one, else the old board's marquee line (seqByCourt).
+  const seqTxt = (bc.sequence && bc.sequence.trim()) ? bc.sequence : (seqByCourt[String(e.courtNo)]||"");
+  if(/not in session/i.test(bc.status||"")){
+    // Court hasn't started, but if its sequence is already published we still know
+    // where we sit in the day's order — plan the route from it, don't wait.
+    const pg=preStartGap(seqTxt, ours);
+    if(pg!=null) return preStartResult(pg);
+    return {tier:"idle",label:"court not sitting",short:"not sitting"};
+  }
+  if(isMentioning(ours)){
+    if(nowMinsIST()>MENT_END) return {tier:"passed",label:"mentioning — over",short:"over",ment:true};
+    return {tier:"soon",label:"mentioning — watch",short:"watch",gap:0,ment:true};
+  }
+  // Reserved item series tell us the court's PHASE, not a queue position:
+  //   800s  = mentioning · 1500s = judgement pronouncement
+  //   1600s = Single Judge matters · 1700s = Chamber Judge matters
+  // Single-Judge / Chamber lists are taken up AFTER the Miscellaneous + Regular board
+  // is over, or when a Division Bench isn't sitting.
+  const curBoardNum=parseInt(bc.item,10);
+  const oursNum=parseFloat(ours);
+  // If OUR matter is itself a Single-Judge (1600s) or Chamber (1700s) matter, track
+  // it WITHIN that series once the court reaches it (sequential 1600x / 1700x).
+  const oursSingle=oursNum>=1600&&oursNum<1700, oursChamber=oursNum>=1700&&oursNum<1800;
+  if(oursSingle||oursChamber){
+    const inPhase=(oursSingle&&curBoardNum>=1600&&curBoardNum<1700)||(oursChamber&&curBoardNum>=1700&&curBoardNum<1800);
+    if(inPhase){ const g=Math.floor(oursNum)-Math.floor(curBoardNum);
+      if(g<0)  return {tier:"passed",label:"matter is over",short:"over",gap:g};
+      if(g<=1) return {tier:"now", label:g===0?"ITEM ON NOW":"NEXT — get in",short:g===0?"NOW":"NEXT",gap:g};
+      if(g<=4) return {tier:"soon",label:"~"+g+" items away",short:g+" away",gap:g};
+      return       {tier:"later",label:g+" items away",short:g+" away",gap:g};
+    }
+    return {tier:"later",label:(oursSingle?"Single Judge":"Chamber Judge")+" list — after the board",short:"after board",reg:true};
+  }
+  // NORMAL (Misc/Regular) matter while the court is in one of the reserved phases:
+  if(curBoardNum>=800 && curBoardNum<900)   return {tier:"soon",label:"mentioning is on",short:"mentioning",ment:true};
+  if(curBoardNum>=1500 && curBoardNum<1600) return {tier:"soon",label:"pronouncement is on",short:"pronouncement"};
+  if(curBoardNum>=1600 && curBoardNum<1700) return {tier:"soon",label:"Single Judge matters on",short:"single judge"};
+  if(curBoardNum>=1700 && curBoardNum<1800) return {tier:"soon",label:"Chamber Judge matters on",short:"chamber"};
+  // Authoritative remark from the court's full cause list, where the bench keeps
+  // it current: OVER = our matter is finished (short-circuits everything else).
+  if(isOver(e.courtNo,ours)) return {tier:"passed",label:"matter is over",short:"over",over:true};
+  const {seq,passIdx}=seqInfo(seqTxt);
+  const curPos = seq.length ? seq.indexOf(parseInt(bc.item,10)) : -1;
+  // Passed over? — the court's remark column (authoritative), a colleague's mark,
+  // or observed live on the board. NOT inferred from the sequence text: "…ITEM 85
+  // PASS OVER THEN ITEM 12…" means passovers are recalled AFTER item 85, it does
+  // NOT make 85 (or 12) a passed-over item — that only comes from the remark column.
+  const mark = poFor(e.courtNo,ours)
+    || (isPassOver(e.courtNo,ours) ? {mode:"detail"} : null)
+    || (boardPOhas(e.courtNo,ours) ? {mode:"slot"} : null);
+  if(mark){
+    let gap=null;
+    if(mark.mode==="after" && mark.after && seq.length){
+      const tp=seq.indexOf(parseInt(mark.after,10));
+      if(tp>=0 && curPos>=0) gap=Math.max(0,tp-curPos+1);
+    } else if(seq.length && curPos>=0){
+      // recalled where the sequence says passovers are taken, else end of board
+      const tp=(passIdx!=null && passIdx>curPos) ? passIdx : seq.length-1;
+      gap=Math.max(0,tp-curPos);
+    }
+    // Owner: don't show "PO 2/3" — a passed-over matter is recalled at the sequence's
+    // passover point, so show how far THAT is, as a normal distance ("N away"). The
+    // detail label still notes it's a recall.
+    if(gap==null) return {tier:"later",label:"passed over — awaiting recall",short:"recall",po:true};
+    if(gap<=0) return {tier:"now", label:"recall — item on now",short:"NOW",gap,po:true};
+    if(gap===1) return {tier:"now", label:"recall — next",short:"NEXT",gap,po:true};
+    if(gap<=4) return {tier:"soon",label:"~"+gap+" items away · recall",short:gap+" away",gap,po:true};
+    return {tier:"later",label:gap+" items away · recall",short:gap+" away",gap,po:true};
+  }
+  // Regular-list matter: reached only after the whole Miscellaneous list is done.
+  if(/^reg/i.test((e.listType||"").trim())){
+    const miscTotal=miscTotalFor(e.courtNo);
+    if(!onRegularList(e.courtNo, miscTotal)){
+      // our PLACE in the Regular list: item 101 -> 1st, 112 -> 12th (Regular is 101+)
+      const regRank=(Math.floor(oursNum)>=REG_BASE)?(Math.floor(oursNum)-(REG_BASE-1)):Math.max(1,Math.floor(oursNum)||1);
+      if(miscTotal==null && !seq.length)
+        return {tier:"later",label:"Regular list — after the Miscellaneous list",short:"after Misc",reg:true};
+      // Misc matters still to be called: from the live sequence position, else the
+      // raw current item; total from the causelist (main + supplementary), else seq.
+      const cur=parseInt(bc.item,10);
+      const miscDone=(seq.length&&curPos>=0)?curPos+1:(isNaN(cur)?0:cur);
+      const miscLeft=Math.max(0,(miscTotal!=null?miscTotal:seq.length)-miscDone);
+      const gap=miscLeft+(regRank-1);                          // misc still to go, then regular matters before ours
+      const detail=miscLeft>0?"Misc: "+miscLeft+" to go":"Misc done";
+      if(gap<=1) return {tier:"now", label:"Regular — get in now", short:"NOW", gap, reg:true};
+      if(gap<=4) return {tier:"soon",label:"Regular — ~"+gap+" away · "+detail, short:gap+" away", gap, reg:true};
+      return {tier:"later",label:"Regular — ~"+gap+" away · "+detail, short:gap+" away", gap, reg:true};
+    }
+    // else: the Regular list is running — fall through to normal proximity within it.
+  }
+  let gap=null, approx=false;
+  // Distance in the court's true call order (sequence, then the rest) — NOT raw item
+  // numbers, so a sequence like "1-17, 21, 30…" doesn't wrongly show 18/19/20 as over.
+  if(seq.length){ const op=orderPos(seq,ours), cp=orderPos(seq,bc.item);
+    if(op!=null && cp!=null) gap=op-cp; }
+  if(gap==null){ const c=parseFloat(bc.item); if(!isNaN(c)){ gap=Math.floor(oursNum)-Math.floor(c); approx=true; } }
+  // Discount matters already finished out of turn (the court's list marks them
+  // OVER): they sit between the item now on and ours but won't be called again, so
+  // our real distance is that much shorter.
+  if(gap!=null && gap>0){ const done=overAhead(e.courtNo,bc.item,ours); if(done>0) gap=Math.max(0,gap-done); }
+  // Account for passovers in the running order: an item passed over ahead of us is
+  // deferred (no longer really ahead); a passed-over matter recalled before us is
+  // pulled in ahead and adds to the wait.
+  let poNote="";
+  if(gap!=null){ const pa=poAdjust(e.courtNo,bc.item,ours,seq,passIdx);
+    if(pa){ gap=Math.max(0,gap+pa); poNote = pa<0 ? " · "+(-pa)+" passed over ahead" : " · "+pa+" recalled first"; } }
+  // Court is up but no current item resolved yet (blank / about to open): if the
+  // day's sequence is published, position from it rather than giving up.
+  if(gap==null){ const pg=preStartGap(seqTxt, ours); if(pg!=null) return preStartResult(pg); }
+  if(gap==null) return {tier:"unknown",label:"position unclear",short:"—"};
+  if(gap<0) return {tier:"passed",label:"matter is over",short:"over",gap,approx};
+  if(gap<=1) return {tier:"now",label:gap===0?"ITEM ON NOW":"NEXT — get in",short:gap===0?"NOW":"NEXT",gap,approx,poNote};
+  if(gap<=4) return {tier:"soon",label:"~"+gap+" items away"+poNote,short:gap+" away",gap,approx,poNote};
+  return {tier:"later",label:gap+" items away"+poNote,short:gap+" away",gap,approx,poNote};
+}
+const TIER_RANK={now:0,soon:1,later:2,unknown:3,passed:4,idle:5};
+
+/* ---- Supreme Court physical layout (from the chamber's hand-drawn map) ----
+   All 17 courts ring an oval central hall. Coordinates trace that oval; you walk
+   AROUND the corridor, never across the middle — so distance = the shorter arc
+   along the ring, not straight-line. Tunable: MIN_PER_PX (walk pace) and
+   MIN_PER_ITEM (how fast an item list moves). */
+const COURT_XY={1:[990,1015],2:[815,1015],3:[1160,1015],4:[1330,1015],5:[615,1015],
+  6:[305,730],7:[390,725],8:[1545,700],9:[1635,700],10:[990,445],11:[895,445],
+  12:[785,435],13:[690,465],14:[590,560],15:[510,585],16:[1340,630],17:[1245,555]};
+// clockwise around the oval (front-centre 1, up the right, across the top, down the left)
+const RING=[1,3,4,9,8,16,17,10,11,12,13,14,15,7,6,5,2];
+const MIN_PER_PX=0.00168;     // calibrated so Court 1↔10 ≈ 2.5 min in a clear corridor
+const MIN_PER_ITEM=1.1;       // rough: one item ≈ ~1 min of board time
+// Corridors are packed 10:30–12:00, so walking is slower then (owner: Court 1↔10
+// is ~3–4 min in that crowd, vs ~2.5 min clear). Eases off after noon.
+function crowdFactor(){ const nm=nowMinsIST();
+  if(nm>=630 && nm<720) return 1.4;   // 10:30–12:00 peak  → Court 1↔10 ≈ 3.5 min
+  if(nm>=720 && nm<780) return 1.2;   // 12:00–13:00 easing
+  return 1.0; }
+const _seg=(a,b)=>{const p=COURT_XY[a],q=COURT_XY[b]; return (p&&q)?Math.hypot(p[0]-q[0],p[1]-q[1]):0;};
+function walkMin(a,b){
+  a=parseInt(a); b=parseInt(b);
+  const ia=RING.indexOf(a), ib=RING.indexOf(b);
+  let px;
+  if(ia<0||ib<0) px=(COURT_XY[a]&&COURT_XY[b]) ? _seg(a,b) : 1500;
+  else if(ia===ib) return 0;
+  else {
+    let cw=0;  for(let i=ia;i!==ib;i=(i+1)%RING.length) cw+=_seg(RING[i],RING[(i+1)%RING.length]);
+    let ccw=0; for(let i=ia;i!==ib;i=(i-1+RING.length)%RING.length) ccw+=_seg(RING[i],RING[(i-1+RING.length)%RING.length]);
+    px=Math.min(cw,ccw);
+  }
+  return px*MIN_PER_PX*crowdFactor();
+}
+const NEAR_MIN=1.2;           // ≤ this walk from the primary court = "catch both"
+
+/* ---- Live per-court pace ----
+   Each court works through its DECLARED SEQUENCE, not 1,2,3. We track each
+   court's position in that sequence over time and measure how fast it advances
+   (positions per minute), then project our item from that court's real pace —
+   so a stalled bench reads slow and a fast one reads fast. Falls back to the
+   flat default until a court has ~2 min of history. */
+function posOf(bc){
+  if(!bc) return null;
+  const item=bc.item; if(!item || !/^\d/.test(String(item))) return null;
+  const seq=expandSequence(bc.sequence);
+  if(seq.length){ const p=seq.indexOf(parseInt(item)); if(p>=0) return p; }
+  return parseFloat(item);                       // no sequence → raw item number
+}
+function recordPace(){
+  if(!boardAt) return;
+  for(const c of board){
+    if(/not in session/i.test(c.status||"")) continue;
+    const p=posOf(c); if(p==null) continue;
+    const h=paceHist[c.court]||(paceHist[c.court]=[]);
+    const last=h[h.length-1];
+    if(!last || last.pos!==p) h.push({pos:p,t:boardAt});   // record only on movement
+    const cut=boardAt-20*60000; while(h.length>2 && h[0].t<cut) h.shift();
+  }
+}
+function paceVel(court){                          // sequence-positions per minute, or null
+  const h=paceHist[court]; if(!h||!h.length||!boardAt) return null;
+  const cur=posOf(boardByCourt()[court]); if(cur==null) return null;
+  let base=null; for(const e of h){ if(boardAt-e.t<=15*60000){ base=e; break; } }
+  if(!base) base=h[h.length-1];
+  const dMin=(boardAt-base.t)/60000; if(dMin<2) return null;   // need ≥2 min observed
+  return (cur-base.pos)/dMin;                     // 0 = stalled (correctly reads slow)
+}
+function reachMinsFor(court,k){
+  if(!k||k.gap==null) return null;
+  const g=Math.max(0,k.gap); if(g===0) return 0;
+  const v=paceVel(court);
+  if(v==null) return g*MIN_PER_ITEM;              // still calibrating → default pace
+  return g/Math.max(v,0.2);                       // measured; cap slowest at 5 min/item
+}
+const paceMeasured = court => paceVel(court)!=null;
+
+/* ---- ALERTS -----------------------------------------------------------------
+   Ping the phone when a chamber matter is reaching, so nobody has to stare at the
+   board. Fires a system notification (+ vibration) as a matter crosses into "get
+   ready" and then "head now"; a keep-awake lock holds the screen on so the app
+   keeps polling. Each level fires once per court+item (re-arms if it recedes).
+   Reliable while the app is OPEN/awake; true closed-phone push needs a server. */
+let notifyOn=false, _alerted={date:"",lv:{}}, _wakeLock=null;
+function alertLevel(k){ if(!k||k.ment) return 0; if(k.tier==="now") return 2; if(k.tier==="soon") return 1; return 0; }
+function runAlerts(){
+  if(!notifyOn || !("Notification" in window) || Notification.permission!=="granted") return;
+  if(_alerted.date!==todayISO()) _alerted={date:todayISO(),lv:{}};
+  const bc=boardByCourt();
+  for(const e of courtMatters()){
+    const k=classify(e,bc[e.courtNo]); const lvl=alertLevel(k);
+    const key=e.courtNo+"|"+e.itemNo; const prev=_alerted.lv[key]||0;
+    if(lvl>prev){ _alerted.lv[key]=lvl; fireCourtAlert(e,k,lvl); }
+    else if(lvl===0 && prev>0){ _alerted.lv[key]=0; }   // re-arm once it recedes
+  }
+}
+function fireCourtAlert(e,k,lvl){
+  const head=lvl>=2, mins=reachMinsFor(e.courtNo,k), cur=boardByCourt()[e.courtNo]?.item;
+  const title=head?`⚖️ Head to Court ${e.courtNo}`:`Get ready — Court ${e.courtNo}`;
+  const body=head
+    ? `Your item ${e.itemNo} is ${(k.short==="NOW"||k.gap===0)?"ON now":"next"}.`+(cur?` (item ${cur} on)`:"")
+    : `Item ${e.itemNo} approaching`+(mins!=null&&mins>=1?` · ~${Math.round(mins)} min`:(k.gap!=null?` · ${k.gap} away`:""))+`.`;
+  pushNotify(title,body,"court-"+e.courtNo,head);                 // this (open) device
+  // ...and push the matter's assigned colleague(s) via the worker, so a CLOSED phone
+  // pops too. Any open instance may fire this; the worker de-dups per court+item+level.
+  const toUids=(e.juniorUids||[]).filter(Boolean); if(toUids.length) relayPush({kind:"court", toUids, court:String(e.courtNo),
+    item:String(e.itemNo), level:lvl, date:todayISO(), title, body, urgent:head, tag:"court-"+e.courtNo});
+}
+/* Approach flash (owner Jul 2026 rework). Any of our matters ≤7 away flashes, and
+   flashes AGAIN each time it gets one item closer (7→6→5…). Colour by distance:
+   5–7 GREEN · 3–4 AMBER · 0–2 RED. Different courts can be in different bands at once,
+   so each court is its OWN coloured island on a light backdrop. The flash is
+   momentary (auto-clears back to the board after ~2.8s); "on now" flashes once and
+   then stays quiet unless another court moves. Fires for ALL courts. */
+let _flashSt={date:"", gaps:{}}, _flashTimer=null;
+const flashBand = g => g<=2 ? "red" : g<=4 ? "amber" : "green";     // 0-2 red · 3-4 amber · 5-7 green
+const _distLabel = g => g<=0 ? "ON NOW" : g===1 ? "NEXT" : g+" AWAY";
+function inRangeMatters(){
+  const bc=boardByCourt(); const seen={};
+  for(const e of courtMatters()){
+    const k=classify(e,bc[e.courtNo]);
+    if(!k||k.ment||k.done||k.over||k.gap==null) continue;
+    if(k.preStart) continue;                                        // court hasn't started — no live flash yet
+    if(k.gap<0||k.gap>7) continue;                                  // within seven
+    const c=String(e.courtNo);
+    if(!seen[c]||k.gap<seen[c].gap) seen[c]={court:e.courtNo,item:e.itemNo,cur:bc[e.courtNo]?.item,gap:k.gap};
+  }
+  return Object.values(seen).sort((a,b)=>a.gap-b.gap);
+}
+function runFlash(){
+  if(document.hidden) return;
+  if(_flashSt.date!==todayISO()) _flashSt={date:todayISO(), gaps:{}};
+  const inrange=inRangeMatters();
+  const keys=new Set(inrange.map(r=>r.court+"|"+r.item));
+  for(const key in _flashSt.gaps) if(!keys.has(key)) delete _flashSt.gaps[key];   // left range → re-arm
+  let stepped=false;
+  for(const r of inrange){ const key=r.court+"|"+r.item; const prev=_flashSt.gaps[key];
+    if(prev===undefined || r.gap<prev) stepped=true;                              // entered range OR got closer
+    _flashSt.gaps[key]=r.gap;
+  }
+  if(stepped) showFlash(inrange);                                                 // one flash showing every court in range
+}
+function showFlash(items){
+  if(_flashTimer){ clearTimeout(_flashTimer); _flashTimer=null; }
+  let host=$("flashHost");
+  if(!host){ host=document.createElement("div"); host.id="flashHost"; host.onclick=hideFlash; document.body.appendChild(host); }
+  items=items.slice(0,6);
+  const cell=r=>{
+    // when OUR matter is the one on, just say "our N is on" — not the item-on / ours split
+    const body = r.gap<=0
+      ? `<div class="flash-on">Our <b>${esc(r.item)}</b> is on</div>`
+      : `<div class="flash-dist">${esc(_distLabel(r.gap))}</div>
+         <div class="flash-rows"><div><span class="fl-k">Ongoing</span><span class="fl-v">${esc(r.cur||"—")}</span></div>
+           <div><span class="fl-k">Ours</span><span class="fl-v">${esc(r.item)}</span></div></div>`;
+    return `<div class="flash-cell b-${flashBand(r.gap)}"><div class="flash-ct">Court <b>${esc(r.court)}</b></div>${body}</div>`;
+  };
+  // ONE court → full-screen wash of its band colour · SEVERAL → small islands, red-first
+  if(items.length===1) host.className="single b-"+flashBand(items[0].gap);
+  else host.className="multi n"+items.length;
+  host.innerHTML=items.map(cell).join("");
+  _flashTimer=setTimeout(hideFlash, 2800);                                        // momentary
+}
+function hideFlash(){ if(_flashTimer){clearTimeout(_flashTimer);_flashTimer=null;} const h=$("flashHost"); if(h) h.remove(); }
+async function pushNotify(title,body,tag,urgent){
+  const opts={body,tag,renotify:true,icon:"icon-192.png",badge:"icon-192.png",
+    vibrate:urgent?[250,120,250,120,250]:[160,90,160],requireInteraction:!!urgent};
+  try{ const reg=await navigator.serviceWorker?.ready; if(reg&&reg.showNotification){ await reg.showNotification(title,opts); return; } }catch(e){}
+  try{ new Notification(title,opts); }catch(e){}
+}
+function updateNotifyBtn(){
+  const b=$("btnNotify"); if(!b) return;
+  const ok="Notification" in window && Notification.permission==="granted" && notifyOn;
+  b.classList.toggle("on",ok);
+  b.querySelector("i").className = ok?"ti ti-bell-ringing":"ti ti-bell";
+  b.title = !("Notification" in window) ? "Alerts not supported here"
+    : Notification.permission==="denied" ? "Alerts blocked — enable in phone/browser settings"
+    : ok ? "Alerts ON — tap to turn off" : "Alerts off — tap to get pinged when a matter is reaching";
+}
+async function acquireWake(){ try{ if("wakeLock" in navigator && !_wakeLock){ _wakeLock=await navigator.wakeLock.request("screen"); _wakeLock.addEventListener("release",()=>{_wakeLock=null;}); } }catch(e){} }
+function releaseWake(){ try{ if(_wakeLock) _wakeLock.release(); }catch(e){} _wakeLock=null; }
+async function toggleNotify(){
+  if(!("Notification" in window)){ alert("This browser doesn't support alerts."); return; }
+  if(Notification.permission==="default"){ try{ await Notification.requestPermission(); }catch(e){} }
+  if(Notification.permission!=="granted"){ alert("Turn on notifications for this site in your phone/browser settings, then tap the bell again."); updateNotifyBtn(); return; }
+  notifyOn=!notifyOn; try{ localStorage.setItem("boardNotify",notifyOn?"1":"0"); }catch(e){}
+  updateNotifyBtn();
+  if(notifyOn){ acquireWake(); syncPushSub(); pushNotify("Alerts on ⚖️","We'll ping you the moment a chamber matter is reaching — even with the app closed.","alerts-test",false); runAlerts(); }
+  else { releaseWake(); dropPushSub(); }
+}
+/* ---- CLOSED-PHONE PUSH (Web Push via the chamber's Cloudflare worker) ----
+   The bell subscribes this device (installed PWA) to push and registers the
+   subscription with the worker, keyed by uid. The worker then delivers a
+   notification even when the app is closed: on a new chat message, and when one of
+   this colleague's matters is ≤4 away. VAPID_PUBLIC must be set + the app installed
+   to the Home Screen (mandatory on iOS 16.4+). No-ops safely if unset/unsupported. */
+function _b64ToU8(s){ s=s.replace(/-/g,"+").replace(/_/g,"/"); s+="=".repeat((4-s.length%4)%4);
+  const bin=atob(s), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return u; }
+async function syncPushSub(){
+  try{
+    if(!VAPID_PUBLIC || !notifyOn || !me?.uid) return;
+    if(!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+    if(Notification.permission!=="granted") return;
+    const reg=await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:_b64ToU8(VAPID_PUBLIC)});
+    await fetch(BOARD_PROXY+"/push-subscribe",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({uid:me.uid, name:me.name||"", sub:sub.toJSON()})}).catch(()=>{});
+  }catch(e){}
+}
+async function dropPushSub(){
+  try{ const reg=await navigator.serviceWorker?.ready; const sub=await reg?.pushManager.getSubscription();
+    if(sub){ await fetch(BOARD_PROXY+"/push-unsubscribe",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({uid:me?.uid, endpoint:sub.endpoint})}).catch(()=>{}); await sub.unsubscribe().catch(()=>{}); }
+  }catch(e){}
+}
+// Ask the worker to fan a notification out to OTHER phones (closed included). De-dup
+// is the worker's job (many open instances may call this for the same event).
+function relayPush(payload){
+  if(!VAPID_PUBLIC) return;
+  try{ fetch(BOARD_PROXY+"/push-send",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)}).catch(()=>{}); }catch(e){}
+}
+
+/* ============================================================
+   DATA LAYER — Firebase (prod) / in-memory mock (demo)
+   ============================================================ */
+let db, auth, pendingReg=null;   // pendingReg carries a new registrant's profile to the users-doc create
+if(DEMO){
+  const now=()=>({_t:Date.now()}); let idc=1; const gid=()=>"g"+(idc++);
+  const store=new Map(); const C=p=>{ if(!store.has(p)) store.set(p,new Map()); return store.get(p); };
+  const subs=[]; const split=p=>{const a=p.split("/");const id=a.pop();return[a.join("/"),id];};
+  const exists=(cp,id)=>C(cp).has(id);
+  function rows(p,order){ let r=[...C(p).entries()].map(([id,d])=>({id,...d}));
+    if(order){const[f,dir]=order;r.sort((a,b)=>{const av=a[f]?._t??a[f]??0,bv=b[f]?._t??b[f]??0;return dir==="desc"?(av<bv?1:av>bv?-1:0):(av>bv?1:av<bv?-1:0);});} return r; }
+  const emitColl=p=>subs.filter(s=>!s.doc&&s.path===p).forEach(s=>s.cb(rows(p,s.order)));
+  const emitDoc=p=>subs.filter(s=>s.doc&&s.path===p).forEach(s=>{const[cp,id]=split(p);s.cb(exists(cp,id)?{id,...C(cp).get(id)}:null);});
+  db={ watchCollection(path,cb,order){const s={path,cb,order,doc:false};subs.push(s);cb(rows(path,order));return()=>subs.splice(subs.indexOf(s),1);},
+    watchDoc(path,cb){const s={path,cb,doc:true};subs.push(s);const[cp,id]=split(path);cb(exists(cp,id)?{id,...C(cp).get(id)}:null);return()=>subs.splice(subs.indexOf(s),1);},
+    async set(path,data,merge){const[cp,id]=split(path);const m=C(cp);m.set(id,merge?{...(m.get(id)||{}),...data}:{...data});emitColl(cp);emitDoc(path);},
+    async add(path,data){const id=gid();C(path).set(id,{...data});emitColl(path);return id;},
+    async update(path,data){const[cp,id]=split(path);const m=C(cp);m.set(id,{...(m.get(id)||{}),...data});emitColl(cp);emitDoc(path);},
+    async remove(path){const[cp,id]=split(path);C(cp).delete(id);emitColl(cp);}, now };
+  let authCb=null,cur={uid:"u_yash"};
+  auth={ onChange(cb){authCb=cb;setTimeout(()=>cb(cur),0);}, signIn(){return Promise.resolve();},
+    resetPassword(){return Promise.resolve();}, signOut(){cur=null;authCb&&authCb(null);},
+    signUp(email,pass,reg){ const uid="u_reg_"+(idc++);
+      db.set("users/"+uid,{name:reg.name,phone:reg.phone||"",email,designation:reg.designation||"",role:"user",office:reg.name,active:true,createdAt:now()});
+      cur={uid}; setTimeout(()=>authCb&&authCb(cur),0); return Promise.resolve(); },
+    setUser(uid){cur={uid};authCb&&authCb(cur);} };
+  window.__demoSetUser=uid=>auth.setUser(uid);
+  seedDemo(db);
+} else {
+  const [{initializeApp},{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail},
+    {getFirestore,collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy,serverTimestamp}] =
+    await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js")
+    ]);
+  const app=initializeApp(firebaseConfig); const fa=getAuth(app); const fs=getFirestore(app);
+  db={ watchCollection(path,cb,order){const c=collection(fs,...path.split("/"));const q=order?query(c,orderBy(order[0],order[1])):c;
+      return onSnapshot(q,s=>{const r=[];s.forEach(d=>r.push({id:d.id,...d.data()}));cb(r);});},
+    watchDoc(path,cb){return onSnapshot(doc(fs,...path.split("/")),s=>cb(s.exists()?{id:s.id,...s.data()}:null));},
+    async set(path,data,merge){await setDoc(doc(fs,...path.split("/")),data,{merge:!!merge});},
+    async add(path,data){const r=await addDoc(collection(fs,...path.split("/")),data);return r.id;},
+    async update(path,data){await updateDoc(doc(fs,...path.split("/")),data);},
+    async remove(path){await deleteDoc(doc(fs,...path.split("/")));}, now:serverTimestamp };
+  auth={ onChange(cb){ onAuthStateChanged(fa,async user=>{
+      if(user){ const uref=doc(fs,"users",user.uid); const snap=await getDoc(uref);
+        if(!snap.exists()){
+          let base;
+          if(pendingReg){   // a self-registrant creating their own standalone "office"
+            base={name:pendingReg.name, email:user.email, phone:pendingReg.phone||"", designation:pendingReg.designation||"",
+              role:"user", office:pendingReg.name, active:true, createdAt:serverTimestamp()};
+            pendingReg=null;
+          } else {
+            base={name:user.email.split("@")[0],email:user.email,role:"pending",active:true,createdAt:serverTimestamp()};
+            if(emailKey(user.email)===emailKey(CHAMBER.adminEmail)) base.role="admin";
+            try{ const ap=await getDoc(doc(fs,"approvals",emailKey(user.email)));
+              if(ap.exists()){ const a=ap.data(); base={...base,name:a.name||base.name,role:a.role||base.role,phone:a.phone||"",joinedOn:a.joinedOn||null}; }
+            }catch(e){}
+          }
+          try{ await setDoc(uref,base); }catch(e){ try{ await setDoc(uref,{name:user.email.split("@")[0],email:user.email,role:"pending",active:true,createdAt:serverTimestamp()}); }catch(_){} }
+        }
+      } cb(user); }); },
+    signIn(email,pass){return signInWithEmailAndPassword(fa,email,pass);},
+    signUp(email,pass,reg){ pendingReg=reg; return createUserWithEmailAndPassword(fa,email,pass); },
+    resetPassword(email){return sendPasswordResetEmail(fa,email);},
+    signOut(){return signOut(fa);}, setUser(){} };
+}
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let me=null, users={}, daysheet=null, live={}, messages={};
+let board=[], boardAt=0, boardErr=null, paceHist={}, _primaryCourt=null, courtUpdates=null;
+let curTab="board", userDocUnsub=null, unsub=[], pollId=null, tickId=null, pollOn=false;
+let lastSeenChat=(()=>{ try{ return parseInt(localStorage.getItem("boardChatSeen")||"0",10)||0; }catch(e){ return 0; } })();
+
+const boardByCourt = () => { const m={}; board.forEach(c=>{ if(c.court && !m[c.court]) m[c.court]=c; }); return m; };
+// Matters to track = the chamber day sheet PLUS this user's own matters (added by
+// court+item in "Track a matter"), private to them. Dedup a personal matter that
+// duplicates a day-sheet entry (same court+item) — the day-sheet one wins (richer).
+let myOwn=[];
+let briefLinks=[], briefMsgs=[]; // BRIEFING FEATURE — AoR↔chamber links + their message threads
+let boardView="mine";            // a briefing AoR can toggle: "mine" (own board) | "senior"
+let briefOpenThread=null;        // team inbox: the thread currently open
+let briefSeen=(()=>{ try{ return JSON.parse(localStorage.getItem("briefSeen")||"{}")||{}; }catch(e){ return {}; } })();
+const myMatters = () => {
+  const ds=(daysheet?.entries||[]).filter(e=>e.courtNo);
+  const key=e=>String(e.courtNo)+"|"+String(e.itemNo);
+  const seen=new Set(ds.map(key));
+  const own=(myOwn||[]).filter(m=>m.court&&m.item).map(m=>({courtNo:String(m.court), itemNo:String(m.item),
+    caseTitle:m.title||"", juniorUids:me?[me.uid]:[], _own:m.id}));
+  return [...ds, ...own.filter(o=>!seen.has(key(o)))];
+};
+// The SC has 17 courtrooms; anything above is the Registrar / administrative list.
+// The display board tracks the courtrooms only (owner: no registrar under the
+// court headings) — registrar matters still appear in "Our list".
+const isCourtroom = n => { const x=parseInt(n,10); return x>=1 && x<=17; };
+// BRIEFING: a briefing AoR sees TWO boards — their own cases, or (when approved)
+// the senior's whole board. The toggle swaps the tracked matter set at the source,
+// so board + rail + flash + alerts all follow it. Chamber members are unaffected.
+const myApprovedLinks = () => briefLinks.filter(l=>l.aorUid===me?.uid && l.status==="approved");
+const isBriefAoR      = () => BRIEFING && !!me && myApprovedLinks().length>0;
+const ownMattersList  = () => (myOwn||[]).filter(m=>m.court&&m.item).map(m=>({courtNo:String(m.court),itemNo:String(m.item),caseTitle:m.title||"",juniorUids:me?[me.uid]:[],_own:m.id}));
+const seniorMattersList = () => (daysheet?.entries||[]).filter(e=>e.courtNo).map(e=>({courtNo:String(e.courtNo),itemNo:String(e.itemNo),caseTitle:e.caseTitle||"",listType:e.listType||"",juniorUids:e.juniorUids||[],bench:e.bench,counsel:e.counsel,time:e.time}));
+function boardSourceMatters(){
+  if(BRIEFING && isBriefAoR()) return (boardView==="senior") ? seniorMattersList() : ownMattersList();
+  if(me && me.role==="user") return ownMattersList();   // standalone individual — their own matters only
+  return myMatters();                                    // chamber member — day sheet + own
+}
+const courtMatters = () => boardSourceMatters().filter(e=>isCourtroom(e.courtNo));
+const shortTitle = e => e.caseTitle || ("Court "+e.courtNo+" item "+e.itemNo);
+const isSenior = () => me?.role==="senior";           // the Senior doesn't set/see his own location
+
+/* ============================================================
+   BOARD FETCH
+   ============================================================ */
+async function fetchBoard(){
+  try{
+    let html="";
+    if(BOARD_SAMPLE){ html=await (await fetch(BOARD_SAMPLE,{cache:"no-store"})).text(); }
+    else if(BOARD_PROXY){ html=await (await fetch(BOARD_PROXY+"?ctype=c",{cache:"no-store"})).text(); }
+    else { boardErr="relay-unset"; renderBoard(); return; }
+    const parsed=parseBoard(html);
+    if(parsed.courts.length){ board=parsed.courts; boardAt=Date.now(); boardErr=null; recordPace(); recordBoardPO(); noteItemHi(); refreshRemarks(); }
+    else boardErr="empty";
+  }catch(e){ boardErr=String(e&&e.message||e); }
+  fetchSeqLine();                 // published court-wise sequence (throttled inside)
+  runAlerts();
+  runFlash();
+  renderBoard();
+}
+// Pull the old board's published SEQUENCE marquee (worker ?seq) and parse it into
+// per-court order. Throttled to ~60s — it changes far more slowly than the board.
+// Non-fatal: any failure just leaves the last-known sequence (or none) in place, so
+// the app falls back to pure live ordering exactly as before.
+async function fetchSeqLine(){
+  if(!SEQ_LINE || !BOARD_PROXY || BOARD_SAMPLE) return;
+  if(Date.now()-seqLineAt < 60000) return;
+  seqLineAt=Date.now();
+  try{
+    const j=await (await fetch(BOARD_PROXY+"?seq",{cache:"no-store"})).json();
+    const txt=(j&&typeof j.seq==="string")?j.seq:"";
+    if(txt!==seqLineText){ seqLineText=txt; seqByCourt=parseSequenceLine(txt); }
+  }catch(e){ /* keep whatever we had */ }
+}
+// Adaptive polling — we track the SC board as tightly as it moves. When one of
+// our matters is at/near its turn we poll every 6s; otherwise every 12s to stay
+// light. A self-scheduling timeout (not setInterval) lets the cadence change each
+// cycle and never lets two fetches overlap.
+function pollDelay(){
+  const bc=boardByCourt();
+  const hot=courtMatters().some(e=>{ const t=classify(e,bc[e.courtNo]).tier; return t==="now"||t==="soon"; });
+  return hot?6000:12000;
+}
+async function pollLoop(){ if(!pollOn) return; await fetchBoard(); if(!pollOn) return; pollId=setTimeout(pollLoop, pollDelay()); }
+function startPolling(){ stopPolling(); pollOn=true; tickId=setInterval(paintFresh,1000); pollLoop(); }  // 1s tick only ages the freshness label
+function stopPolling(){ pollOn=false; if(pollId)clearTimeout(pollId); if(tickId)clearInterval(tickId); pollId=tickId=null; }
+
+// Refresh: freshest app version AND freshest board. Clears caches + cache-bust
+// reload (so an installed PWA can't sit on a stale shell); reload re-pulls board.
+async function hardRefresh(){
+  const b=$("btnRefresh"); if(b) b.classList.add("spin");
+  try{ if("caches" in window){ const ks=await caches.keys(); await Promise.all(ks.map(k=>caches.delete(k))); } }catch(e){}
+  try{ if(navigator.serviceWorker){ const rs=await navigator.serviceWorker.getRegistrations(); rs.forEach(r=>r.update&&r.update()); } }catch(e){}
+  const u=new URL(location.href); u.searchParams.set("v", String(Date.now()));
+  location.replace(u.toString());
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function paintFresh(){
+  const dot=$("freshDot"), txt=$("statusTxt");
+  if(!dot||!txt) return;
+  const day=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+  if(boardErr==="relay-unset"){ dot.className="freshdot off"; txt.textContent=day+" · relay not set"; return; }
+  if(boardErr){ dot.className="freshdot stale"; txt.textContent=day+" · board offline"; return; }
+  if(!boardAt){ dot.className="freshdot off"; txt.textContent=day+" · connecting…"; return; }
+  dot.className="freshdot"+((Date.now()-boardAt)>45000?" stale":"");
+  txt.textContent=day+" · updated "+agoTxt(boardAt);
+}
+
+// senior location: confirmed (config/live.court, fresh <25m) else inferred
+function seniorState(){
+  const c=live?.court; const at=c?tsMs(c.at):0;
+  const fresh=at && (Date.now()-at)<25*60*1000;
+  if(c && c.court && fresh) return {court:c.court, mode:"confirmed", at, by:c.by};
+  const bc=boardByCourt(); let best=null;
+  for(const e of courtMatters()){
+    const k=classify(e,bc[e.courtNo]);
+    if(k.tier==="now"||k.tier==="soon"){ if(!best || (k.gap??99)<(best.gap??99)) best={court:e.courtNo,gap:k.gap}; }
+  }
+  if(best) return {court:best.court, mode:"inferred"};
+  if(c && c.court) return {court:c.court, mode:"stale", at};
+  return {court:null, mode:"none"};
+}
+
+// Route rail: our stops in the order to reach them (soonest first), one small chip per
+// court, colour-coded by distance band (red ≤2 · amber 3–4 · green 5–7 · neutral
+// beyond). Wraps into rows so all fit on one screen. On-now reads "our N on".
+function renderRail(){
+  const rail=$("routeRail"); if(!rail) return;
+  if(!board.length){ _primaryCourt=null;
+    rail.innerHTML=`<div class="rail-empty">${boardErr&&boardErr!=="relay-unset"?"Board offline":"Reading the board…"}</div>`; return; }
+  const bc=boardByCourt();
+  const cands=courtMatters().map(e=>({e,k:classify(e,bc[e.courtNo])}))
+    .filter(x=>["now","soon","later"].includes(x.k.tier) && !x.k.done && !x.k.over)
+    .map(x=>({court:x.e.courtNo, e:x.e, k:x.k, mins:reachMinsFor(x.e.courtNo,x.k)}))
+    .sort((a,b)=>((a.mins==null?9999:a.mins)-(b.mins==null?9999:b.mins)) || ((a.k.gap??999)-(b.k.gap??999)));
+  const seen=new Set(), stops=[];
+  for(const c of cands){ const key=String(c.court); if(seen.has(key)) continue; seen.add(key); stops.push(c); }
+  if(!stops.length){ _primaryCourt=null;
+    rail.innerHTML=`<div class="rail-empty">All quiet — no chamber matter is close right now.</div>`; return; }
+  _primaryCourt=stops[0].court;
+  const band=g=> g==null?"far" : g<=2?"red" : g<=4?"amber" : g<=7?"green" : "far";
+  const distLab=k=> k.ment ? "WATCH" : (k.gap===0||k.short==="NOW") ? "NOW" : k.gap===1 ? "NEXT"
+                 : (k.gap!=null ? k.gap+" away" : (k.short||"—"));
+  const chip=s=>{
+    const isNow=(s.k.gap===0||s.k.short==="NOW")&&!s.k.ment;
+    // when OUR matter is the one on, just say "our N is on" — not which item is on / ours
+    return isNow
+      ? `<button class="rail-stop red" data-court="${esc(s.court)}"><span class="rail-ct">our <b>${esc(s.e.itemNo)}</b> is on</span></button>`
+      : `<button class="rail-stop ${band(s.k.ment?null:s.k.gap)}" data-court="${esc(s.court)}"><span class="rail-ct">Ct <b>${esc(s.court)}</b></span><span class="rail-dist">${esc(distLab(s.k))}</span></button>`;
+  };
+  // arrows between chips show the flow (which court to reach first → next → …)
+  rail.innerHTML=stops.map((s,i)=>`${i?'<span class="rail-arrow"><i class="ti ti-chevron-right"></i></span>':''}${chip(s)}`).join("");
+}
+
+// one court tile: full island when we have matters there, mini otherwise
+function boardCell(c, senCourt, senMode){
+  const idle=/not in session/i.test(c.status||"");
+  const ours=courtMatters().filter(e=>String(e.courtNo)===String(c.court));
+  const sen = senCourt && String(senCourt)===String(c.court);
+  const live = sen && senMode==="confirmed";
+  const senCls = sen ? " sen"+(live?" senlive":"") : "";
+  const pin = sen ? `<span class="senpin${live?"":" inferred"}"><i class="ti ti-user-check"></i><span class="lab">${live?"Senior here":"Likely here"}</span></span>` : "";
+  if(!ours.length){
+    return `<div class="cell mini ${idle?"idle":""}${senCls}" data-court="${esc(c.court)}">
+      ${pin}
+      <div class="cell-ct">Court <span class="ctn">${esc(c.court)}</span></div>
+      <div class="cell-item">${idle?"—":esc(c.item||"·")}</div></div>`;
+  }
+  const ks=ours.map(e=>({e,k:classify(e,c)})).sort((a,b)=>(TIER_RANK[a.k.tier]-TIER_RANK[b.k.tier])||((a.k.gap??999)-(b.k.gap??999)));
+  const tier=ks[0].k.tier;
+  // a matter marked over (attended / not attended) is struck through here
+  const items=ks.map(x=> x.k.done ? `<s>${esc(x.e.itemNo)}</s>` : esc(x.e.itemNo)).join(" · ");
+  return `<div class="cell ours ${tier} ${idle?"idle":""}${senCls}" data-court="${esc(c.court)}">
+    ${pin}
+    <div class="cell-ct">Court <span class="ctn">${esc(c.court)}</span></div>
+    <div class="cell-item">${idle?"—":esc(c.item||"·")}</div>
+    <div class="cell-sub">${idle?"not sitting":esc(c.status||"hearing")}</div>
+    <div class="cell-ours"><span class="oi">${items}</span><br>${esc(ks[0].k.short||ks[0].k.label)}</div></div>`;
+}
+function renderBoardSwitch(){
+  const el=$("boardSwitch"); if(!el) return;
+  if(!(BRIEFING && isBriefAoR())){ el.classList.add("hidden"); return; }
+  const srName=(CHAMBER.seniorName||"Senior").split(" ")[0];
+  el.classList.remove("hidden");
+  el.innerHTML=`<button data-bv="mine" class="${boardView==="mine"?"on":""}">My board</button>
+    <button data-bv="senior" class="${boardView==="senior"?"on":""}">${esc(srName)}'s board</button>`;
+  el.querySelectorAll("[data-bv]").forEach(b=>b.onclick=()=>{ boardView=b.dataset.bv; renderBoard(); });
+}
+function renderBoard(){
+  renderBoardSwitch();
+  paintFresh(); renderRail();
+  if(curTab!=="board") return;
+  let h="";
+  if(boardErr && boardErr!=="relay-unset") h+=`<div class="notice"><b>Can't reach the board</b> — retrying every 15 seconds.</div>`;
+  if(!board.length){ $("main").innerHTML=h+`<div class="empty">Loading the display board…</div>`; return; }
+  const ourCourts=new Set(courtMatters().map(e=>String(e.courtNo)));
+  // (colour-code legend removed — red/amber/green are self-evident now)
+  // Only the 17 courtrooms — never the Registrar / administrative list (courts
+  // >17), even if we have a matter there (owner: no registrar under the court
+  // headings; those still show in "Our list"). Our courts render first at full
+  // size; the rest shrink to minis — all fit one screen, no scrolling.
+  // the senior-here pin belongs to the chamber; a standalone user only sees it when
+  // they're viewing a senior's board they've been approved to track (not their own).
+  const showSen = !(isStandalone() && boardView!=="senior");
+  const ss=seniorState(), senCourt=showSen?ss.court:null, senMode=ss.mode;
+  const shown=[...board].filter(c=>isCourtroom(c.court));
+  const byNo=(a,b)=>(parseInt(a.court)||999)-(parseInt(b.court)||999);
+  const full=shown.filter(c=>ourCourts.has(String(c.court))).sort(byNo);
+  const mini=shown.filter(c=>!ourCourts.has(String(c.court))).sort(byNo);
+  h+=`<div class="grid">`+full.map(c=>boardCell(c,senCourt,senMode)).join("")+`</div>`;
+  if(mini.length) h+=`<div class="grid" style="margin-top:7px">`+mini.map(c=>boardCell(c,senCourt,senMode)).join("")+`</div>`;
+  $("main").innerHTML=h;
+}
+
+function renderList(){
+  const bc=boardByCourt();
+  const mine=courtMatters().slice().sort((a,b)=>(parseInt(a.courtNo)||999)-(parseInt(b.courtNo)||999)||(parseFloat(a.itemNo)||999)-(parseFloat(b.itemNo)||999));
+  let h=`<div class="legend" style="margin-bottom:12px">Chamber cause list · ${todayISO().split("-").reverse().join(".")}</div>`;
+  if(!mine.length){ $("main").innerHTML=h+`<div class="empty">Today's day sheet is empty.</div>`; return; }
+  for(const e of mine){
+    const k=classify(e,bc[e.courtNo]);
+    const jl=(e.juniorUids||[]).map(u=>users[u]?.name||"").filter(Boolean).map(n=>n.split(" ")[0]).join(" / ");
+    const dn=doneOf(e.courtNo,e.itemNo);
+    const cur=dn?("over_"+dn.v):(poFor(e.courtNo,e.itemNo)?"po":"");
+    h+=`<div class="li ${k.done?'struck':''}"><div class="ci"><div class="c">Ct ${esc(e.courtNo)}</div><div class="i">${esc(e.itemNo)}</div>
+        <span class="badge2 ${k.tier}">${esc(k.short||"")}</span></div>
+      <div class="d"><div class="t">${esc(e.caseTitle||"—")}</div>
+      <div class="m">${e.bench?`<b>Bench:</b> ${esc(e.bench)}<br>`:""}${e.counsel?`${esc(e.counsel)}`:""}${jl?` — ${esc(jl)}`:""}${e.confTime?`<br><b>Conf:</b> ${esc(e.confTime)}`:""}</div>
+      <select class="li-stat" data-court="${esc(e.courtNo)}" data-item="${esc(e.itemNo)}" aria-label="Mark status">
+        <option value="">Mark status…</option>
+        <option value="po" ${cur==="po"?"selected":""}>Passed over</option>
+        <option value="over_att" ${cur==="over_att"?"selected":""}>Over — attended</option>
+        <option value="over_abs" ${cur==="over_abs"?"selected":""}>Over — didn't attend</option>
+        ${cur?`<option value="clear">Clear status</option>`:""}
+      </select>
+      </div></div>`;
+  }
+  $("main").innerHTML=h;
+  // any member marks a matter's status live for the whole chamber
+  $("main").querySelectorAll(".li-stat").forEach(sel=>sel.onchange=async()=>{
+    const court=sel.dataset.court, item=sel.dataset.item, v=sel.value; sel.disabled=true;
+    try{
+      if(v==="po"){ await clearDone(court,item); await setPO(court,item,"slot"); }
+      else if(v==="over_att") await setDone(court,item,"att");
+      else if(v==="over_abs") await setDone(court,item,"abs");
+      else if(v==="clear"){ await clearDone(court,item); await clearPO(court,item); }
+    }catch(err){ sel.disabled=false; }
+  });
+}
+
+// A fresh window every day: the chat only ever shows TODAY's messages. Anything
+// from an earlier day is never displayed, and is purged best-effort (see below).
+const msgDay = m => { const ms=tsMs(m.at); return ms?new Date(ms).toLocaleDateString('en-CA'):todayISO(); };
+const todayMsgs = () => Object.values(messages).filter(m=>msgDay(m)===todayISO()).sort((a,b)=>tsMs(a.at)-tsMs(b.at));
+const clockIST = ms => { try{ return new Date(ms).toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour12:false,hour:'2-digit',minute:'2-digit'}); }catch(e){ return ""; } };
+// Delete messages older than today so the collection doesn't grow forever. Rules
+// let a member remove their OWN messages and let Staff/PA/admin remove anyone's —
+// so a manager opening the board clears the shared history fully, a colleague
+// clears their own. Either way the day-filter above already hides the rest. Once
+// per session, and never blocks the UI.
+let _chatPurged=false;
+async function purgeOldChat(){
+  if(_chatPurged || !me) return; _chatPurged=true;
+  const old=Object.values(messages).filter(m=>msgDay(m)<todayISO());
+  for(const m of old){ try{ await db.remove("messages/"+m.id); }catch(e){} }
+}
+function chatListHtml(){
+  const list=todayMsgs();
+  if(!list.length) return `<div class="empty">No messages yet today.<br>Coordinate here — everyone in the chamber sees it live.</div>`;
+  const dayLabel=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  let html=`<div class="chat-day">Today · ${esc(dayLabel)}</div>`;
+  let lastBy=null, lastMs=0;
+  for(const m of list){
+    const mine=m.by===me?.uid, ms=tsMs(m.at);
+    const grp = m.by===lastBy && (ms-lastMs)<4*60000;          // same sender within 4 min → group
+    html += `<div class="msg ${mine?"mine ":""}${grp?"grp":""}">`
+      + ((!mine&&!grp)?`<div class="who">${esc(m.name||"—")}</div>`:"")
+      + `<div class="tx">${esc(m.text)}</div><div class="tm">${clockIST(ms)}</div></div>`;
+    lastBy=m.by; lastMs=ms;
+  }
+  return html;
+}
+// Repaint only the message list — never the composer — so an incoming message
+// can't wipe what a colleague is typing or steal focus. Keeps the view pinned to
+// the newest message unless the reader has scrolled up to read history.
+function paintChatList(){
+  const cl=$("chatList"); if(!cl) return;
+  const nearBottom = cl.scrollHeight-cl.scrollTop-cl.clientHeight < 80;
+  cl.innerHTML=chatListHtml();
+  if(nearBottom) cl.scrollTop=cl.scrollHeight;
+  if(curTab==="chat") markChatSeen();          // reading the chat clears/holds the badge
+}
+// Persisted "seen" watermark so the unread badge survives a refresh — otherwise every
+// reload reset it to 0 and re-flagged today's already-read messages as new.
+function markChatSeen(){
+  const msgs=todayMsgs();
+  const newest=msgs.length?tsMs(msgs[msgs.length-1].at):0;
+  lastSeenChat=Math.max(lastSeenChat, newest, Date.now());
+  try{ localStorage.setItem("boardChatSeen", String(lastSeenChat)); }catch(e){}
+  updateChatBadge();
+}
+// Keyboard-aware sizing: pin #chatWrap to the visual viewport so the composer stays
+// just above the on-screen keyboard and only the message list scrolls (the box never
+// grows or scrolls itself). Driven by window.visualViewport, which shrinks when the
+// keyboard opens. Falls back to the CSS flex layout where visualViewport is absent.
+let _vvBound=false;
+function bindVV(){ if(_vvBound) return; _vvBound=true;
+  const on=()=>fitChat();
+  if(window.visualViewport){ window.visualViewport.addEventListener("resize",on); window.visualViewport.addEventListener("scroll",on); }
+  window.addEventListener("resize",on);
+}
+function fitChat(){
+  const wrap=$("chatWrap");
+  if(curTab!=="chat" || !wrap || !window.visualViewport){ document.body.classList.remove("chat-vv","kb-open"); return; }
+  const vv=window.visualViewport;
+  // Ignore PINCH-ZOOM (scale ≠ 1): only the keyboard should resize the box. A pinch
+  // changes vv.height too, and reacting to it made the chat grow/shrink — messaging
+  // apps keep the box fixed, so we simply don't re-fit while zoomed.
+  if(vv.scale && Math.abs(vv.scale-1) > 0.01) return;
+  const headH=document.querySelector("header.top")?.getBoundingClientRect().height||0;
+  const kbOpen=(window.innerHeight - vv.height) > 120;                 // keyboard is up
+  const navH=kbOpen?0:(document.querySelector("nav.botnav")?.getBoundingClientRect().height||0);
+  const cl=$("chatList"); const wasBottom=cl?(cl.scrollHeight-cl.scrollTop-cl.clientHeight<90):true;
+  const rs=document.documentElement.style;
+  rs.setProperty("--chat-top",(vv.offsetTop+headH)+"px");
+  rs.setProperty("--chat-h",Math.max(140, vv.height-headH-navH)+"px");
+  document.body.classList.add("chat-vv");
+  document.body.classList.toggle("kb-open",kbOpen);
+  if(cl&&wasBottom) cl.scrollTop=cl.scrollHeight;
+}
+function renderChat(){
+  $("main").innerHTML=`<div id="chatWrap"><div id="chatList">${chatListHtml()}</div>
+    <div class="chatbar"><input id="chatIn" placeholder="Message the chamber…" autocomplete="off" maxlength="1000">
+    <button id="chatSend" aria-label="Send"><i class="ti ti-send"></i></button></div></div>`;
+  const cl=$("chatList"); cl.scrollTop=cl.scrollHeight;
+  $("chatSend").onclick=sendChat;
+  $("chatIn").onkeydown=ev=>{ if(ev.key==="Enter"&&!ev.shiftKey){ ev.preventDefault(); sendChat(); } };
+  // when the field gains/loses focus the keyboard toggles — re-fit after it settles
+  $("chatIn").addEventListener("focus",()=>{ setTimeout(fitChat,200); setTimeout(fitChat,500); });
+  $("chatIn").addEventListener("blur",()=>setTimeout(fitChat,200));
+  bindVV(); fitChat();
+  $("chatIn").focus();
+  markChatSeen(); purgeOldChat();
+}
+async function sendChat(){
+  const inp=$("chatIn"); const t=(inp.value||"").trim(); if(!t) return; inp.value=""; inp.focus();
+  const id=await db.add("messages",{by:me.uid,name:me.name||"",text:t.slice(0,1000),at:db.now(),day:todayISO()});
+  // fan a push out to the OTHER members' phones (closed included)
+  relayPush({kind:"chat", id:String(id||Date.now()), fromUid:me.uid,
+    title:(me.name||"Chamber").split(" ")[0]+" · chat", body:t.slice(0,140)});
+}
+function updateChatBadge(){
+  const unseen=todayMsgs().filter(m=>tsMs(m.at)>lastSeenChat && m.by!==me?.uid).length;
+  const b=$("chatBadge");
+  if(unseen>0 && curTab!=="chat"){ b.textContent=unseen; b.classList.remove("hidden"); } else b.classList.add("hidden");
+}
+
+function render(){
+  if(curTab==="board") renderBoard();
+  else if(curTab==="list") renderList();
+  else if(curTab==="chat") renderChat();
+  else if(curTab==="brief") renderBrief();
+  $("paneTop").classList.toggle("hidden", curTab!=="board");
+}
+let _rafR=null;                       // coalesce the boot burst of watcher callbacks into one paint
+function scheduleRender(){ if(_rafR) return; _rafR=requestAnimationFrame(()=>{ _rafR=null; render(); }); }
+
+/* ============================================================
+   DETAIL SHEETS — court island → sequence / passovers / totals /
+   our matters; our matter → full details + passover marking
+   ============================================================ */
+async function loadCourtUpdates(){
+  // totals per court come from the chamber's fetched causelist (same repo)
+  for(const p of ["court-updates.json","../court-updates.json"]){
+    try{ const r=await fetch(p+"?_="+Date.now(),{cache:"no-store"});
+      if(r.ok){ courtUpdates=await r.json(); return; } }catch(e){}
+  }
+}
+function totalsFor(court){
+  const lists=courtUpdates?.by_date?.[todayISO()]?.lists||{};
+  const out=[];
+  for(const [type,courts] of Object.entries(lists)){
+    if(/registrar/i.test(type)) continue;                  // owner: no registrar in the board app
+    const rec=courts?.[String(court)];
+    if(rec?.total) out.push(type+": "+rec.total);
+  }
+  return out;
+}
+function closeModal(){ $("modalRoot").innerHTML=""; }
+// "Track a matter": a user adds their own case by court + item. Stored privately in
+// usermatters/{uid} and merged into myMatters(), so it tracks live against the board
+// exactly like a chamber matter (position, rail, flash, and — once enabled — push).
+function addMatterForm(){
+  const own=(myOwn||[]).slice();
+  $("modalRoot").innerHTML=`<div class="ovl" data-close><div class="sheet"><button class="sh-x" data-close>&times;</button>
+    <div class="sheet-grab"></div>
+    <h2>Track a matter</h2>
+    <div class="sh-sub">Add your case by court &amp; item — it's tracked live against the board, and stays private to you.</div>
+    <div class="am-form">
+      <div class="am-row">
+        <label class="am-fld">Court<input id="am_court" inputmode="numeric" autocomplete="off" placeholder="e.g. 5"></label>
+        <label class="am-fld">Item<input id="am_item" inputmode="numeric" autocomplete="off" placeholder="e.g. 32"></label>
+      </div>
+      <label class="am-fld">Label <span style="color:var(--mut);font-weight:400">(optional)</span><input id="am_title" autocomplete="off" placeholder="e.g. Sharma v. State"></label>
+      <div class="am-err" id="am_err"></div>
+      <button class="sh-btn navy" id="am_save">Add matter</button>
+    </div>
+    ${own.length?`<div class="sh-sec">My matters (${own.length})</div>${own.map(m=>`<div class="am-item">
+      <span class="am-ci">Ct ${esc(m.court)} · #${esc(m.item)}</span>
+      <span class="am-t">${esc(m.title||"")}</span>
+      <button class="am-del" data-del="${esc(m.id)}">Remove</button></div>`).join("")}`:''}
+  </div></div>`;
+  const save=async()=>{
+    const court=($("am_court").value||"").trim(), item=($("am_item").value||"").trim();
+    if(!/^\d{1,3}$/.test(court)){ $("am_err").textContent="Enter a court number (1–17)."; return; }
+    if(!item){ $("am_err").textContent="Enter your item number."; return; }
+    const id="m"+Date.now().toString(36);
+    const matters=[...(myOwn||[]).filter(m=>!(String(m.court)===court&&String(m.item)===item)),
+                   {id, court, item, title:($("am_title").value||"").trim()}];
+    try{ await db.set("usermatters/"+me.uid,{matters,updatedAt:db.now()},true); addMatterForm(); }
+    catch(e){ $("am_err").textContent="Could not save — "+(e.message||e); }
+  };
+  $("am_save").onclick=save;
+  $("am_item").onkeydown=e=>{ if(e.key==="Enter") save(); };
+  $("modalRoot").querySelectorAll("[data-del]").forEach(x=>x.onclick=async()=>{
+    const matters=(myOwn||[]).filter(m=>m.id!==x.dataset.del);
+    try{ await db.set("usermatters/"+me.uid,{matters,updatedAt:db.now()},true); addMatterForm(); }catch(e){}
+  });
+}
+function openCourtModal(court,_refetched){
+  court=String(court);
+  const bc=boardByCourt()[court];
+  // Pull this court's full-list remarks fresh on open (even courts we're not in),
+  // then re-render once when they arrive — so OVER / PASS OVER is up to date.
+  if(!_refetched && bc?.token) fetchRemarksFor(court,bc.token,true).then(()=>{
+    if($("modalRoot").querySelector(`.sheet[data-court="${court}"]`)) openCourtModal(court,true);
+  });
+  const idle=bc?/not in session/i.test(bc.status||""):true;
+  const {seq,passIdx}=seqInfo(bc?.sequence||"");
+  const ours=courtMatters().filter(e=>String(e.courtNo)===court);
+  const senCourt=seniorState().court;
+  let h=`<div class="ovl" data-close><div class="sheet" data-court="${esc(court)}"><div class="sheet-grab"></div>
+    <h2>Court ${esc(court)} <span class="chip">${idle?"not sitting":"item "+esc(bc?.item||"·")}</span></h2>
+    <div class="sh-sub">${idle?"Not in session":esc(bc?.status||"Hearing")+(bc?.caseNo?" · "+esc(bc.caseNo):"")}</div>`;
+  if(ours.length){
+    h+=`<div class="sh-sec">Our matters here</div>`;
+    for(const e of ours){
+      const k=classify(e,bc);
+      h+=`<div class="sh-matter" data-matter="${esc(court)}|${esc(e.itemNo)}">
+        <div class="mi">${esc(e.itemNo)}</div><div class="mt">${esc(shortTitle(e))}</div>
+        <span class="badge2 ${k.tier}" style="flex:none">${esc(k.short||"")}</span></div>`;
+    }
+  }
+  h+=`<div class="sh-sec">Declared sequence</div>
+    <div class="sh-box">${bc?.sequence?esc(bc.sequence):"No sequence declared — runs in listed order."}</div>`;
+  h+=`<div class="sh-sec">Passovers</div><div class="sh-box">`;
+  const poHere=Object.entries(poMarks()).filter(([k])=>k.startsWith(court+"_")).map(([k,v])=>({item:k.split("_")[1],...v}));
+  // Passed-over items the court itself publishes in its list's remark column.
+  const rmk=remarksByCourt[court];
+  const detailPO = rmk&&rmk.items ? Object.keys(rmk.items).filter(i=>/pass\s*over/i.test(rmk.items[i])) : [];
+  const poBits=[];
+  if(detailPO.length) poBits.push("Court's list shows passed over: <b>"+detailPO.map(esc).join(", ")+"</b>");
+  else if(bc?.token && !rmk) poBits.push(`<span style="color:var(--mut)">Reading the court's list…</span>`);
+  if(poHere.length) poBits.push("Marked by chamber: <b>"+poHere.map(p=>p.item+(p.mode==="after"&&p.after?" (after "+esc(p.after)+")":"")).join(", ")+"</b>");
+  poBits.push(passIdx!=null?"Sequence recalls passovers after <b>item "+esc(String(seq[passIdx-1]??"start"))+"</b>.":"Recall position not declared — assumed end of board.");
+  h+=poBits.join("<br>")+`</div>`;
+  const tots=totalsFor(court);
+  if(tots.length) h+=`<div class="sh-sec">Total matters today</div><div class="sh-box">${tots.map(esc).join("<br>")}</div>`;
+  if(!isSenior()) h+=`<button class="sh-btn navy" data-senhere="${esc(court)}">${String(senCourt)===court?"Senior is here ✓":"Senior is in Court "+esc(court)}</button>`;
+  h+=`<button class="sh-btn" data-close>Close</button></div></div>`;
+  $("modalRoot").innerHTML=h;
+}
+function openMatterModal(court,item){
+  const e=courtMatters().find(x=>String(x.courtNo)===String(court)&&String(x.itemNo)===String(item));
+  if(!e) return;
+  const bc=boardByCourt()[String(court)];
+  const k=classify(e,bc);
+  const jl=(e.juniorUids||[]).map(u=>users[u]?.name||"").filter(Boolean).join(", ");
+  const mark=poFor(court,item);
+  const mins=reachMinsFor(court,k);
+  let h=`<div class="ovl" data-close><div class="sheet"><div class="sheet-grab"></div>
+    <h2>Item ${esc(item)} <span class="chip">Court ${esc(court)}</span></h2>
+    <div class="sh-sub">${esc(shortTitle(e))}</div>
+    <div class="sh-row"><span class="k">Status</span><span><span class="badge2 ${k.tier}">${esc(k.short||"")}</span> ${esc(k.label)}${mins!=null&&mins>0.9?" · ~"+Math.round(mins)+" min":""}</span></div>
+    ${e.bench?`<div class="sh-row"><span class="k">Bench</span><span>${esc(e.bench)}</span></div>`:""}
+    ${e.counsel?`<div class="sh-row"><span class="k">Counsel</span><span>${esc(e.counsel)}</span></div>`:""}
+    ${jl?`<div class="sh-row"><span class="k">Colleagues</span><span>${esc(jl)}</span></div>`:""}
+    ${e.appearingFor?`<div class="sh-row"><span class="k">For</span><span>${esc(e.appearingFor)}</span></div>`:""}
+    ${e.confTime?`<div class="sh-row"><span class="k">Conference</span><span>${esc(e.confTime)}</span></div>`:""}`;
+  // passover controls — colleagues mark it live for the whole chamber
+  h+=`<div class="sh-sec">Passover</div>`;
+  if(mark){
+    h+=`<div class="sh-box">Marked passed over${mark.mode==="after"&&mark.after?" — recall after item <b>"+esc(mark.after)+"</b>":mark.mode==="auto"?" (from the board)":" — recall at passover slot / end"}.</div>
+      <button class="sh-btn warn2" data-poclear="${esc(court)}|${esc(item)}">Clear passover mark</button>`;
+  } else {
+    h+=`<div class="po-row"><select id="poMode"><option value="slot">Recall at passover slot / end</option><option value="after">Recall after item…</option></select>
+      <input id="poAfter" type="number" placeholder="item no." style="max-width:90px" class="hidden"></div>
+      <button class="sh-btn warn2" data-poset="${esc(court)}|${esc(item)}">Mark passed over</button>`;
+  }
+  h+=`<button class="sh-btn" data-close>Close</button></div></div>`;
+  $("modalRoot").innerHTML=h;
+  const sel=$("poMode"); if(sel) sel.onchange=()=>$("poAfter").classList.toggle("hidden",sel.value!=="after");
+}
+
+/* ============================================================
+   BRIEFING FEATURE (regressible — const BRIEFING)
+   An AoR briefing this senior asks the chamber for permission to TRACK the
+   senior's board position for their matter, and can ping the team with one tap
+   ("my matter is reaching", "bench is calling you"). Demo-tested end-to-end.
+   Cross-chamber security hardening (rules so an outside AoR sees ONLY the
+   senior's location + their own matter, never the chamber) is the pre-live step.
+   Data: brieflinks/{id} {aorUid,aorName,aorDesig,court,item,date,title,note,status,at}
+   ============================================================ */
+const canApproveBrief = () => ["admin","clerk","pa","senior"].includes(me?.role);
+const myBriefLinks    = () => briefLinks.filter(l=>l.aorUid===me?.uid);
+const pendingBriefs   = () => briefLinks.filter(l=>l.status==="pending");
+const approvedBriefs  = () => briefLinks.filter(l=>l.status==="approved");
+const QUICK = { reaching:"My matter is reaching — please come.", five:"My matter is about five away.", three:"My matter is about three away.", next:"My matter is next — please come." };
+const threadMsgs   = id => briefMsgs.filter(m=>m.linkId===id).sort((a,b)=>tsMs(a.at)-tsMs(b.at));
+const threadLast   = id => { const m=threadMsgs(id); return m[m.length-1]||null; };
+const threadUnread = id => threadMsgs(id).filter(m=>m.by!==me?.uid && tsMs(m.at)>(briefSeen[id]||0)).length;
+function markThreadSeen(id){ briefSeen[id]=Date.now(); try{ localStorage.setItem("briefSeen",JSON.stringify(briefSeen)); }catch(e){} }
+const linkProx = l => classify({courtNo:String(l.court),itemNo:String(l.item),listType:l.listType||""}, boardByCourt()[String(l.court)]);
+const proxBand = k => { if(!k||k.gap==null) return "far"; const g=k.gap; return g<=2?"red":g<=4?"amber":g<=7?"green":"far"; };
+function updateBriefBadge(){
+  const b=$("briefBadge"); if(!b) return; let cnt=0;
+  if(canApproveBrief()) cnt = pendingBriefs().length + approvedBriefs().reduce((n,l)=>n+(threadUnread(l.id)>0?1:0),0);
+  else cnt = myBriefLinks().reduce((n,l)=>n+(threadUnread(l.id)>0?1:0),0);
+  if(cnt>0 && curTab!=="brief"){ b.textContent=cnt; b.classList.remove("hidden"); } else b.classList.add("hidden");
+}
+function briefStatusChip(s){
+  const map={pending:["#8a6a12","#f6eccf","Awaiting approval"],approved:["#1e5d37","#dceee2","Approved · tracking"],
+    declined:["#8a2a20","#f6dcd8","Declined"],revoked:["#555","#e7e9eb","Revoked"]};
+  const [c,bg,t]=map[s]||map.pending; return `<span class="bchip" style="color:${c};background:${bg}">${t}</span>`;
+}
+function threadHtml(l){
+  const msgs=threadMsgs(l.id);
+  if(!msgs.length) return `<div class="bthread"><div class="bsub" style="text-align:center">No messages yet — start the conversation below.</div></div>`;
+  return `<div class="bthread">`+msgs.map(m=>{ const mine=m.by===me?.uid;
+    return `<div class="bbub ${mine?"me":"them"}">${mine?"":`<span class="bn">${esc(m.name||"")}</span>`}<span>${esc(m.text)}</span><span class="bt">${esc(clockIST(tsMs(m.at)))}</span></div>`;
+  }).join("")+`</div>`;
+}
+function composeHtml(l, aorSide){
+  const quick = aorSide ? [["reaching","Reaching"],["five","5 away"],["three","3 away"],["next","Next"]] : [];
+  return `${quick.length?`<div class="bquick">`+quick.map(([k,lab])=>`<button data-bq="${esc(l.id)}|${k}">${lab}</button>`).join("")+`</div>`:''}
+    <div class="bcompose">
+      <textarea id="bc_${esc(l.id)}" rows="1" placeholder="Message ${aorSide?"the chamber":"the AoR"}…"></textarea>
+      <button class="bsend" data-bsend="${esc(l.id)}"><i class="ti ti-send"></i></button>
+    </div>`;
+}
+function wireBriefCommon(){
+  document.querySelectorAll("[data-bsend]").forEach(b=>b.onclick=async()=>{ const id=b.dataset.bsend; const ta=$("bc_"+id); const v=ta?ta.value:""; if(ta) ta.value=""; await sendBriefMsg(id,v); });
+  document.querySelectorAll("[data-bq]").forEach(b=>b.onclick=async()=>{ const [id,k]=b.dataset.bq.split("|"); await sendBriefMsg(id, QUICK[k]||k); });
+  document.querySelectorAll(".bcompose textarea").forEach(ta=>{ ta.onkeydown=e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); const id=ta.id.slice(3); const v=ta.value; ta.value=""; sendBriefMsg(id,v); } }; });
+  document.querySelectorAll(".bthread").forEach(t=>{ t.scrollTop=t.scrollHeight; });
+}
+function renderBrief(){
+  if(!BRIEFING){ $("main").innerHTML=""; return; }
+  if(briefOpenThread) return renderBriefThread(briefOpenThread);
+  updateBriefBadge();
+  return canApproveBrief() ? renderBriefInbox() : renderBriefAoR();
+}
+function renderBriefAoR(){
+  const mine=myBriefLinks(), srName=(CHAMBER.seniorName||"Senior").split(" ")[0];
+  let h=`<div class="bwrap"><div class="bsec-h">People you're tracking</div>`;
+  h+=`<button class="sh-btn navy" id="bNew"><i class="ti ti-plus"></i> Request to track someone</button>`;
+  if(!mine.length) h+=`<div class="bempty">No requests yet — ask a senior's chamber for access to see his whole board while your matter reaches, and message his team.</div>`;
+  else h+=mine.map(l=>{
+    if(l.status==="approved") return `<div class="bcard bhi">
+      <div class="brow"><span class="bval">${esc(CHAMBER.seniorName)} · Ct ${esc(l.court)} item ${esc(l.item)}</span>${briefStatusChip(l.status)}</div>
+      ${l.title?`<div class="bttl">${esc(l.title)}</div>`:''}
+      <button class="sh-btn" style="margin-top:10px" data-viewboard="1"><i class="ti ti-layout-grid"></i> View ${esc(srName)}'s board</button>
+      ${threadHtml(l)}${composeHtml(l,true)}</div>`;
+    return `<div class="bcard"><div class="brow"><span class="bval">${esc(CHAMBER.seniorName)} · Ct ${esc(l.court)} item ${esc(l.item)}</span>${briefStatusChip(l.status)}</div>
+      ${l.title?`<div class="bttl">${esc(l.title)}</div>`:''}${l.status==="pending"?`<div class="bsub">Waiting for the chamber to approve.</div>`:''}</div>`;
+  }).join("");
+  h+=`</div>`; $("main").innerHTML=h;
+  wireBriefCommon();
+  const nb=$("bNew"); if(nb) nb.onclick=briefRequestForm;
+  const vb=document.querySelector("[data-viewboard]"); if(vb) vb.onclick=()=>{ boardView="senior"; curTab="board";
+    document.querySelectorAll("nav.botnav button").forEach(x=>x.classList.toggle("on",x.dataset.tab==="board")); render(); };
+  mine.forEach(l=>markThreadSeen(l.id)); updateBriefBadge();
+}
+function renderBriefInbox(){
+  const pend=pendingBriefs(), appr=approvedBriefs();
+  let h=`<div class="bwrap">`;
+  if(pend.length){ h+=`<div class="bsec-h">Requests to approve</div>`;
+    h+=pend.map(l=>`<div class="bcard">
+      <div class="brow"><span class="bval">${esc(l.aorName)}</span>${briefStatusChip(l.status)}</div>
+      <div class="bsub">wants to track the senior for <b>Ct ${esc(l.court)} · item ${esc(l.item)}</b>${l.title?` — ${esc(l.title)}`:''}${l.note?`<br>“${esc(l.note)}”`:''}</div>
+      <div class="bmsgs"><button class="bmsg ok" data-bdec="${esc(l.id)}|approved">Approve</button><button class="bmsg no" data-bdec="${esc(l.id)}|declined">Decline</button></div>
+    </div>`).join(""); }
+  h+=`<div class="bsec-h" style="margin-top:${pend.length?16:2}px">Collaboration inbox${appr.length?` · ${appr.length}`:''}</div>`;
+  if(!appr.length) h+=`<div class="bempty">No active briefing conversations.</div>`;
+  else{
+    const rows=appr.map(l=>({l,k:linkProx(l),unread:threadUnread(l.id),last:threadLast(l.id)}))
+      .sort((a,b)=>((a.k.gap??999)-(b.k.gap??999))||(b.unread-a.unread));
+    h+=rows.map(({l,k,unread,last})=>{ const band=proxBand(k);
+      const initials=(l.aorName||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
+      const lastTxt=last?`${last.by===me?.uid?"You: ":""}${last.text}`:"No messages yet";
+      return `<div class="bcard binbox" data-open="${esc(l.id)}"><div class="binbox-row">
+        <span class="bavatar">${esc(initials)}</span>
+        <span class="bmeta"><span class="bnm">${esc(l.aorName)}</span><span class="bmatter">Ct ${esc(l.court)} · item ${esc(l.item)}${l.title?` — ${esc(l.title)}`:''}</span><span class="blast">${esc(lastTxt)}</span></span>
+        <span class="bright"><span class="bprox ${band}">${esc(k.short||"—")}</span>${unread?`<span class="bunread">${unread}</span>`:''}</span>
+      </div></div>`;
+    }).join("");
+  }
+  h+=`</div>`; $("main").innerHTML=h;
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ briefOpenThread=b.dataset.open; renderBrief(); });
+}
+function renderBriefThread(id){
+  const l=briefLinks.find(x=>x.id===id);
+  if(!l){ briefOpenThread=null; return renderBrief(); }
+  const k=linkProx(l), band=proxBand(k), ss=seniorState();
+  const senTxt = ss.court ? (ss.mode==="confirmed"?`confirmed in Court ${esc(ss.court)}`:`likely in Court ${esc(ss.court)}`) : "location not set yet";
+  $("main").innerHTML=`<div class="bwrap">
+    <button class="bback" id="bBack"><i class="ti ti-chevron-left"></i> Collaboration inbox</button>
+    <div class="bcard bhi">
+      <div class="brow"><span class="bval">${esc(l.aorName)}</span><span class="bprox ${band}">${esc(k.short||"—")}</span></div>
+      <div class="bsub">Their matter: <b>Ct ${esc(l.court)} · item ${esc(l.item)}</b>${l.title?` — ${esc(l.title)}`:''}</div>
+      <div class="bsub">Senior: ${esc(CHAMBER.seniorName)} — ${senTxt}</div>
+      ${threadHtml(l)}${composeHtml(l,false)}
+      <button class="bmsg no small" style="margin-top:10px" data-bdec="${esc(l.id)}|revoked">Revoke access</button>
+    </div></div>`;
+  markThreadSeen(id); updateBriefBadge(); wireBriefCommon();
+  const bk=$("bBack"); if(bk) bk.onclick=()=>{ briefOpenThread=null; renderBrief(); };
+}
+function briefRequestForm(){
+  const own=(myOwn||[]).slice();
+  $("modalRoot").innerHTML=`<div class="ovl" data-close><div class="sheet"><button class="sh-x" data-close>&times;</button>
+    <div class="sheet-grab"></div>
+    <h2>Request to track the senior</h2>
+    <div class="sh-sub">Ask ${esc(CHAMBER.seniorName)}'s chamber to let you see his board position for your matter. They approve before anything is shared.</div>
+    <div class="am-form">
+      <div class="am-row">
+        <label class="am-fld">Court<input id="bq_court" inputmode="numeric" autocomplete="off" placeholder="e.g. 6"></label>
+        <label class="am-fld">Item<input id="bq_item" inputmode="numeric" autocomplete="off" placeholder="e.g. 4"></label>
+      </div>
+      <label class="am-fld">Your matter <span style="color:var(--mut);font-weight:400">(optional)</span><input id="bq_title" autocomplete="off" placeholder="e.g. Mahabanoo v. Kalikund"></label>
+      <label class="am-fld">Note to the chamber <span style="color:var(--mut);font-weight:400">(optional)</span><input id="bq_note" autocomplete="off" placeholder="e.g. briefing on the SLP tomorrow"></label>
+      <div class="am-err" id="bq_err"></div>
+      <button class="sh-btn navy" id="bq_save">Send request</button>
+    </div>
+    ${own.length?`<div class="sh-sec">Your matters</div>${own.map(m=>`<div class="am-item" data-bqpick="${esc(m.court)}|${esc(m.item)}|${esc(m.title||"")}">
+      <span class="am-ci">Ct ${esc(m.court)} · #${esc(m.item)}</span><span class="am-t">${esc(m.title||"")}</span></div>`).join("")}`:''}
+  </div></div>`;
+  $("modalRoot").querySelectorAll("[data-bqpick]").forEach(x=>x.onclick=()=>{
+    const [c,i,t]=x.dataset.bqpick.split("|"); $("bq_court").value=c; $("bq_item").value=i; $("bq_title").value=t; });
+  $("bq_save").onclick=async()=>{
+    const court=($("bq_court").value||"").trim(), item=($("bq_item").value||"").trim();
+    if(!/^\d{1,3}$/.test(court)){ $("bq_err").textContent="Enter a court number (1–17)."; return; }
+    if(!item){ $("bq_err").textContent="Enter your item number."; return; }
+    try{ await db.add("brieflinks",{aorUid:me.uid, aorName:me.name||"Advocate", aorDesig:me.designation||"Advocate",
+        court, item, date:todayISO(), title:($("bq_title").value||"").trim(), note:($("bq_note").value||"").trim(),
+        status:"pending", at:db.now()}); closeModal(); curTab="brief";
+      document.querySelectorAll("nav.botnav button").forEach(x=>x.classList.toggle("on",x.dataset.tab==="brief")); render(); }
+    catch(e){ $("bq_err").textContent="Could not send — "+(e.message||e); }
+  };
+}
+async function decideBrief(id,status){
+  try{ await db.update("brieflinks/"+id,{status,decidedBy:me.uid,decidedAt:db.now()});
+    if(status!=="approved" && briefOpenThread===id) briefOpenThread=null; }catch(e){}
+}
+// Messages live in a PER-LINK thread (not the general chamber chat), so eight AoRs
+// stay eight separate conversations. Name only, never designation.
+async function sendBriefMsg(id,text){
+  text=(text||"").trim(); if(!text) return;
+  const l=briefLinks.find(x=>x.id===id); if(!l) return;
+  try{ const mid=await db.add("briefmsgs",{linkId:id, by:me.uid, name:me.name||"Advocate", text, at:db.now()});
+    relayPush({kind:"chat", id:String(mid||Date.now()), fromUid:me.uid, title:"Briefing — "+(me.name||""), body:text, tag:"brief-"+id});
+    markThreadSeen(id); }catch(e){}
+}
+if(BRIEFING) document.addEventListener("click",ev=>{
+  const dec=ev.target.closest("[data-bdec]"); if(dec){ const [id,st]=dec.dataset.bdec.split("|"); decideBrief(id,st); return; }
+});
+
+/* ============================================================
+   ACTIONS + AUTH + BOOT
+   ============================================================ */
+async function setSeniorCourt(court){
+  if(!court) return;
+  await db.set("config/live",{ court:{court:String(court),at:db.now(),by:me.uid} }, true);
+}
+function boot(user){
+  unsub.forEach(u=>u&&u()); unsub=[]; if(userDocUnsub){userDocUnsub();userDocUnsub=null;}
+  bootStarted=false;   // a new session (user switch / re-login) must re-establish the live-data watchers
+  briefOpenThread=null; boardView="mine";   // reset briefing view state for the new user
+  if(!user){ me=null; $("app").classList.add("hidden"); $("login").classList.remove("hidden"); stopPolling(); return; }
+  const uid=user.uid;
+  userDocUnsub=db.watchDoc("users/"+uid, u=>{
+    me = u ? {uid,...u} : {uid,role:"pending",name:user.email};
+    if(emailKey(me.email||user.email)===emailKey(CHAMBER.adminEmail)) me.role="admin";
+    if(!bootStarted){ bootStarted=true; startWatchers(); }
+    gateUI();
+  });
+}
+let bootStarted=false;
+function startWatchers(){
+  unsub.push(db.watchCollection("users",rows=>{ users={}; rows.forEach(u=>users[u.id]=u); scheduleRender(); }));
+  unsub.push(db.watchDoc("config/live", d=>{ live=d||{}; delete live.id; scheduleRender(); }));
+  unsub.push(db.watchCollection("messages",rows=>{ messages={}; rows.forEach(m=>messages[m.id]=m); updateChatBadge(); if(curTab==="chat") paintChatList(); purgeOldChat(); }));
+  unsub.push(db.watchDoc("daysheets/"+todayISO(), d=>{ daysheet=d||{entries:[]}; scheduleRender(); }));
+  if(me?.uid) unsub.push(db.watchDoc("usermatters/"+me.uid, d=>{ myOwn=(d&&d.matters)||[]; scheduleRender(); }));
+  if(BRIEFING){
+    unsub.push(db.watchCollection("brieflinks",rows=>{ briefLinks=rows||[]; updateBriefBadge(); scheduleRender(); }));
+    unsub.push(db.watchCollection("briefmsgs",rows=>{ briefMsgs=rows||[]; updateBriefBadge(); if(curTab==="brief") renderBrief(); }));
+  }
+  loadCourtUpdates();
+  startPolling();
+}
+const isStandalone = () => me && me.role==="user";   // a self-registrant with their own office
+function gateUI(){
+  const approved = me && ["admin","senior","clerk","pa","junior","user"].includes(me.role);
+  $("login").classList.toggle("hidden", !!approved);
+  $("app").classList.toggle("hidden", !approved);
+  if(approved){
+    if(BRIEFING) $("tabBrief").classList.remove("hidden");
+    // a standalone individual has no chamber-internal chat — hide that tab for them
+    const chatBtn=document.querySelector('nav.botnav button[data-tab="chat"]'); if(chatBtn) chatBtn.classList.toggle("hidden", isStandalone());
+    if(isStandalone() && curTab==="chat") curTab="board";
+    paintMasthead(); render(); initNotify();
+  }
+  else if(me){ $("lgErr").textContent = me.role==="pending" ? "Your account isn't approved yet." : ""; }
+}
+// Header shows the OFFICE of whoever is logged in: the chamber for chamber members,
+// the person's own name + designation for a self-registrant.
+function initials(s){ return (s||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase(); }
+function paintMasthead(){
+  const seal=document.querySelector(".top .seal"), main=document.querySelector(".top .ttl-main"), sub=$("hdrSub");
+  if(!seal||!main||!sub) return;
+  if(isStandalone()){
+    seal.textContent=initials(me.name); main.textContent=me.name||"My office";
+    sub.textContent=(me.designation? me.designation+" · " : "")+CHAMBER.court;
+  } else {
+    seal.textContent="SD"; main.textContent="Chamber Display Board";
+    sub.textContent=CHAMBER.seniorName ? CHAMBER.seniorName+" · "+CHAMBER.court : CHAMBER.court;
+  }
+}
+
+/* tabs (bottom nav) + header wiring */
+document.querySelectorAll("nav.botnav button").forEach(b=>b.onclick=()=>{
+  curTab=b.dataset.tab;
+  document.querySelectorAll("nav.botnav button").forEach(x=>x.classList.toggle("on",x===b));
+  render(); fitChat(); if(BRIEFING) updateBriefBadge();
+});
+$("main").addEventListener("click",ev=>{
+  const c=ev.target.closest("[data-court]");
+  if(c) openCourtModal(c.dataset.court);
+});
+$("routeRail").addEventListener("click",ev=>{ const c=ev.target.closest("[data-court]"); if(c) openCourtModal(c.dataset.court); });
+$("modalRoot").addEventListener("click",async ev=>{
+  const t=ev.target;
+  if(t.classList.contains("ovl") || t.closest("button[data-close]")){ closeModal(); return; }
+  const m=t.closest("[data-matter]");
+  if(m){ const [ct,it]=m.dataset.matter.split("|"); openMatterModal(ct,it); return; }
+  const sh=t.closest("[data-senhere]");
+  if(sh){ await setSeniorCourt(sh.dataset.senhere); openCourtModal(sh.dataset.senhere); return; }
+  const ps=t.closest("[data-poset]");
+  if(ps){ const [ct,it]=ps.dataset.poset.split("|");
+    const mode=$("poMode").value==="after"?"after":"slot";
+    const after=mode==="after"?($("poAfter").value||"").trim():null;
+    await setPO(ct,it,mode,after); openMatterModal(ct,it); return; }
+  const pc=t.closest("[data-poclear]");
+  if(pc){ const [ct,it]=pc.dataset.poclear.split("|"); await clearPO(ct,it); openMatterModal(ct,it); return; }
+});
+$("btnAdd").onclick=addMatterForm;
+$("btnRefresh").onclick=hardRefresh;
+$("btnNotify").onclick=toggleNotify;
+$("btnOut").onclick=()=>auth.signOut();
+
+/* login form */
+$("lgGo").onclick=async()=>{
+  $("lgErr").textContent="";
+  try{ await auth.signIn($("lgEmail").value.trim(), $("lgPass").value); }
+  catch(e){ $("lgErr").textContent = (e.code||"").includes("password")||(e.code||"").includes("credential")
+    ? "Wrong email or password." : (e.message||"Sign-in failed."); }
+};
+$("lgPass").addEventListener("keydown",e=>{ if(e.key==="Enter") $("lgGo").click(); });
+$("lgReset").onclick=async()=>{
+  const em=$("lgEmail").value.trim(); if(!em){ $("lgErr").textContent="Enter your email first."; return; }
+  try{ await auth.resetPassword(em); $("lgErr").textContent="Reset link sent to "+em; }
+  catch(e){ $("lgErr").textContent=e.message||"Could not send reset."; }
+};
+// Create-account (self-registration) — makes a standalone user with their own office.
+$("lgToReg").onclick=()=>{ $("signinForm").classList.add("hidden"); $("regForm").classList.remove("hidden"); $("lgSub").textContent="Create your account"; };
+$("lgToSignin").onclick=()=>{ $("regForm").classList.add("hidden"); $("signinForm").classList.remove("hidden"); $("lgSub").textContent="Live Supreme Court board"; };
+$("rgGo").onclick=async()=>{
+  $("rgErr").textContent="";
+  const name=$("rgName").value.trim(), phone=$("rgPhone").value.replace(/\D/g,""), email=$("rgEmail").value.trim(),
+        designation=$("rgDesig").value, pass=$("rgPass").value;
+  if(name.length<2){ $("rgErr").textContent="Enter your full name."; return; }
+  if(phone.length<10){ $("rgErr").textContent="Enter a valid mobile number."; return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $("rgErr").textContent="Enter a valid email."; return; }
+  if(pass.length<6){ $("rgErr").textContent="Password must be at least 6 characters."; return; }
+  $("rgGo").disabled=true; $("rgErr").textContent="Creating your account…";
+  try{ await auth.signUp(email, pass, {name, phone, designation}); }
+  catch(e){ $("rgGo").disabled=false;
+    $("rgErr").textContent = (e.code||"").includes("email-already-in-use") ? "That email already has an account — sign in instead."
+      : (e.code||"").includes("weak-password") ? "Choose a stronger password." : (e.message||"Could not create account."); }
+};
+function initNotify(){
+  try{ notifyOn = localStorage.getItem("boardNotify")==="1" && ("Notification" in window) && Notification.permission==="granted"; }catch(e){ notifyOn=false; }
+  updateNotifyBtn(); if(notifyOn){ acquireWake(); syncPushSub(); }
+}
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && me && !DEMO) fetchBoard(); if(!document.hidden && notifyOn){ acquireWake(); syncPushSub(); } });
+
+auth.onChange(boot);
+// masthead (seal + title + sub) is now painted per-user by paintMasthead() in gateUI
+
+/* ============================================================
+   DEMO SEED (only used when DEMO=true; injected by make-board-test.py)
+   ============================================================ */
+function seedDemo(db){
+  const n=db.now;
+  const people=[
+    ["u_senior","Shyam Divan","senior","sd@chamber.in","Senior Advocate"],
+    ["u_admin","Adith Deshmukh","admin","adithdeshmukh@gmail.com","Advocate-on-Record"],
+    ["u_clerk","Staff","clerk","clerk@chamber.in","Clerk"],
+    ["u_yash","Yashvardhan S.","junior","yash@chamber.in","Advocate"],
+    ["u_shaishir","Shaishir","junior","shaishir@chamber.in","Advocate"],
+    ["u_anshula","Anshula L.","junior","anshula@chamber.in","Advocate"],
+    ["u_rishit","Rishit V.","junior","rishit@chamber.in","Advocate"],
+    // a STANDALONE self-registrant (external AoR) — role "user", their own office
+    ["u_aor","Rohan Mehta","user","rohan@ext.in","Advocate-on-Record"],
+  ];
+  people.forEach(([uid,name,role,email,designation])=>db.set("users/"+uid,{name,email,role,designation,office:name,phone:"9820011234",active:true}));
+
+  const D=todayISO();
+  // Items chosen to hit each tier against the saved board sample (2026-07-13):
+  //  Ct6 on item 3 (seq present) · Ct3 on 3 · Ct10 on 4 · Ct7 on 1506 · Ct13 not sitting · Ct14 on 3
+  const entries=[
+    {courtNo:"6", itemNo:"4",  caseTitle:"Mahabanoo & Anr. vs Kalikund Developers & Ors.", time:"10:30", bench:"J.B. Pardiwala, K.V. Chandran", counsel:"Somiran Sharma", juniorUids:["u_yash","u_shaishir"], confTime:"6:30 pm"},
+    {courtNo:"3", itemNo:"6",  caseTitle:"Test Soon Matter vs State (sample)", time:"10:30", bench:"Vikram Nath, Sandeep Mehta", counsel:"Karanjawala & Co.", juniorUids:["u_anshula"]},
+    {courtNo:"5", itemNo:"6",  caseTitle:"Test Adjacent Matter vs Union (sample)", time:"10:30", bench:"", counsel:"", juniorUids:["u_rishit"]},
+    {courtNo:"6", itemNo:"49", caseTitle:"Jyoti Builders vs Chief Executive Officer & Ors.", time:"10:30", bench:"J.B. Pardiwala, K.V. Chandran", counsel:"Anish Agarwal", juniorUids:["u_yash"], confTime:"5:00 pm"},
+    {courtNo:"7", itemNo:"MM", caseTitle:"Kotak Mahindra Trustee Co. Ltd. vs SEBI", time:"10:30", bench:"Dipankar Datta, Sheel Nagu", counsel:"Mahesh Agarwal", juniorUids:["u_anshula"]},
+    {courtNo:"13",itemNo:"48", caseTitle:"M/s Chandler & Price India vs M.Z.S. Da Piedade Vas & Ors.", time:"10:30", bench:"P.K. Mishra, Chandrasekhar", counsel:"Wadia Ghandy", juniorUids:["u_rishit"]},
+    {courtNo:"14",itemNo:"2",  caseTitle:"Test Passed Matter vs State (sample)", time:"10:30", bench:"", counsel:"", juniorUids:["u_shaishir"]},
+    {courtNo:"1", itemNo:"12", caseTitle:"Sugandha Hiemath & Ors. vs Babasaheb N. Kalyani & Ors.", time:"10:30", bench:"C.J.I., Joymala Bagchi, V. Mohana", counsel:"Karanjawala & Co.", juniorUids:["u_yash"]},
+    {courtNo:"2", itemNo:"101", listType:"Regular", caseTitle:"Test Regular Matter vs Union of India (regular list)", time:"10:30", bench:"Surya Kant, N.K. Singh", counsel:"AZB & Partners", juniorUids:["u_rishit"]},
+    {courtNo:"21",itemNo:"2",  caseTitle:"Test Registrar Matter vs State (must NOT show as a board island)", time:"10:30", bench:"Registrar", counsel:"", juniorUids:["u_yash"]},
+  ];
+  db.set("daysheets/"+D,{date:D,updatedAt:n(),updatedBy:"u_clerk",entries,conferences:[]});
+
+  // Live remark column (only some benches publish it; in prod the relay parses it
+  // per court). Demo: Court 3 has passed our item 6 over (PASS OVER -> PO + shown
+  // in the Passovers section); Court 5 has finished item 5 out of turn (OVER), so
+  // our item 6 is discounted from ~2-away to NEXT — over items are never listed.
+  remarksByCourt["3"]={at:Date.now(),items:{"6":"PASS OVER"}};
+  remarksByCourt["5"]={at:Date.now(),items:{"5":"OVER"}};
+
+  // Senior last marked in Court 6 40 min ago -> stale -> the app should INFER.
+  db.set("config/live",{court:{court:"6",at:{_t:Date.now()-40*60000},by:"u_yash"},conf:null});
+
+  db.set("messages/m1",{by:"u_yash",name:"Yashvardhan S.",text:"Court 6 is moving slowly, still on item 3.",at:{_t:Date.now()-9*60000}});
+  db.set("messages/m2",{by:"u_anshula",name:"Anshula L.",text:"I'm outside Court 3, will signal when our item is called.",at:{_t:Date.now()-4*60000}});
+
+  // BRIEFING FEATURE demo. u_aor ("Rohan") is an external AoR briefing the senior:
+  // his OWN board = his usermatter (Ct4/5); the senior's board = the chamber day sheet.
+  db.set("usermatters/u_aor",{matters:[{id:"mo1",court:"4",item:"5",title:"My SLP v. State of Karnataka"}],updatedAt:n()});
+  // Several AoRs tracking the senior — the team's Briefing inbox (eight-AoR handling):
+  //  bl_a Rohan (Ct6/4), bl_c Meera (Ct1/12), bl_d Arjun (Ct14/3) approved; bl_b Priya pending.
+  db.set("brieflinks/bl_a",{aorUid:"u_aor",aorName:"Rohan Mehta",aorDesig:"Advocate-on-Record",
+    court:"6",item:"4",date:D,title:"Mahabanoo v. Kalikund",note:"Briefing on the SLP",status:"approved",at:{_t:Date.now()-30*60000},decidedBy:"u_clerk"});
+  db.set("brieflinks/bl_c",{aorUid:"u_aor2",aorName:"Meera Krishnan",aorDesig:"Advocate",
+    court:"1",item:"12",date:D,title:"Sugandha v. Babasaheb",note:"",status:"approved",at:{_t:Date.now()-50*60000},decidedBy:"u_clerk"});
+  db.set("brieflinks/bl_d",{aorUid:"u_aor3",aorName:"Arjun Rao",aorDesig:"Senior Advocate",
+    court:"14",item:"3",date:D,title:"Rao v. Union of India",note:"",status:"approved",at:{_t:Date.now()-70*60000},decidedBy:"u_clerk"});
+  db.set("brieflinks/bl_b",{aorUid:"u_aor4",aorName:"Priya Nair",aorDesig:"Advocate",
+    court:"3",item:"6",date:D,title:"Nair v. State of Maharashtra",note:"Reaching after lunch",status:"pending",at:{_t:Date.now()-6*60000}});
+  // per-thread messages (name only, no designation)
+  db.set("briefmsgs/bm1",{linkId:"bl_a",by:"u_aor",name:"Rohan Mehta",text:"My matter is next — please come.",at:{_t:Date.now()-6*60000}});
+  db.set("briefmsgs/bm2",{linkId:"bl_a",by:"u_clerk",name:"Staff",text:"He's wrapping up Court 6, will come across.",at:{_t:Date.now()-4*60000}});
+  db.set("briefmsgs/bm3",{linkId:"bl_c",by:"u_aor2",name:"Meera Krishnan",text:"Is he reaching my Court 1 item soon?",at:{_t:Date.now()-8*60000}});
+}
+</script>
+</body>
+</html>

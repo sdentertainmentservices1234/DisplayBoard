@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SC Court Pace Collector</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#141719;--mut:#697079;--line:#e4e7ea;--accent:#3a5a8c;
+    --ok:#2ea050;--warn:#c69412;--bad:#d24040;--navy:#101418}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:14px;line-height:1.4}
+  header{background:var(--navy);color:#fff;padding:14px 18px}
+  header h1{margin:0;font-size:17px;font-weight:700}
+  header p{margin:2px 0 0;font-size:12px;color:#aab2bd}
+  .wrap{max-width:820px;margin:0 auto;padding:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .stat{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--mut);flex:none}
+  .dot.on{background:var(--ok);box-shadow:0 0 0 4px rgba(46,160,80,.18)}
+  .dot.err{background:var(--bad)}
+  .dot.pause{background:var(--warn)}
+  .state{font-weight:700;font-size:15px}
+  .muted{color:var(--mut)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:12px}
+  .kpi{background:var(--bg);border-radius:9px;padding:9px 11px}
+  .kpi .n{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+  .kpi .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  button{font:inherit;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;
+    padding:9px 14px;cursor:pointer;font-weight:600}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.ghost{background:transparent}
+  button:active{transform:scale(.98)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:7px 10px;text-align:left;border-top:1px solid var(--line)}
+  thead th{border-top:none;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);background:var(--bg)}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+  .ph{font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:5px}
+  .ph0{background:#e7f0e9;color:#2e7d46}.ph1{background:#eef1f4;color:#697079}
+  .ph2{background:#fbf0d8;color:#8a6d1a}.ph3{background:#efe9f5;color:#5a4886}
+  .note{font-size:12.5px;color:var(--mut);line-height:1.5}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>SC Court Pace Collector</h1>
+  <p>Leave this tab open during court hours. It records how fast each court works through its list, so the display app can estimate real times. Nothing is sent anywhere — export the data and hand it over.</p>
+</header>
+<div class="wrap">
+  <div class="card">
+    <div class="stat">
+      <span class="dot" id="dot"></span>
+      <span class="state" id="state">Starting…</span>
+      <span class="muted" id="sub"></span>
+    </div>
+    <div class="grid">
+      <div class="kpi"><div class="n" id="kToday">0</div><div class="l">moves today</div></div>
+      <div class="kpi"><div class="n" id="kCourts">0</div><div class="l">courts sitting</div></div>
+      <div class="kpi"><div class="n" id="kDays">0</div><div class="l">days collected</div></div>
+      <div class="kpi"><div class="n" id="kTotal">0</div><div class="l">moves total</div></div>
+    </div>
+    <div class="row">
+      <button class="primary" id="bDownload">⬇ Download data (JSON)</button>
+      <button id="bCopyToday">Copy today</button>
+      <button id="bCopyAll">Copy all</button>
+      <button class="ghost" id="bPause">Pause</button>
+      <button class="ghost" id="bPoll">Poll now</button>
+      <button class="ghost" id="bClear">Clear all</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Court</th><th>Now</th><th class="n">Moves today</th><th class="n">~ items / hr</th><th>Phase</th></tr></thead>
+        <tbody id="tb"><tr><td colspan="5" class="muted" style="padding:14px">Waiting for the first reading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card note">
+    <b>How it works.</b> Every 60&nbsp;seconds it reads the live Supreme Court display board and, whenever a court moves to a new item, records the time and the item's position in that court's declared sequence. Over a week this shows each court's real disposal speed by time of day. Phases: <span class="ph ph0">hearing</span> normal list, <span class="ph ph2">ment.</span> mentioning (800s), <span class="ph ph3">pron.</span> judgement (1500s), <span class="ph ph1">idle</span> not sitting — the analysis ignores the non-hearing phases.<br><br>
+    When asked, hit <b>Copy all</b> (or Download) and paste it back into the chat. Your data stays in this browser (localStorage) until you clear it.
+  </div>
+</div>
+
+<script>
+const BOARD_PROXY = "https://sd-board.sdentertainmentservices.workers.dev";
+const POLL_MS = 60000;
+const LS_KEY  = "scPaceData_v1";
+
+/* ---- board parser (same logic as the display app) ---- */
+function parseBoard(html){
+  const strip = s => s.replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&")
+    .replace(/&#039;|&apos;/g,"'").replace(/&quot;/g,'"').replace(/&gt;/g,">").replace(/&lt;/g,"<")
+    .replace(/\s+/g," ").trim();
+  const rows = html.split(/<tr class="record">/i).slice(1);
+  const courts = [];
+  for (let raw of rows){
+    raw = raw.split(/<\/tr>/i)[0];
+    let court=""; let m=raw.match(/btn-primary[^>]*>\s*([0-9]+)/i); if(m) court=m[1];
+    if(!court){ const im=raw.match(/id="cl_(\d+)"/i); if(im) court=im[1]; }
+    const cl=raw.match(/id="cl_\d+"[^>]*>(.*?)<\/td>/is); const cltext=cl?strip(cl[1]):"";
+    let item="", status=cltext; const im2=cltext.match(/^(\d+(?:\.\d+)?)\s+(.*)$/);
+    if(im2){ item=im2[1]; status=im2[2].trim(); }
+    const seqm=raw.match(/title="([^"]*(?:SEQUENCE|SEQ|sequence)[^"]*)"/i);
+    if(!court) continue;
+    courts.push({ court, item, status, sequence:seqm?strip(seqm[1]):"" });
+  }
+  return courts;
+}
+function seqInfo(text){
+  if(!text) return {seq:[]};
+  const toks=text.toUpperCase().replace(/[^0-9A-Z. ]/g," ").split(/\s+/).filter(Boolean);
+  const out=[], seen=new Set();
+  const push=n=>{ if(!seen.has(n)){seen.add(n);out.push(n);} };
+  for(let i=0;i<toks.length;i++){
+    const t=toks[i]; const num=t.match(/^(\d+)(?:\.\d+)?$/); if(!num) continue;
+    const a=parseInt(num[1],10);
+    if(toks[i+1]==="TO" && /^\d+$/.test(toks[i+2]||"")){
+      const b=parseInt(toks[i+2],10);
+      if(b>=a && b-a<600){ for(let k=a;k<=b;k++) push(k); } else push(a); i+=2;
+    } else push(a);
+  }
+  return {seq:out};
+}
+function posOf(c){
+  const item=c.item; if(!item || !/^\d/.test(String(item))) return null;
+  const seq=seqInfo(c.sequence).seq;
+  if(seq.length){ const p=seq.indexOf(parseInt(item)); if(p>=0) return p; }
+  return parseFloat(item);
+}
+// phase: 0 hearing, 1 not-in-session, 2 mentioning (800s), 3 pronouncement (1500s)
+function phaseOf(c){
+  if(/not in session/i.test(c.status||"")) return 1;
+  const n=parseInt(c.item,10);
+  if(n>=800 && n<900) return 2;
+  if(n>=1500 && n<1600) return 3;
+  return 0;
+}
+
+/* ---- storage ---- */
+const todayISO=()=>new Date().toLocaleDateString("en-CA");
+function load(){ try{ return JSON.parse(localStorage.getItem(LS_KEY))||{days:{}}; }catch(e){ return {days:{}}; } }
+function save(d){ try{ localStorage.setItem(LS_KEY, JSON.stringify(d)); }catch(e){ setErr("Storage full — download & clear."); } }
+let data = load();
+
+/* ---- collection ---- */
+let paused=false, lastErr=null, lastPollTxt="—", lastCourts=0, timer=null, nextAt=0;
+
+function recordSnapshot(courts){
+  const iso=todayISO();
+  const day = data.days[iso] || (data.days[iso]={courts:{}, seqs:{}});
+  let moved=0;
+  const now=Date.now();
+  for(const c of courts){
+    const ph=phaseOf(c);
+    const pos=posOf(c);
+    const log = day.courts[c.court] || (day.courts[c.court]=[]);
+    const last=log[log.length-1];
+    // record a row only when the item changes (a disposal / new matter called)
+    if(!last || String(last[2])!==String(c.item)){
+      log.push([now, pos==null?null:Math.round(pos), c.item, ph]);   // [t, seqPos, item, phase]
+      moved++;
+    }
+    if(c.sequence && !day.seqs[c.court]) day.seqs[c.court]=c.sequence;   // keep one sequence sample
+  }
+  save(data);
+  return moved;
+}
+
+async function poll(){
+  if(paused) return;
+  try{
+    const r=await fetch(BOARD_PROXY+"?ctype=c",{cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const courts=parseBoard(await r.text());
+    if(!courts.length) throw new Error("empty board");
+    const moved=recordSnapshot(courts);
+    lastCourts=courts.filter(c=>phaseOf(c)===0).length;
+    lastErr=null;
+    lastPollTxt=new Date().toLocaleTimeString()+"  ·  +"+moved+" move"+(moved===1?"":"s");
+  }catch(e){ lastErr=String(e&&e.message||e); }
+  render();
+}
+function schedule(){ clearTimeout(timer); if(paused) return; nextAt=Date.now()+POLL_MS; timer=setTimeout(()=>{poll(); schedule();}, POLL_MS); }
+function setErr(m){ lastErr=m; render(); }
+
+/* ---- render ---- */
+function fmtHr(courtLog){
+  const good=courtLog.filter(r=>r[3]===0 && r[1]!=null);
+  if(good.length<2) return "—";
+  const first=good[0], last=good[good.length-1];
+  const dPos=last[1]-first[1], dHr=(last[0]-first[0])/3600000;
+  if(dHr<0.05 || dPos<=0) return "—";
+  return (dPos/dHr).toFixed(1);
+}
+const PH=["hearing","idle","ment.","pron."];
+function render(){
+  const iso=todayISO();
+  const day=data.days[iso]||{courts:{}};
+  const dot=document.getElementById("dot"), state=document.getElementById("state");
+  if(paused){ dot.className="dot pause"; state.textContent="Paused"; }
+  else if(lastErr){ dot.className="dot err"; state.textContent="Reading — retrying"; }
+  else { dot.className="dot on"; state.textContent="Collecting"; }
+  document.getElementById("sub").textContent = lastErr ? ("last error: "+lastErr) : ("last read "+lastPollTxt);
+
+  const movesToday=Object.values(day.courts).reduce((s,l)=>s+l.length,0);
+  const movesTotal=Object.values(data.days).reduce((s,d)=>s+Object.values(d.courts).reduce((a,l)=>a+l.length,0),0);
+  document.getElementById("kToday").textContent=movesToday;
+  document.getElementById("kCourts").textContent=lastCourts;
+  document.getElementById("kDays").textContent=Object.keys(data.days).length;
+  document.getElementById("kTotal").textContent=movesTotal;
+
+  const courts=Object.keys(day.courts).sort((a,b)=>(parseInt(a)||999)-(parseInt(b)||999));
+  const tb=document.getElementById("tb");
+  if(!courts.length){ tb.innerHTML='<tr><td colspan="5" class="muted" style="padding:14px">Waiting for the first reading…</td></tr>'; return; }
+  tb.innerHTML=courts.map(ct=>{
+    const log=day.courts[ct], last=log[log.length-1], ph=last[3];
+    return `<tr><td><b>Court ${ct}</b></td><td>${last[2]||"—"}</td><td class="n">${log.length}</td>`+
+      `<td class="n">${fmtHr(log)}</td><td><span class="ph ph${ph}">${PH[ph]}</span></td></tr>`;
+  }).join("");
+}
+
+/* ---- export ---- */
+function download(obj,name){
+  const blob=new Blob([JSON.stringify(obj)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+async function copy(obj){
+  const t=JSON.stringify(obj);
+  try{ await navigator.clipboard.writeText(t); flash("Copied "+(t.length>1000?Math.round(t.length/1024)+" KB":"data")+" — paste it into the chat."); }
+  catch(e){ // fallback
+    const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); flash("Copied — paste it into the chat."); }catch(_){ flash("Couldn't copy — use Download instead."); }
+    ta.remove();
+  }
+}
+let flashT=null;
+function flash(m){ const s=document.getElementById("sub"); s.textContent=m; clearTimeout(flashT); flashT=setTimeout(render,4000); }
+
+document.getElementById("bDownload").onclick=()=>download({generated:new Date().toISOString(),...data},"sc-pace-"+todayISO()+".json");
+document.getElementById("bCopyToday").onclick=()=>copy({date:todayISO(),day:data.days[todayISO()]||{}});
+document.getElementById("bCopyAll").onclick=()=>copy({generated:new Date().toISOString(),...data});
+document.getElementById("bPause").onclick=()=>{ paused=!paused; document.getElementById("bPause").textContent=paused?"Resume":"Pause"; if(!paused){poll();schedule();} render(); };
+document.getElementById("bPoll").onclick=()=>poll();
+document.getElementById("bClear").onclick=()=>{ if(confirm("Delete all collected data from this browser?")){ data={days:{}}; save(data); render(); } };
+
+/* ---- go ---- */
+poll(); schedule();
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && !paused && Date.now()>nextAt) { poll(); schedule(); } });
+</script>
+</body>
+</html>
