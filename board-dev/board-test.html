@@ -829,6 +829,15 @@ function poAdjust(court, curItem, ours, seq, passIdx){
   }
   return delta;
 }
+// When the court takes passovers at the END of the board (no sequence declared),
+// ours is recalled after every OTHER passed-over matter that comes before it —
+// i.e. those with a lower item number (reached, and so passed over, earlier).
+function passoversBeforeOurs(court, ours){
+  const po=passoverItemsFor(court); const ourN=Math.floor(parseFloat(ours));
+  if(isNaN(ourN)) return 0;
+  let n=0; for(const k in po){ const kn=parseInt(k,10); if(!isNaN(kn) && kn<ourN) n++; }
+  return n;
+}
 async function fetchRemarksFor(court,token,force){
   if(!token || BOARD_SAMPLE || !BOARD_PROXY) return;       // demo seeds remarksByCourt directly
   const now=Date.now();
@@ -947,23 +956,32 @@ function classify(e, bc){
     || (isPassOver(e.courtNo,ours) ? {mode:"detail"} : null)
     || (boardPOhas(e.courtNo,ours) ? {mode:"slot"} : null);
   if(mark){
-    let gap=null;
-    if(mark.mode==="after" && mark.after && seq.length){
-      const tp=seq.indexOf(parseInt(mark.after,10));
-      if(tp>=0 && curPos>=0) gap=Math.max(0,tp-curPos+1);
+    let gap=null, tail="";
+    if(mark.mode==="after" && mark.after){
+      // an explicit recall point ("after item N") — sequence space if we have one, else item-number space
+      if(seq.length){ const tp=seq.indexOf(parseInt(mark.after,10)); if(tp>=0 && curPos>=0) gap=Math.max(0,tp-curPos+1); }
+      else { const cur=parseInt(bc.item,10), tp=parseInt(mark.after,10); if(!isNaN(cur)&&!isNaN(tp)) gap=Math.max(0,tp-cur+1); }
+      if(gap!=null) tail=" · taken after item "+String(mark.after);
     } else if(seq.length && curPos>=0){
-      // recalled where the sequence says passovers are taken, else end of board
+      // recalled where the sequence says passovers are taken, else end of the sequence
       const tp=(passIdx!=null && passIdx>curPos) ? passIdx : seq.length-1;
       gap=Math.max(0,tp-curPos);
     }
-    // Owner: don't show "PO 2/3" — a passed-over matter is recalled at the sequence's
-    // passover point, so show how far THAT is, as a normal distance ("N away"). The
-    // detail label still notes it's a recall.
-    if(gap==null) return {tier:"later",label:"passed over — awaiting recall",short:"recall",po:true};
-    if(gap<=0) return {tier:"now", label:"recall — item on now",short:"NOW",gap,po:true};
-    if(gap===1) return {tier:"now", label:"recall — next",short:"NEXT",gap,po:true};
-    if(gap<=4) return {tier:"soon",label:"~"+gap+" items away · recall",short:gap+" away",gap,po:true};
-    return {tier:"later",label:gap+" items away · recall",short:gap+" away",gap,po:true};
+    // No sequence and no explicit recall point: assume the court takes passovers at the
+    // END of the board. Distance = matters still to be called before the board finishes
+    // (total − current item), PLUS any other passed-over matters recalled before ours.
+    if(gap==null){
+      const total=miscTotalFor(e.courtNo), cur=parseInt(bc.item,10);
+      if(total!=null && !isNaN(cur)){ gap=Math.max(0,total-cur)+passoversBeforeOurs(e.courtNo,ours); tail=" · taken at end"; }
+    }
+    // Owner: don't show a bare "recall" — a passed-over matter is taken at its recall
+    // point (sequence slot, an explicit "after N", or the end of the board), so show
+    // how far THAT is as a normal distance ("N away").
+    if(gap==null) return {tier:"later",label:"passed over — awaiting its turn",short:"passed over",po:true};
+    if(gap<=0) return {tier:"now", label:"passed over — item on now",short:"NOW",gap,po:true};
+    if(gap===1) return {tier:"now", label:"passed over — next",short:"NEXT",gap,po:true};
+    if(gap<=4) return {tier:"soon",label:"~"+gap+" items away · passed over"+tail,short:gap+" away",gap,po:true};
+    return {tier:"later",label:gap+" items away · passed over"+tail,short:gap+" away",gap,po:true};
   }
   // Regular-list matter: reached only after the whole Miscellaneous list is done.
   if(/^reg/i.test((e.listType||"").trim())){
