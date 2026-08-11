@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T18:39:55.501844Z",
+  "generated_at": "2026-08-11T05:40:41.228633Z",
   "parser_version": 8,
   "window": [
     "2026-08-11",
@@ -2185,7 +2185,7 @@
           },
           "6": {
             "coram": "HON'BLE MR. JUSTICE DIPANKAR DATTA HON'BLE MR. JUSTICE SHEEL NAGU",
-            "total": "22",
+            "total": "23",
             "fresh": "",
             "items": {
               "2": "THEREAFTER REGULAR HEARING MATTERS WILL BE TAKEN UP.",
@@ -2230,6 +2230,7 @@
               "18": "SLP(C) No. RITESH KUMAR MOHAPATRA VERSUS STATE OF ODISHA AND ORS. GAURAV KHANNA [CAVEAT]",
               "18.1": "Connected PAPUN KUMAR SAHOO VERSUS STATE OF ODISHA AND ORS.",
               "19": "SLP(C) No. THE UNION OF INDIA AND ORS. VERSUS THE STATE OF ARUNACHAL PRADESH AND ORS.",
+              "1501": "SLP(C) No. SUDHIR VERSUS HEAD OF HUMAN RESOURCE, DAINIK BHASKAR",
               "20": "C.A. No. UCO BANK VERSUS DEBASHISH NANDA AND ANR.",
               "21": "SLP(C) No. AMULYA KUMAR MISHRA AND ANR. VERSUS DINESH DUA AND ANR."
             },
@@ -2388,6 +2389,10 @@
                 "pet": "ARVIND KUMAR SHARMA",
                 "resp": "RITURAJ BISWAS"
               },
+              "1501": {
+                "pet": "RAVINDRA BANA",
+                "resp": "SAVITA SINGH"
+              },
               "20": {
                 "pet": "BRIJESH KUMAR TAMBER",
                 "resp": "SHASHWAT ANAND"
@@ -2398,7 +2403,7 @@
               }
             },
             "main": 20,
-            "supp": 2
+            "supp": 3
           },
           "7": {
             "coram": "HON'BLE MR. JUSTICE SANJAY KAROL HON'BLE MR. JUSTICE AUGUSTINE GEORGE MASIH",
@@ -15717,7 +15722,7 @@
   "sources": {
     "2026-08-11": {
       "M_J_1": 1056179,
-      "M_J_2": 585371,
+      "M_J_2": 590589,
       "F_J_1": 593410,
       "F_J_2": 505420,
       "M_R_1": 522142,
