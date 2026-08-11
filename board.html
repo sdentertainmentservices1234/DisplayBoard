@@ -226,22 +226,20 @@ main{flex:1;min-height:0;overflow-y:auto;padding:10px 12px calc(64px + env(safe-
   transition:box-shadow .18s,transform .1s;
   flex:1 1 calc(33.33% - 6px);max-width:calc(33.33% - 6px)}
 .cell:active{transform:scale(.98)}
-.cell-ct{font-size:13.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;
-  background:var(--navy);color:#fff;border-radius:20px;padding:3px 13px;align-self:center;line-height:1.15}
-.cell-ct .ctn{font-family:'IBM Plex Mono';font-size:16px;font-weight:800;margin-left:2px;color:#e9c982}
-.cell-item{font-family:'IBM Plex Mono';font-size:24px;font-weight:700;color:var(--ink);line-height:1.02;margin-top:4px}
-.cell-sub{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+/* top row of the island: court no. prominent (left) · item now on (right) */
+.cell-head{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;width:100%}
+.ct-block{display:flex;flex-direction:column;align-items:flex-start;line-height:1;min-width:0}
+.on-block{display:flex;flex-direction:column;align-items:flex-end;line-height:1;min-width:0}
+.ct-lab,.on-lab{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)}
+.ct-num{font-family:'IBM Plex Mono';font-size:30px;font-weight:800;color:var(--navy);line-height:.9;margin-top:1px}
+.on-num{font-family:'IBM Plex Mono';font-size:21px;font-weight:700;color:var(--ink);line-height:.95;margin-top:2px}
 .cell.idle{background:var(--idle-bg)}
-.cell.idle .cell-item{color:var(--idle);font-weight:600}
-.cell.idle .cell-ct{background:var(--idle)}
+.cell.idle .on-num,.cell.idle .on-lab{color:var(--idle)}
 /* mini tile — no chamber matter in this court */
-/* 5-up: each = (100% − 4×8px gap)/5 = 20% − 6.4px. The old −6px overflowed by ~2px,
-   dropping to 4-up and leaving a vacant right column — use 6.5px so all 5 fit. */
-.cell.mini{flex:1 1 calc(20% - 6.5px);max-width:calc(20% - 6.5px);min-height:0;padding:6px 2px 7px}
-.cell.mini .cell-ct{font-size:12px;padding:2px 9px}
-.cell.mini .cell-ct .ctn{font-size:13px}
-.cell.mini .cell-item{font-size:16px;margin-top:2px}
-.cell.mini .cell-sub{display:none}
+/* 5-up: each = (100% − 4×8px gap)/5 = 20% − 6.4px. Use 6.5px so all 5 fit. */
+.cell.mini{flex:1 1 calc(20% - 6.5px);max-width:calc(20% - 6.5px);min-height:0;padding:7px 7px 8px}
+.cell.mini .ct-num{font-size:21px}
+.cell.mini .on-num{font-size:15px}
 /* our courts — colour-coded, shifts as our item nears. Softer tint + a refined,
    slightly-recessed status bar carries the tier colour (calmer than a loud block). */
 .cell.ours{border-width:1.5px}
@@ -1527,11 +1525,14 @@ function boardCell(c, senCourt, senMode){
   const senCls = sen ? " sen"+(live?" senlive":"") : "";
   const pin = sen ? `<span class="senpin${live?"":" inferred"}"><i class="ti ti-user-check"></i><span class="lab">${live?"Senior here":"Likely here"}</span></span>` : "";
   const rib = mine ? `<div class="mycase-rib"><i class="ti ti-star-filled"></i> Your case</div>` : "";
+  // top row: court no. prominent on the LEFT, the item now on the RIGHT
+  const head=`<div class="cell-head">
+    <div class="ct-block"><span class="ct-lab">Court</span><span class="ct-num">${esc(c.court)}</span></div>
+    <div class="on-block">${idle?`<span class="on-lab">not sitting</span><span class="on-num">—</span>`
+      :`<span class="on-lab">on</span><span class="on-num">${esc(c.item||"·")}</span>`}</div>
+  </div>`;
   if(!ours.length && !mine){
-    return `<div class="cell mini ${idle?"idle":""}${senCls}" data-court="${esc(c.court)}">
-      ${pin}
-      <div class="cell-ct">Court <span class="ctn">${esc(c.court)}</span></div>
-      <div class="cell-item">${idle?"—":esc(c.item||"·")}</div></div>`;
+    return `<div class="cell mini ${idle?"idle":""}${senCls}" data-court="${esc(c.court)}">${pin}${head}</div>`;
   }
   // build the item set: the senior's matters here, plus (if this is my case court) any
   // of my briefed items the senior isn't separately listed on — so my item always shows
@@ -1542,10 +1543,7 @@ function boardCell(c, senCourt, senMode){
   // a matter marked over (attended / not attended) is struck through here; my own briefed item is bolded
   const items=ks.map(x=>{ let t=x.k.done?`<s>${esc(x.e.itemNo)}</s>`:esc(x.e.itemNo); return myItems.has(String(x.e.itemNo))?`<b class="myit">${t}</b>`:t; }).join(" · ");
   return `<div class="cell ours ${tier} ${idle?"idle":""}${senCls}${mine?" mycase":""}" data-court="${esc(c.court)}">
-    ${rib}${pin}
-    <div class="cell-ct">Court <span class="ctn">${esc(c.court)}</span></div>
-    <div class="cell-item">${idle?"—":esc(c.item||"·")}</div>
-    <div class="cell-sub">${idle?"not sitting":esc(c.status||"hearing")}</div>
+    ${rib}${pin}${head}
     <div class="cell-ours"><span class="oi">${items}</span><br>${esc(ks[0].k.short||ks[0].k.label)}</div></div>`;
 }
 function renderBoardSwitch(){
