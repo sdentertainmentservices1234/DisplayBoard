@@ -471,31 +471,10 @@ nav.botnav .badge{position:absolute;top:4px;left:calc(50% + 8px);background:var(
       <button class="btn" id="lgGo">Sign in</button>
       <button class="btn ghost" id="lgReset">Forgot password</button>
       <div class="err" id="lgErr"></div>
-      <div class="lg-alt">New here? <button type="button" id="lgToReg">Create an account</button></div>
+      <div class="lg-alt" style="color:var(--mut)">Access is by chamber invitation only — new sign-ups are closed.</div>
     </div>
-    <!-- CREATE ACCOUNT -->
-    <div id="regForm" class="hidden">
-      <label>Full name</label>
-      <input id="rgName" autocomplete="name" placeholder="e.g. Rohan Mehta">
-      <label>Mobile number</label>
-      <input id="rgPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile">
-      <label>Email</label>
-      <input id="rgEmail" type="email" autocomplete="email" placeholder="you@example.com">
-      <label>Designation</label>
-      <select id="rgDesig">
-        <option value="Advocate">Advocate</option>
-        <option value="Advocate-on-Record">Advocate-on-Record</option>
-        <option value="Senior Advocate">Senior Advocate</option>
-        <option value="Clerk">Clerk</option>
-        <option value="Law Clerk / Intern">Law Clerk / Intern</option>
-        <option value="Office Staff">Office Staff</option>
-      </select>
-      <label>Password</label>
-      <input id="rgPass" type="password" autocomplete="new-password" placeholder="choose a password">
-      <button class="btn" id="rgGo">Create account</button>
-      <button class="btn ghost" id="lgToSignin">Back to sign in</button>
-      <div class="err" id="rgErr"></div>
-    </div>
+    <!-- Self-registration removed — this app is invitation-only; chamber members onboard
+         via the chamber app. New sign-ups are closed (also enforced in the rules). -->
   </div>
 </div>
 
@@ -2298,23 +2277,8 @@ $("lgReset").onclick=async()=>{
   try{ await auth.resetPassword(em); $("lgErr").textContent="Reset link sent to "+em; }
   catch(e){ $("lgErr").textContent=e.message||"Could not send reset."; }
 };
-// Create-account (self-registration) — makes a standalone user with their own office.
-$("lgToReg").onclick=()=>{ $("signinForm").classList.add("hidden"); $("regForm").classList.remove("hidden"); $("lgSub").textContent="Create your account"; };
-$("lgToSignin").onclick=()=>{ $("regForm").classList.add("hidden"); $("signinForm").classList.remove("hidden"); $("lgSub").textContent="Live Supreme Court board"; };
-$("rgGo").onclick=async()=>{
-  $("rgErr").textContent="";
-  const name=$("rgName").value.trim(), phone=$("rgPhone").value.replace(/\D/g,""), email=$("rgEmail").value.trim(),
-        designation=$("rgDesig").value, pass=$("rgPass").value;
-  if(name.length<2){ $("rgErr").textContent="Enter your full name."; return; }
-  if(phone.length<10){ $("rgErr").textContent="Enter a valid mobile number."; return; }
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $("rgErr").textContent="Enter a valid email."; return; }
-  if(pass.length<6){ $("rgErr").textContent="Password must be at least 6 characters."; return; }
-  $("rgGo").disabled=true; $("rgErr").textContent="Creating your account…";
-  try{ await auth.signUp(email, pass, {name, phone, designation}); }
-  catch(e){ $("rgGo").disabled=false;
-    $("rgErr").textContent = (e.code||"").includes("email-already-in-use") ? "That email already has an account — sign in instead."
-      : (e.code||"").includes("weak-password") ? "Choose a stronger password." : (e.message||"Could not create account."); }
-};
+// Self-registration removed — the display board is invitation-only. Existing users sign
+// in normally; new accounts are closed here and in the Firestore rules.
 function initNotify(){
   try{ notifyOn = localStorage.getItem("boardNotify")==="1" && ("Notification" in window) && Notification.permission==="granted"; }catch(e){ notifyOn=false; }
   updateNotifyBtn(); if(notifyOn){ acquireWake(); syncPushSub(); }
