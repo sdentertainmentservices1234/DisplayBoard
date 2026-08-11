@@ -226,20 +226,23 @@ main{flex:1;min-height:0;overflow-y:auto;padding:10px 12px calc(64px + env(safe-
   transition:box-shadow .18s,transform .1s;
   flex:1 1 calc(33.33% - 6px);max-width:calc(33.33% - 6px)}
 .cell:active{transform:scale(.98)}
-/* top row of the island: court no. prominent (left) · item now on (right) */
-.cell-head{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;width:100%}
-.ct-block{display:flex;flex-direction:column;align-items:flex-start;line-height:1;min-width:0}
-.on-block{display:flex;flex-direction:column;align-items:flex-end;line-height:1;min-width:0}
-.ct-lab,.on-lab{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)}
-.ct-num{font-family:'IBM Plex Mono';font-size:30px;font-weight:800;color:var(--navy);line-height:.9;margin-top:1px}
+/* top row of the island: C<court> chip (left, contrasting) · divider · item now on (right) */
+.cell-head{display:flex;align-items:center;width:100%}
+.ct-side{flex:1;display:flex;justify-content:flex-start;min-width:0}
+.on-side{flex:1;display:flex;flex-direction:column;align-items:flex-end;line-height:1;min-width:0}
+.on-lab{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)}
+.ct-num{background:var(--navy);color:#fff;font-family:'IBM Plex Mono';font-size:25px;font-weight:800;line-height:1;border-radius:9px;padding:5px 10px;letter-spacing:.5px}
+.ct-num .cd{color:#e9c982}
+.cell-div{flex:none;width:1.5px;align-self:stretch;min-height:34px;background:var(--line);border-radius:2px;margin:0 8px}
 .on-num{font-family:'IBM Plex Mono';font-size:21px;font-weight:700;color:var(--ink);line-height:.95;margin-top:2px}
 .cell.idle{background:var(--idle-bg)}
 .cell.idle .on-num,.cell.idle .on-lab{color:var(--idle)}
 /* mini tile — no chamber matter in this court */
 /* 5-up: each = (100% − 4×8px gap)/5 = 20% − 6.4px. Use 6.5px so all 5 fit. */
 .cell.mini{flex:1 1 calc(20% - 6.5px);max-width:calc(20% - 6.5px);min-height:0;padding:7px 7px 8px}
-.cell.mini .ct-num{font-size:21px}
+.cell.mini .ct-num{font-size:18px;padding:3px 7px;border-radius:7px}
 .cell.mini .on-num{font-size:15px}
+.cell.mini .cell-div{min-height:24px;margin:0 5px}
 /* our courts — colour-coded, shifts as our item nears. Softer tint + a refined,
    slightly-recessed status bar carries the tier colour (calmer than a loud block). */
 .cell.ours{border-width:1.5px}
@@ -1527,8 +1530,9 @@ function boardCell(c, senCourt, senMode){
   const rib = mine ? `<div class="mycase-rib"><i class="ti ti-star-filled"></i> Your case</div>` : "";
   // top row: court no. prominent on the LEFT, the item now on the RIGHT
   const head=`<div class="cell-head">
-    <div class="ct-block"><span class="ct-lab">Court</span><span class="ct-num">${esc(c.court)}</span></div>
-    <div class="on-block">${idle?`<span class="on-lab">not sitting</span><span class="on-num">—</span>`
+    <div class="ct-side"><span class="ct-num">C<span class="cd">${esc(c.court)}</span></span></div>
+    <div class="cell-div"></div>
+    <div class="on-side">${idle?`<span class="on-lab">not sitting</span><span class="on-num">—</span>`
       :`<span class="on-lab">on</span><span class="on-num">${esc(c.item||"·")}</span>`}</div>
   </div>`;
   if(!ours.length && !mine){
