@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T15:33:03.132534Z",
+  "generated_at": "2026-08-11T16:27:13.925316Z",
   "parser_version": 8,
   "window": [
     "2026-08-11",
@@ -17023,6 +17023,7 @@
     "2026-08-14": {
       "lists_found": [
         "Chamber (main)",
+        "Single Judge (main)",
         "Registrar (main)"
       ],
       "lists": {
@@ -17414,6 +17415,235 @@
               }
             },
             "main": 21,
+            "supp": 0
+          }
+        },
+        "Single Judge": {
+          "7": {
+            "coram": "HON'BLE MR. JUSTICE SANJEEV SACHDEVA",
+            "total": "10",
+            "fresh": "",
+            "items": {
+              "1601": "T.P.(C) No. 2280/2026 SUSAN THOMAS VERSUS APPU JACOB ZACHARIAH",
+              "1602": "T.P.(C) No. 2307/2026 KIRTI SHARMA VERSUS RISHI SHARMA",
+              "1603": "T.P.(C) No. 2298/2026 EKTA KUMARI VERSUS AVINASH KUMAR RAM",
+              "1604": "T.P.(Crl.) No. 807/2026 NARESH VIRJI BHANUSHALI VERSUS NEETA NARESH BHANUSHALI",
+              "1605": "T.P.(C) No. 2890/2025 RESHMI GOSWAMI VERSUS PRADIP KUMAR GOSWAMI",
+              "1606": "T.P.(Crl.) No. 32/2026 GEETIKA GUPTA AND ORS. VERSUS HEENA SHARMA",
+              "1607": "T.P.(C) No. 77/2026 NADIYA RAHMAN VERSUS MD. NADIM",
+              "1608": "T.P.(C) No. 263/2026 PRIYANKA GUPTA VERSUS RACHIT GOYAL",
+              "1609": "T.P.(C) No. 704/2026 SHANTIPRIYA BALRAJ KSHIRSAGAR VERSUS BALRAJ SHANKAR KSHIRSAGAR",
+              "1610": "T.P.(Crl.) No. 556/2026 AMANPREET KAUR VERSUS SUBHASH CHAUDHARY AND ORS."
+            },
+            "advocates": {
+              "1601": {
+                "pet": "RANGOLI SETH"
+              },
+              "1602": {
+                "pet": "EKANSH BANSAL"
+              },
+              "1603": {
+                "pet": "ADITYA VITHAL SHIVAJI"
+              },
+              "1604": {
+                "pet": "SUJOY CHATTERJEE"
+              },
+              "1605": {
+                "pet": "ROBIN KHOKHAR",
+                "resp": "ARUP BANERJEE"
+              },
+              "1606": {
+                "pet": "AKANKSHA MEHRA",
+                "resp": "RUPALI SAMANTA GHOSH"
+              },
+              "1607": {
+                "pet": "PUNEET DHAWAN",
+                "resp": "SYED MEHDI IMAM"
+              },
+              "1608": {
+                "pet": "RISHI JAISWAL",
+                "resp": "ANUJ SAXENA"
+              },
+              "1609": {
+                "pet": "SANJAY KUMAR VISEN"
+              },
+              "1610": {
+                "pet": "RIJU MANI TALUKDAR"
+              }
+            },
+            "main": 10,
+            "supp": 0
+          },
+          "11": {
+            "coram": "HON'BLE MR. JUSTICE SHREE CHANDRASHEKHAR",
+            "total": "9",
+            "fresh": "",
+            "items": {
+              "1601": "T.P.(C) No. 2300/2026 JYOTI RAJPUT VERSUS KANWARJEET SINGH PARMAR",
+              "1602": "T.P.(C) No. 2315/2026 NITHYAPRIYA E. VERSUS RAMKUMAR R",
+              "1603": "T.P.(C) No. 2283/2026 ANSHU PAL VERSUS BRIJESH PAL",
+              "1604": "Diary No. 38564-2026 KAMINI SINGH RANA VERSUS STATE OF U.P. AND ANR.",
+              "1605": "T.P.(Crl.) No. 803/2026 RASNA ARORA VERSUS MANOJ KUMAR",
+              "1606": "T.P.(C) No. 3379/2025 VANITA SHASHIKANT KOLWALE VERSUS SHASHIKANT BHANUDAS KOLWALE",
+              "1607": "T.P.(Crl.) No. 133/2026 ANU VERSUS SAROJ AND ORS.",
+              "1608": "T.P.(C) No. 343/2026 NISHA VERSUS RAMAN",
+              "1609": "T.P.(C) No. 1183/2026 AISHWARYA BHARDWAJ VERSUS AKASH GOEL"
+            },
+            "advocates": {
+              "1601": {
+                "pet": "SUSHIL BALWADA"
+              },
+              "1602": {
+                "pet": "MALAVIKA JAYANTH"
+              },
+              "1603": {
+                "pet": "ALAPATI SAHITHYA"
+              },
+              "1604": {
+                "pet": "AMAN GUPTA"
+              },
+              "1605": {
+                "pet": "PRIYANKA PRAKASH"
+              },
+              "1606": {
+                "pet": "K. KRISHNA KUMAR"
+              },
+              "1607": {
+                "pet": "ANILENDRA PANDEY"
+              },
+              "1608": {
+                "pet": "RUCHI GUPTA"
+              },
+              "1609": {
+                "pet": "SURYA PRAKASH",
+                "resp": "QURRATULAIN"
+              }
+            },
+            "main": 9,
+            "supp": 0
+          },
+          "12": {
+            "coram": "HON'BLE MR. JUSTICE ARUN PALLI",
+            "total": "11",
+            "fresh": "",
+            "items": {
+              "1601": "T.P.(C) No. 2180/2026 NEHA TEWATIA VERSUS AMAN",
+              "1602": "T.P.(C) No. KEETHANA MADHAVAN VERSUS PRAKASH DHAMOTHARAN",
+              "1603": "T.P.(C) No. 2302/2026 NEHA SINGH VERSUS GAURAV CHANDEL",
+              "1604": "T.P.(C) No. 2306/2026 DR. BADVELI LAKSHMI ANUSHA VERSUS VANKINENI SRIKANTH",
+              "1605": "T.P.(C) No. 3416/2025 PRIYANKA VERSUS MANISH AND ANR.",
+              "1606": "T.P.(C) No. 3678/2025 GUDIYA KUMARI VERSUS GIREEJA SHANKAR SINGH",
+              "1607": "T.P.(Crl.) No. 49/2026 NARESH KUMAR METARI THROUGH GPA HOLDER VERSUS JASMINE",
+              "1608": "T.P.(C) No. 8/2026 NIKITA VISHAL JAIN ALIAS NIKITA POPATLAL VERSUS VISHAL MOHANLAL JAIN",
+              "1609": "T.P.(C) No. 465/2026 ASHISH KAPILA VERSUS AMAN SHARMA",
+              "1610": "T.P.(Crl.) No. 170/2026 BIBIN JOSEPH AND ORS. VERSUS KHUSHBOO KUMARI",
+              "1611": "T.P.(C) No. 1582/2026 N. TRUSHNA REDDY VERSUS CHINMAYA KUMAR"
+            },
+            "advocates": {
+              "1601": {
+                "pet": "VARUN SINGH"
+              },
+              "1602": {
+                "pet": "P. V. YOGESWARAN",
+                "resp": "T. HARISH KUMAR"
+              },
+              "1603": {
+                "pet": "TUNGESH"
+              },
+              "1604": {
+                "pet": "ANAND SHANKAR JHA"
+              },
+              "1605": {
+                "pet": "DINKAR KALRA",
+                "resp": "ANIL KUMAR VERMA"
+              },
+              "1606": {
+                "pet": "PUSHKAR ANAND",
+                "resp": "RUCHI GUPTA"
+              },
+              "1607": {
+                "pet": "SNEHA KALITA",
+                "resp": "ARPIT GUPTA"
+              },
+              "1608": {
+                "pet": "DESHPANDE CHINMAY"
+              },
+              "1609": {
+                "pet": "JAYDIP PATI"
+              },
+              "1610": {
+                "pet": "MRS. VIPIN GUPTA",
+                "resp": "RITA JHA"
+              },
+              "1611": {
+                "pet": "V. N. RAGHUPATHY"
+              }
+            },
+            "main": 11,
+            "supp": 0
+          },
+          "17": {
+            "coram": "HON'BLE MRS. JUSTICE V. MOHANA",
+            "total": "5",
+            "fresh": "",
+            "items": {
+              "1606": "Diary No. 34300-2026 MANOJ KUMAR SAH VERSUS STATE OF WEST BENGAL AND ORS.",
+              "1607": "T.P.(Crl.) No. 788/2026 VIJAY @ VICKY VERSUS THE STATE OF NCT OF DELHI AND ANR.",
+              "1608": "T.P.(Crl.) No. 223/2026 SHIVLI SRIVASTAVA VERSUS ANKIT APOORV AND ORS.",
+              "1609": "T.P.(C) No. 416/2026 MALVIKA LODHI VERSUS BHANU VRAT",
+              "1610": "T.P.(Crl.) No. 393/2026 MOHIT CHOUHAN VERSUS KOMAL CHOUHAN"
+            },
+            "advocates": {
+              "1606": {
+                "pet": "ABHIJIT BHATNAGAR"
+              },
+              "1607": {
+                "pet": "NISCHAL KUMAR NEERAJ"
+              },
+              "1608": {
+                "pet": "SUHAAS RATNA JOSHI",
+                "resp": "DINESH KUMAR GARG"
+              },
+              "1609": {
+                "pet": "SUMIT SRIVAASTAVA",
+                "resp": "NITEEN KUMAR SINHA"
+              },
+              "1610": {
+                "pet": "MEDHA TANDON"
+              }
+            },
+            "main": 5,
+            "supp": 0
+          },
+          "1": {
+            "coram": "",
+            "total": "5",
+            "fresh": "",
+            "items": {
+              "1601": "T.P.(C) No. 1999/2026 SNEHA KUMARI VERSUS AVINASH KUMAR SINGH",
+              "1602": "T.P.(C) No. 2187/2026 NISHU TYAGI VERSUS CHETAN TYAGI",
+              "1603": "T.P.(C) No. 2296/2026 MADHUMITA BISWAL VERSUS R. SARAVANARAJA",
+              "1604": "T.P.(C) No. 2322/2026 SONAL VERSUS VIKAS KUMAR MALIK",
+              "1605": "T.P.(C) No. 2312/2026 GUNJAN RATHORE VERSUS SOURABH SINGH SHISHODIA"
+            },
+            "advocates": {
+              "1601": {
+                "pet": "NARESH KUMAR"
+              },
+              "1602": {
+                "pet": "UPENDRA PRATAP SINGH"
+              },
+              "1603": {
+                "pet": "DANISH ZUBAIR KHAN"
+              },
+              "1604": {
+                "pet": "SACHIN HITKARI"
+              },
+              "1605": {
+                "pet": "YASHASWI S.K. CHOCKSEY"
+              }
+            },
+            "main": 5,
             "supp": 0
           }
         },
@@ -18042,6 +18272,7 @@
     },
     "2026-08-14": {
       "M_C_1": 546381,
+      "M_S_1": 518973,
       "M_R_1": 532720
     }
   },
