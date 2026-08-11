@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Supreme Court of India — per-court BENCH (coram) fetcher for SD-Chamber.
+Supreme Court of India — per-court BENCH (coram) fetcher for DisplayBoard.
 
-Model (owner's decision, Jul 2026): the office Staff enter each listing on the
-day sheet — court no, item no, causelist type, cause title, date, briefing
-counsel. This scheduled Action cannot read the app's database, so it does NOT
-search for the chamber's matters. Instead it downloads the published SC lists
-for a rolling window of upcoming days and extracts, per (date, list-type,
-court): the BENCH (coram) and the court's total/fresh counts. The app then
-looks up whatever court/item/type/date Staff entered and fills in the
-authoritative bench "as per the causelist".
+DisplayBoard is a live war-room display of the Supreme Court's board, overlaid
+with a chamber's own matters (court proximity, chat, alerts). This scheduled
+Action cannot read the app's database, so it does NOT search for anyone's
+matters. Instead it downloads the published SC lists for a rolling window of
+upcoming days and extracts, per (date, list-type, court): the BENCH (coram)
+and the court's total/fresh counts. The app then looks up whatever
+court/item/type/date a matter is tracked at and fills in the authoritative
+bench "as per the causelist".
 
 Writes court-updates.json at the repo root; the app reads it same-origin.
 Free: pure fetch + PDF text, no API keys. Drafting aid only — the court's
@@ -52,7 +52,7 @@ OUTPUT_FILE = "court-updates.json"
 # this, a parser FIX never reaches already-cached dates (their PDFs don't change).
 # A version mismatch forces a full re-parse of every date in the window.
 PARSER_VERSION = 8   # bumped: skip page-header boilerplate (was leaking as respondent)
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; sd-chamber-causelist-bot/1.0)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; displayboard-causelist-bot/1.0)"}
 
 COURT_RE = re.compile(r"COURT\s*NO\.?\s*[:\-]?\s*([0-9]+)", re.I)
 CJ_RE    = re.compile(r"CHIEF\s+JUSTICE'?S\s+COURT", re.I)
