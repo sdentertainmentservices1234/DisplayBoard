@@ -60,10 +60,15 @@ SEED = '''function seedDemo(db){
   db.set("usermatters/u_aor",{matters:[{id:"mo1",court:"4",item:"5",title:"My SLP v. State of Karnataka"}],updatedAt:n()});
   // Several AoRs tracking the senior — the team's Briefing inbox (eight-AoR handling):
   //  bl_a Rohan (Ct6/4), bl_c Meera (Ct1/12), bl_d Arjun (Ct14/3) approved; bl_b Priya pending.
+  const Y=new Date(Date.now()-864e5).toLocaleDateString('en-CA');   // yesterday — an expired grant
   db.set("brieflinks/bl_a",{aorUid:"u_aor",aorName:"Rohan Mehta",aorDesig:"Advocate-on-Record",
     court:"6",item:"4",date:D,title:"Mahabanoo v. Kalikund",note:"Briefing on the SLP",status:"approved",at:{_t:Date.now()-30*60000},decidedBy:"u_clerk",
     matters:[{court:"6",item:"4",date:D,listType:"Miscellaneous",party:"Petitioner",title:"Mahabanoo v. Kalikund",bench:"J.B. Pardiwala, K.V. Chandran",aor:""},
              {court:"1",item:"12",date:D,listType:"Miscellaneous",party:"Respondent",title:"Sugandha v. Babasaheb",bench:"C.J.I., Joymala Bagchi, V. Mohana",aor:""}]});
+  // an EXPIRED grant for the same AoR (permission was for yesterday) — day-scoped test
+  db.set("brieflinks/bl_ax",{aorUid:"u_aor",aorName:"Rohan Mehta",aorDesig:"Advocate-on-Record",
+    court:"9",item:"7",date:Y,title:"Old briefing v. State",note:"",status:"approved",at:{_t:Date.now()-26*3600000},decidedBy:"u_clerk",
+    matters:[{court:"9",item:"7",date:Y,listType:"Miscellaneous",party:"Petitioner",title:"Old briefing v. State",bench:"",aor:""}]});
   db.set("brieflinks/bl_c",{aorUid:"u_aor2",aorName:"Meera Krishnan",aorDesig:"Advocate",
     court:"1",item:"12",date:D,title:"Sugandha v. Babasaheb",note:"",status:"approved",at:{_t:Date.now()-50*60000},decidedBy:"u_clerk"});
   db.set("brieflinks/bl_d",{aorUid:"u_aor3",aorName:"Arjun Rao",aorDesig:"Senior Advocate",

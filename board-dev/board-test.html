@@ -419,6 +419,9 @@ body.kb-open nav.botnav{display:none}
 .bdesig{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);font-weight:700;margin-left:4px}
 .bchip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;flex:none}
 .bempty{text-align:center;color:var(--mut);font-size:13px;padding:16px 12px;border:1px dashed var(--line);border-radius:12px;margin-bottom:9px}
+.brief-lapse{margin-top:10px;background:#f6eccf;border:1px solid #e6cf9c;color:#6b4e18;border-radius:11px;padding:10px 12px;font-size:12.5px;line-height:1.45}
+.blink-rereq{background:none;border:none;padding:0;color:#8a5a12;font-weight:700;text-decoration:underline;font-size:12.5px;cursor:pointer}
+.binbox.binbox-off{opacity:.72}
 .bmsgs{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
 .bmsg{flex:1 1 46%;padding:10px 8px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:12.5px;font-weight:600}
 .bmsg:active{transform:translateY(1px)}
@@ -1362,14 +1365,24 @@ const isCourtroom = n => { const x=parseInt(n,10); return x>=1 && x<=17; };
 // the senior's whole board. The toggle swaps the tracked matter set at the source,
 // so board + rail + flash + alerts all follow it. Chamber members are unaffected.
 const myApprovedLinks = () => briefLinks.filter(l=>l.aorUid===me?.uid && l.status==="approved");
-const isBriefAoR      = () => BRIEFING && !!me && myApprovedLinks().length>0;
+// A brief approval is good ONLY for the date(s) the request was for — after that day it
+// lapses (re-request for the next date). linkState → active | scheduled | expired.
+const linkDates = l => { const ds=[...new Set((((l&&l.matters)||[]).map(m=>m&&m.date).filter(Boolean)))]; return ds.length?ds:(l&&l.date?[l.date]:[]); };
+function linkState(l){ if(!l||l.status!=="approved") return (l&&l.status)||"none";
+  const ds=linkDates(l); if(!ds.length) return "active";
+  const t=todayISO(); if(ds.includes(t)) return "active"; if(ds.some(d=>d>t)) return "scheduled"; return "expired"; }
+const linkActive = l => linkState(l)==="active";
+const linkSoonDate = l => { const t=todayISO(), ds=linkDates(l); return ds.filter(d=>d>=t).sort()[0] || ds.sort().slice(-1)[0] || null; };
+const fmtDay = d => { try{ return new Date(d+"T00:00:00").toLocaleDateString('en-GB',{day:'numeric',month:'short'}); }catch(e){ return d; } };
+const isBriefAoR      = () => BRIEFING && !!me && myApprovedLinks().some(linkActive);
 // The case(s) an AoR is briefing the senior in — carried on the brieflink (matters[]),
 // with a fallback to the legacy single court/item. Used to FLAG those courts on the
 // senior's board so the AoR finds their matter instead of getting lost in his many.
 const linkMatters = l => (l && l.matters && l.matters.length)
-  ? l.matters.filter(m=>m&&m.court&&m.item).map(m=>({court:String(m.court),item:String(m.item),title:m.title||"",listType:m.listType||"",party:m.party||"",bench:m.bench||"",aor:m.aor||""}))
-  : (l && l.court && l.item ? [{court:String(l.court),item:String(l.item),title:l.title||"",listType:l.listType||"",party:"",bench:"",aor:""}] : []);
-const myBriefMatters   = () => myApprovedLinks().flatMap(linkMatters);
+  ? l.matters.filter(m=>m&&m.court&&m.item).map(m=>({court:String(m.court),item:String(m.item),date:m.date||"",title:m.title||"",listType:m.listType||"",party:m.party||"",bench:m.bench||"",aor:m.aor||""}))
+  : (l && l.court && l.item ? [{court:String(l.court),item:String(l.item),date:l.date||"",title:l.title||"",listType:l.listType||"",party:"",bench:"",aor:""}] : []);
+// Only ACTIVE links, and only TODAY's cases, feed the senior-board highlight.
+const myBriefMatters   = () => myApprovedLinks().filter(linkActive).flatMap(l=>linkMatters(l).filter(m=>!m.date||m.date===todayISO()));
 const isBriefCaseCourt = court => BRIEFING && isBriefAoR() && boardView==="senior" && myBriefMatters().some(m=>String(m.court)===String(court));
 const briefCaseItemsIn = court => myBriefMatters().filter(m=>String(m.court)===String(court)).map(m=>m.item);
 const ownMattersList  = () => (myOwn||[]).filter(m=>m.court&&m.item).map(m=>({courtNo:String(m.court),itemNo:String(m.item),caseTitle:m.title||"",juniorUids:me?[me.uid]:[],_own:m.id}));
@@ -2005,11 +2018,21 @@ function renderBriefAoR(){
   h+=`<button class="sh-btn navy" id="bNew"><i class="ti ti-plus"></i> Request to track someone</button>`;
   if(!mine.length) h+=`<div class="bempty">No requests yet — ask a senior's chamber for access to see his whole board while your matter reaches, and message his team.</div>`;
   else h+=mine.map(l=>{
-    if(l.status==="approved") return `<div class="bcard bhi">
-      <div class="brow"><span class="bval">${esc(CHAMBER.seniorName)}</span>${briefStatusChip(l.status)}</div>
-      <div class="bsub">${linkMattersLabel(l)}</div>
-      <button class="sh-btn" style="margin-top:10px" data-viewboard="1"><i class="ti ti-layout-grid"></i> View ${esc(srName)}'s board</button>
-      ${threadHtml(l)}${composeHtml(l,true)}</div>`;
+    if(l.status==="approved"){ const st=linkState(l), d=linkSoonDate(l);
+      const stChip = st==="active" ? briefStatusChip("approved")
+        : st==="scheduled" ? `<span class="bchip" style="color:#8a6a12;background:#f6eccf">Opens ${esc(fmtDay(d))}</span>`
+        : `<span class="bchip" style="color:#8a2a20;background:#f6dcd8">Expired</span>`;
+      const ctl = st==="active"
+        ? `<button class="sh-btn" style="margin-top:10px" data-viewboard="1"><i class="ti ti-layout-grid"></i> View ${esc(srName)}'s board</button>`
+        : st==="scheduled"
+          ? `<div class="brief-lapse">Approved for <b>${esc(fmtDay(d))}</b> — tracking opens that day.</div>`
+          : `<div class="brief-lapse">This permission was for <b>${esc(fmtDay(d))}</b>. Tracking lasts one day only — <button class="blink-rereq" data-rereq="1">request again</button> for the next date.</div>`;
+      return `<div class="bcard bhi">
+        <div class="brow"><span class="bval">${esc(CHAMBER.seniorName)}</span>${stChip}</div>
+        <div class="bsub">${linkMattersLabel(l)}</div>
+        ${ctl}
+        ${threadHtml(l)}${composeHtml(l,true)}</div>`;
+    }
     return `<div class="bcard"><div class="brow"><span class="bval">${esc(CHAMBER.seniorName)}</span>${briefStatusChip(l.status)}</div>
       <div class="bsub">${linkMattersLabel(l)}</div>${l.status==="pending"?`<div class="bsub">Waiting for the chamber to approve.</div>`:''}</div>`;
   }).join("");
@@ -2018,6 +2041,7 @@ function renderBriefAoR(){
   const nb=$("bNew"); if(nb) nb.onclick=briefRequestForm;
   const vb=document.querySelector("[data-viewboard]"); if(vb) vb.onclick=()=>{ boardView="senior"; curTab="board";
     document.querySelectorAll("nav.botnav button").forEach(x=>x.classList.toggle("on",x.dataset.tab==="board")); render(); };
+  const rr=document.querySelector("[data-rereq]"); if(rr) rr.onclick=briefRequestForm;
   mine.forEach(l=>markThreadSeen(l.id)); updateBriefBadge();
 }
 function renderBriefInbox(){
@@ -2027,21 +2051,28 @@ function renderBriefInbox(){
     h+=pend.map(l=>`<div class="bcard">
       <div class="brow"><span class="bval">${esc(l.aorName)}</span>${briefStatusChip(l.status)}</div>
       <div class="bsub">wants to track the senior for:<br><b>${linkMattersLabel(l)}</b>${l.note?`<br>“${esc(l.note)}”`:''}</div>
+      <div class="bsub" style="color:#8a6a12">Grants tracking for <b>${esc(linkDates(l).map(fmtDay).join(", ")||"today")}</b> only — one day.</div>
       <div class="bmsgs"><button class="bmsg ok" data-bdec="${esc(l.id)}|approved">Approve</button><button class="bmsg no" data-bdec="${esc(l.id)}|declined">Decline</button></div>
     </div>`).join(""); }
   h+=`<div class="bsec-h" style="margin-top:${pend.length?16:2}px">Collaboration inbox${appr.length?` · ${appr.length}`:''}</div>`;
   if(!appr.length) h+=`<div class="bempty">No active briefing conversations.</div>`;
   else{
-    const rows=appr.map(l=>({l,k:linkProx(l),unread:threadUnread(l.id),last:threadLast(l.id)}))
-      .sort((a,b)=>((a.k.gap??999)-(b.k.gap??999))||(b.unread-a.unread));
-    h+=rows.map(({l,k,unread,last})=>{ const band=proxBand(k);
+    // Active (today's) briefings first, then scheduled, then expired — a briefing that
+    // isn't today no longer shows a live proximity.
+    const rank={active:0,scheduled:1,expired:2};
+    const rows=appr.map(l=>({l,st:linkState(l),k:linkProx(l),unread:threadUnread(l.id),last:threadLast(l.id)}))
+      .sort((a,b)=>(rank[a.st]-rank[b.st])||((a.k.gap??999)-(b.k.gap??999))||(b.unread-a.unread));
+    h+=rows.map(({l,st,k,unread,last})=>{ const band=proxBand(k);
       const initials=(l.aorName||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
       const lastTxt=last?`${last.by===me?.uid?"You: ":""}${last.text}`:"No messages yet";
       const ms=linkMatters(l); const mlab=ms.length?`Ct ${esc(ms[0].court)} · item ${esc(ms[0].item)}${ms.length>1?` +${ms.length-1} more`:(ms[0].title?` — ${esc(ms[0].title)}`:'')}`:"—";
-      return `<div class="bcard binbox" data-open="${esc(l.id)}"><div class="binbox-row">
+      const chip = st==="active" ? `<span class="bprox ${band}">${esc(k.short||"—")}</span>`
+        : st==="scheduled" ? `<span class="bprox far">${esc(fmtDay(linkSoonDate(l)))}</span>`
+        : `<span class="bprox far" style="opacity:.7">expired</span>`;
+      return `<div class="bcard binbox${st!=="active"?" binbox-off":""}" data-open="${esc(l.id)}"><div class="binbox-row">
         <span class="bavatar">${esc(initials)}</span>
         <span class="bmeta"><span class="bnm">${esc(l.aorName)}</span><span class="bmatter">${mlab}</span><span class="blast">${esc(lastTxt)}</span></span>
-        <span class="bright"><span class="bprox ${band}">${esc(k.short||"—")}</span>${unread?`<span class="bunread">${unread}</span>`:''}</span>
+        <span class="bright">${chip}${unread?`<span class="bunread">${unread}</span>`:''}</span>
       </div></div>`;
     }).join("");
   }
@@ -2327,10 +2358,15 @@ function seedDemo(db){
   db.set("usermatters/u_aor",{matters:[{id:"mo1",court:"4",item:"5",title:"My SLP v. State of Karnataka"}],updatedAt:n()});
   // Several AoRs tracking the senior — the team's Briefing inbox (eight-AoR handling):
   //  bl_a Rohan (Ct6/4), bl_c Meera (Ct1/12), bl_d Arjun (Ct14/3) approved; bl_b Priya pending.
+  const Y=new Date(Date.now()-864e5).toLocaleDateString('en-CA');   // yesterday — an expired grant
   db.set("brieflinks/bl_a",{aorUid:"u_aor",aorName:"Rohan Mehta",aorDesig:"Advocate-on-Record",
     court:"6",item:"4",date:D,title:"Mahabanoo v. Kalikund",note:"Briefing on the SLP",status:"approved",at:{_t:Date.now()-30*60000},decidedBy:"u_clerk",
     matters:[{court:"6",item:"4",date:D,listType:"Miscellaneous",party:"Petitioner",title:"Mahabanoo v. Kalikund",bench:"J.B. Pardiwala, K.V. Chandran",aor:""},
              {court:"1",item:"12",date:D,listType:"Miscellaneous",party:"Respondent",title:"Sugandha v. Babasaheb",bench:"C.J.I., Joymala Bagchi, V. Mohana",aor:""}]});
+  // an EXPIRED grant for the same AoR (permission was for yesterday) — day-scoped test
+  db.set("brieflinks/bl_ax",{aorUid:"u_aor",aorName:"Rohan Mehta",aorDesig:"Advocate-on-Record",
+    court:"9",item:"7",date:Y,title:"Old briefing v. State",note:"",status:"approved",at:{_t:Date.now()-26*3600000},decidedBy:"u_clerk",
+    matters:[{court:"9",item:"7",date:Y,listType:"Miscellaneous",party:"Petitioner",title:"Old briefing v. State",bench:"",aor:""}]});
   db.set("brieflinks/bl_c",{aorUid:"u_aor2",aorName:"Meera Krishnan",aorDesig:"Advocate",
     court:"1",item:"12",date:D,title:"Sugandha v. Babasaheb",note:"",status:"approved",at:{_t:Date.now()-50*60000},decidedBy:"u_clerk"});
   db.set("brieflinks/bl_d",{aorUid:"u_aor3",aorName:"Arjun Rao",aorDesig:"Senior Advocate",
