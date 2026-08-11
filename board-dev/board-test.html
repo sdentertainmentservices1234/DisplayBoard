@@ -1374,6 +1374,11 @@ function linkState(l){ if(!l||l.status!=="approved") return (l&&l.status)||"none
 const linkActive = l => linkState(l)==="active";
 const linkSoonDate = l => { const t=todayISO(), ds=linkDates(l); return ds.filter(d=>d>=t).sort()[0] || ds.sort().slice(-1)[0] || null; };
 const fmtDay = d => { try{ return new Date(d+"T00:00:00").toLocaleDateString('en-GB',{day:'numeric',month:'short'}); }catch(e){ return d; } };
+// The tracking window (ms, IST calendar days) an approval is valid for — stamped on the
+// brieflink and mirrored to briefaccess/{aorUid} so the Firestore rules gate the day-sheet
+// read server-side, not just the UI.
+function linkWindow(dates){ const ds=[...new Set((dates||[]).filter(Boolean))].sort(); if(!ds.length) return {};
+  return { startsAt:new Date(ds[0]+"T00:00:00+05:30").getTime(), expiresAt:new Date(ds[ds.length-1]+"T00:00:00+05:30").getTime()+864e5 }; }
 const isBriefAoR      = () => BRIEFING && !!me && myApprovedLinks().some(linkActive);
 // The case(s) an AoR is briefing the senior in — carried on the brieflink (matters[]),
 // with a fallback to the legacy single court/item. Used to FLAG those courts on the
@@ -2147,7 +2152,7 @@ function briefRequestForm(){
       const first=cases[0];
       try{ await db.add("brieflinks",{aorUid:me.uid, aorName:me.name||"Advocate", aorDesig:me.designation||"Advocate",
           matters:cases, court:first.court, item:first.item, title:first.title||"", listType:first.listType||"",
-          date:first.date||todayISO(), note:note.trim(), status:"pending", at:db.now()});
+          date:first.date||todayISO(), note:note.trim(), status:"pending", at:db.now(), ...linkWindow(cases.map(c=>c.date))});
         closeModal(); curTab="brief";
         document.querySelectorAll("nav.botnav button").forEach(x=>x.classList.toggle("on",x.dataset.tab==="brief")); render(); }
       catch(e){ $("bq_err").textContent="Could not send — "+(e.message||e); }
@@ -2156,8 +2161,22 @@ function briefRequestForm(){
   draw();
 }
 async function decideBrief(id,status){
+  const l=briefLinks.find(x=>x.id===id);
   try{ await db.update("brieflinks/"+id,{status,decidedBy:me.uid,decidedAt:db.now()});
-    if(status!=="approved" && briefOpenThread===id) briefOpenThread=null; }catch(e){}
+    if(status!=="approved" && briefOpenThread===id) briefOpenThread=null;
+    if(l&&l.aorUid) await syncBriefAccess(l.aorUid, {id, status}); }catch(e){}
+}
+// Mirror the AoR's live board-tracking window to briefaccess/{aorUid} (union of their
+// approved brieflinks' windows). The rules gate the day-sheet read on this, so an
+// approval only opens the board for the day(s) it was for. Written by the chamber team
+// on approve/revoke; natural expiry needs no write (rules compare request.time).
+async function syncBriefAccess(aorUid, override){
+  const rows=briefLinks.filter(l=>l.aorUid===aorUid)
+    .map(l=> (override&&l.id===override.id)?{...l,status:override.status}:l)
+    .filter(l=>l.status==="approved" && l.expiresAt);
+  const starts=rows.map(l=>l.startsAt).filter(v=>typeof v==="number"), exps=rows.map(l=>l.expiresAt).filter(v=>typeof v==="number");
+  try{ if(exps.length) await db.set("briefaccess/"+aorUid,{startsAt:starts.length?Math.min(...starts):0, expiresAt:Math.max(...exps), by:me.uid, at:db.now()},true);
+    else await db.remove("briefaccess/"+aorUid); }catch(e){}
 }
 // Messages live in a PER-LINK thread (not the general chamber chat), so eight AoRs
 // stay eight separate conversations. Name only, never designation.
