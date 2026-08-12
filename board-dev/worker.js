@@ -100,6 +100,12 @@ export default {
       try { return await handlePush(u.pathname, req, env); }
       catch (e) { return new Response(JSON.stringify({ error: String(e) }), { status: 500, headers: JSONH }); }
     }
+    // ---- CourtReach's own Web Push subscribe/unsubscribe (its scheduled() tick below does
+    // the sending — there's no /cr-push-send, unlike SD-Chamber's relay model) ----
+    if (req.method === "POST" && u.pathname.startsWith("/cr-push-")) {
+      try { return await handleCRPush(u.pathname, req, env); }
+      catch (e) { return new Response(JSON.stringify({ error: String(e) }), { status: 500, headers: JSONH }); }
+    }
 
     // ---- per-court remarks (parsed JSON) ----
     const token = u.searchParams.get("remarks");
@@ -172,6 +178,14 @@ export default {
     }));
     return out;
   },
+
+  // CourtReach's autonomous closed-phone watcher — see the CR_ section far below. Runs on
+  // whatever Cron Trigger is configured in the dashboard for this worker, independent of
+  // whether ANY device has courtreach.app open (unlike SD-Chamber's relay-based push above,
+  // which needs an open board to notice a crossing in the first place).
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(crTick(env));
+  },
 };
 
 /* ============================================================================
@@ -223,7 +237,7 @@ async function handlePush(path, req, env){
       for(const k of l.keys){
         const rec = await KV.get(k.name); if(!rec) continue;
         let sub; try{ sub = JSON.parse(rec).sub; }catch(_){ continue; }
-        try{ const st = await sendPush(sub, payload, env); if(st===404||st===410) await KV.delete(k.name); else if(st>=200&&st<300) sent++; }catch(_){}
+        try{ const st = await sendPush(sub, payload, env.VAPID_PUBLIC, env.VAPID_PRIVATE, env.VAPID_SUBJECT); if(st===404||st===410) await KV.delete(k.name); else if(st>=200&&st<300) sent++; }catch(_){}
       }
     }
     return new Response(JSON.stringify({ok:true, sent}), {headers:JSONH});
@@ -241,15 +255,18 @@ async function hkdf(salt, ikm, info, len){
   const key = await crypto.subtle.importKey("raw", ikm, {name:"HKDF"}, false, ["deriveBits"]);
   return new Uint8Array(await crypto.subtle.deriveBits({name:"HKDF", hash:"SHA-256", salt, info}, key, len*8));
 }
-async function vapidAuth(endpoint, env){
+// pub/priv/subject passed explicitly (not read off env directly) so the SAME function serves
+// more than one app's VAPID identity sharing this worker — see the CourtReach section below,
+// which has its own keys/subject, not SD-Chamber's.
+async function vapidAuth(endpoint, pub, priv, subject){
   const aud = new URL(endpoint).origin;
   const enc = o => bytesToB64u(new TextEncoder().encode(JSON.stringify(o)));
-  const signingInput = enc({typ:"JWT", alg:"ES256"}) + "." + enc({aud, exp:Math.floor(Date.now()/1000)+12*3600, sub:env.VAPID_SUBJECT||"mailto:admin@sdchamber"});
-  const pub = b64uToBytes(env.VAPID_PUBLIC);                       // 65: 0x04 x(32) y(32)
-  const jwk = { kty:"EC", crv:"P-256", x:bytesToB64u(pub.slice(1,33)), y:bytesToB64u(pub.slice(33,65)), d:env.VAPID_PRIVATE, ext:true };
+  const signingInput = enc({typ:"JWT", alg:"ES256"}) + "." + enc({aud, exp:Math.floor(Date.now()/1000)+12*3600, sub:subject||"mailto:admin@sdchamber"});
+  const pubBytes = b64uToBytes(pub);                                // 65: 0x04 x(32) y(32)
+  const jwk = { kty:"EC", crv:"P-256", x:bytesToB64u(pubBytes.slice(1,33)), y:bytesToB64u(pubBytes.slice(33,65)), d:priv, ext:true };
   const key = await crypto.subtle.importKey("jwk", jwk, {name:"ECDSA", namedCurve:"P-256"}, false, ["sign"]);
   const sig = await crypto.subtle.sign({name:"ECDSA", hash:"SHA-256"}, key, new TextEncoder().encode(signingInput));
-  return "vapid t=" + signingInput + "." + bytesToB64u(new Uint8Array(sig)) + ", k=" + env.VAPID_PUBLIC;
+  return "vapid t=" + signingInput + "." + bytesToB64u(new Uint8Array(sig)) + ", k=" + pub;
 }
 async function encryptPayload(sub, plaintext){
   const clientPub = b64uToBytes(sub.keys.p256dh);                 // 65
@@ -269,11 +286,460 @@ async function encryptPayload(sub, plaintext){
   const rs = new Uint8Array([0,0,0x10,0]);                        // record size 4096
   return concatU8(salt, rs, new Uint8Array([65]), ephPub, ct);    // aes128gcm header + body
 }
-async function sendPush(sub, payload, env){
+async function sendPush(sub, payload, pub, priv, subject){
   const body = await encryptPayload(sub, payload);
   const res = await fetch(sub.endpoint, { method:"POST", headers:{
-    "Authorization": await vapidAuth(sub.endpoint, env),
+    "Authorization": await vapidAuth(sub.endpoint, pub, priv, subject),
     "Content-Encoding": "aes128gcm", "Content-Type": "application/octet-stream",
     "TTL": "1800" }, body });
   return res.status;                                              // 201 ok · 404/410 gone
+}
+
+/* ============================================================================
+   COURTREACH — autonomous closed-phone push (owner: "I want notifications to
+   come even when the phone is locked... How can we make it happen").
+   ----------------------------------------------------------------------------
+   Unlike SD-Chamber's push above (a RELAY: some open board detects a crossing and asks the
+   worker to fan it out), this runs the check ITSELF on a schedule — no device needs to be
+   open anywhere. That's the only way it actually covers a solo advocate whose own phone is
+   the only device: nothing else exists to notice their case got close if their phone is
+   locked and nothing else is running.
+
+   Needs, in the Cloudflare dashboard (see CourtReach's PUSH-SETUP.md):
+     • a KV namespace bound as  CR_SUBS      (subscriptions + per-user/court "last gap" state)
+     • secrets  CR_VAPID_PUBLIC  CR_VAPID_PRIVATE  CR_VAPID_SUBJECT  (mailto:… — separate
+       identity from SD-Chamber's own VAPID_* secrets above, different app, different keys)
+     • secret   CR_FIRESTORE_SA_KEY   — the FULL JSON of a courtreach-ee02b service-account
+       key (Firebase console → courtreach-ee02b → Project settings → Service accounts →
+       Generate new private key), pasted as one secret value. This is what lets the worker
+       read tracked matters directly — a Google-IAM-authenticated call, so it reads straight
+       through Firestore Security Rules exactly like the daysheet-sync Action already does
+       with its own COURTREACH_SA_KEY GitHub secret (same courtreach-ee02b project — you can
+       reuse that exact key file here rather than generating a new one, if you still have it).
+     • a Cron Trigger — every minute, roughly 8:30am to 4:30pm IST, weekdays only (the exact
+       expression is in CourtReach's PUSH-SETUP.md, not spelled out here: it contains the two
+       characters that close THIS comment). Cloudflare Cron is always UTC and can't run more
+       than once a minute.
+   Endpoints (POST JSON):
+     /cr-push-subscribe   {uid, name, sub}       store a device
+     /cr-push-unsubscribe {uid, endpoint}        remove a device
+   (No /cr-push-send — sending only ever happens from the scheduled tick below, never a
+   client request, since the whole point is not depending on a client being there to ask.)
+
+   Deliberate v1 scope, not silently — flagged here so it's a known gap, not a surprise:
+     • Only honours a case's OWN declared status (My cases → Case over / Passover — see
+       courtreach.html's CASE_STATUSES) for "over"/"passover" handling, not the live board's
+       own OVER/PASS OVER remark column the way the in-app classify() also does. That remark
+       data needs a PER-COURT extra fetch (?remarks=<token>) keyed off a token scraped from
+       the main board row; wiring that in for every court any subscriber is tracking is a
+       real addition, not a one-line one — left for a follow-up round once this base version
+       is confirmed working.
+     • No itemHi/Regular-list-reset refinement (onRegularList's second detection path) —
+       needs state persisted across ticks the same way. Regular-list gap math still runs; it
+       just uses the simpler "current item > misc total" signal, not the reset-from-high-back-
+       to-101 one.
+   ============================================================================ */
+const CR_FIRESTORE_PROJECT = "courtreach-ee02b";
+const crSubKey = (uid, ep) => "cr:sub:" + uid + ":" + hash32(ep);
+const crStateKey = (uid, court, item) => "cr:st:" + uid + ":" + court + ":" + item;
+
+async function handleCRPush(path, req, env){
+  const KV = env.CR_SUBS;
+  if(!KV) return new Response(JSON.stringify({error:"KV 'CR_SUBS' not bound"}), {status:500, headers:JSONH});
+  let b; try{ b = await req.json(); }catch(_){ return new Response("{}", {status:400, headers:JSONH}); }
+
+  if(path === "/cr-push-subscribe"){
+    if(!b.uid || !b.sub?.endpoint) return new Response(JSON.stringify({error:"bad"}), {status:400, headers:JSONH});
+    await KV.put(crSubKey(b.uid, b.sub.endpoint), JSON.stringify({uid:b.uid, name:b.name||"", sub:b.sub}), {expirationTtl:60*60*24*45});
+    return new Response(JSON.stringify({ok:true}), {headers:JSONH});
+  }
+  if(path === "/cr-push-unsubscribe"){
+    if(b.uid && b.endpoint) await KV.delete(crSubKey(b.uid, b.endpoint));
+    return new Response(JSON.stringify({ok:true}), {headers:JSONH});
+  }
+  return new Response(JSON.stringify({error:"unknown"}), {status:404, headers:JSONH});
+}
+
+// ---- Google service-account auth → Firestore REST (RFC 7523 JWT-bearer) ----
+function pemToDer(pem){
+  const b64 = pem.replace(/-----BEGIN [^-]+-----/, "").replace(/-----END [^-]+-----/, "").replace(/\s+/g, "");
+  const bin = atob(b64); const out = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+let _crTokenCache = null;   // {token, exp} — best-effort reuse if the isolate survives between ticks
+async function crFirestoreToken(env){
+  if(_crTokenCache && _crTokenCache.exp > Date.now()+30000) return _crTokenCache.token;
+  const sa = JSON.parse(env.CR_FIRESTORE_SA_KEY);
+  const now = Math.floor(Date.now()/1000);
+  const enc = o => bytesToB64u(new TextEncoder().encode(JSON.stringify(o)));
+  const signingInput = enc({alg:"RS256", typ:"JWT"}) + "." + enc({
+    iss: sa.client_email, scope: "https://www.googleapis.com/auth/datastore",
+    aud: "https://oauth2.googleapis.com/token", iat: now, exp: now + 3600 });
+  const key = await crypto.subtle.importKey("pkcs8", pemToDer(sa.private_key),
+    {name:"RSASSA-PKCS1-v1_5", hash:"SHA-256"}, false, ["sign"]);
+  const sig = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(signingInput));
+  const jwt = signingInput + "." + bytesToB64u(new Uint8Array(sig));
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method:"POST", headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:"grant_type=" + encodeURIComponent("urn:ietf:params:oauth:grant-type:jwt-bearer") + "&assertion=" + jwt });
+  const j = await res.json();
+  if(!j.access_token) throw new Error("Firestore auth failed: " + JSON.stringify(j));
+  _crTokenCache = { token:j.access_token, exp: Date.now() + (j.expires_in||3600)*1000 };
+  return j.access_token;
+}
+// Firestore REST documents are typed ({fields:{name:{stringValue:"..."}}}) — flatten to plain JS.
+function fsValue(v){
+  if(v==null) return null;
+  if("stringValue" in v) return v.stringValue;
+  if("integerValue" in v) return parseInt(v.integerValue,10);
+  if("doubleValue" in v) return v.doubleValue;
+  if("booleanValue" in v) return v.booleanValue;
+  if("nullValue" in v) return null;
+  if("timestampValue" in v) return v.timestampValue;
+  if("arrayValue" in v) return (v.arrayValue.values||[]).map(fsValue);
+  if("mapValue" in v) return fsDoc({fields:v.mapValue.fields||{}});
+  return null;
+}
+function fsDoc(d){
+  if(!d || !d.fields) return null;
+  const out = {}; for(const k in d.fields) out[k] = fsValue(d.fields[k]);
+  return out;
+}
+async function fsGet(token, path){
+  const res = await fetch(`https://firestore.googleapis.com/v1/projects/${CR_FIRESTORE_PROJECT}/databases/(default)/documents/${path}`,
+    { headers:{ "Authorization": "Bearer " + token } });
+  if(res.status===404) return null;
+  if(!res.ok) return null;
+  return fsDoc(await res.json());
+}
+// Structured query: SELECT * FROM <collection> WHERE <field> == <value>. Returns [{id,...}].
+async function fsQueryEq(token, collection, field, value){
+  const body = { structuredQuery: { from:[{collectionId:collection}],
+    where: { fieldFilter: { field:{fieldPath:field}, op:"EQUAL", value:{stringValue:String(value)} } } } };
+  const res = await fetch(`https://firestore.googleapis.com/v1/projects/${CR_FIRESTORE_PROJECT}/databases/(default)/documents:runQuery`,
+    { method:"POST", headers:{ "Authorization":"Bearer "+token, "Content-Type":"application/json" }, body:JSON.stringify(body) });
+  if(!res.ok) return [];
+  const rows = await res.json();
+  return rows.filter(r=>r.document).map(r=>({ id:r.document.name.split("/").pop(), ...fsDoc(r.document) }));
+}
+
+// Ported verbatim from courtreach.html's parseBoard() — same live-board HTML, same fields.
+function parseBoardCR(html){
+  const strip = s => s.replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&")
+    .replace(/&#039;|&apos;/g,"'").replace(/&quot;/g,'"').replace(/&gt;/g,">").replace(/&lt;/g,"<").replace(/\s+/g," ").trim();
+  const rows = html.split(/<tr class="record">/i).slice(1); const courts=[];
+  for(let raw of rows){ raw=raw.split(/<\/tr>/i)[0];
+    let court=""; let m=raw.match(/btn-primary[^>]*>\s*([0-9]+)/i); if(m) court=m[1];
+    if(!court){ const im=raw.match(/id="cl_(\d+)"/i); if(im) court=im[1]; }
+    const cl=raw.match(/id="cl_\d+"[^>]*>(.*?)<\/td>/is); const cltext=cl?strip(cl[1]):"";
+    let item="",status=cltext; const im2=cltext.match(/^(\d+(?:\.\d+)?)\s+(.*)$/); if(im2){ item=im2[1]; status=im2[2].trim(); }
+    if(!court) continue;
+    courts.push({ court, item, status, passover:/pass\s*over/i.test(status) });
+  }
+  return { courts };
+}
+
+/* ---- board-engine.js, embedded verbatim (self.BoardEngine) ----
+   The Cloudflare dashboard editor can't import across repos, so this is a manual copy —
+   see courtreach.html/board-engine.js's own header on why it's built portable in the first
+   place ("so the identical file can run in the browser... AND inside the Cloudflare worker").
+   Keep it byte-identical to CourtReach's copy; re-paste here if that file ever changes. */
+(function (root) {
+  "use strict";
+  const MENT_END = 640, REG_BASE = 101;
+  const poKey = (court, item) => String(court) + "_" + String(item);
+  function isMentioning(item) { const s = String(item || "").trim(); return s !== "" && !/^\d/.test(s); }
+  function seqInfo(text) {
+    if (!text) return { seq: [], passIdx: null };
+    const norm = String(text).replace(/(\d)\s*[-–—]\s*(\d)/g, "$1 TO $2");
+    const toks = norm.toUpperCase().replace(/[^0-9A-Z. ]/g, " ").split(/\s+/).filter(Boolean);
+    const out = [], seen = new Set(); let passIdx = null;
+    const push = n => { if (!seen.has(n)) { seen.add(n); out.push(n); } };
+    for (let i = 0; i < toks.length; i++) {
+      const t = toks[i];
+      if (passIdx == null && (t === "PASSOVER" || t === "PASSOVERS" || t === "PO" || (t === "PASS" && (toks[i + 1] === "OVER" || toks[i + 1] === "OVERS")))) passIdx = out.length;
+      const num = t.match(/^(\d+)(?:\.\d+)?$/); if (!num) continue;
+      const a = parseInt(num[1], 10);
+      if (toks[i + 1] === "TO" && /^\d+$/.test(toks[i + 2] || "")) {
+        const b = parseInt(toks[i + 2], 10);
+        if (b >= a && b - a < 600) { for (let k = a; k <= b; k++) push(k); } else push(a); i += 2;
+      } else push(a);
+    }
+    return { seq: out, passIdx };
+  }
+  function orderPos(seq, item) {
+    item = Math.floor(parseFloat(item)); if (isNaN(item)) return null;
+    const i = seq.indexOf(item); if (i >= 0) return i;
+    const seqSet = new Set(seq); let before = 0;
+    for (let n = 1; n < item; n++) { if (!seqSet.has(n)) before++; }
+    return seq.length + before;
+  }
+  function preStartGap(seqTxt, ours) {
+    const { seq } = seqInfo(seqTxt); if (!seq.length) return null;
+    const op = orderPos(seq, ours); return op == null ? null : op;
+  }
+  function preStartResult(g) {
+    const short = g === 0 ? "up next" : g + " ahead";
+    const lab = g === 0 ? "opens · you're up first" : "opens · ~" + g + " ahead in the sequence";
+    return { tier: g <= 4 ? "soon" : "later", label: lab, short, gap: g, preStart: true };
+  }
+  function detailRemark(ctx, court, item) {
+    const r = (ctx.remarksByCourt || {})[String(court)]; if (!r || !r.items) return "";
+    const s = String(item); if (r.items[s]) return r.items[s];
+    const n = String(Math.floor(parseFloat(item)));
+    return (n !== "NaN" && r.items[n]) || "";
+  }
+  const isOver = (ctx, court, item) => /^over$/i.test(detailRemark(ctx, court, item));
+  const isPassOver = (ctx, court, item) => /pass\s*over/i.test(detailRemark(ctx, court, item));
+  function overAhead(ctx, court, curItem, ours) {
+    const r = (ctx.remarksByCourt || {})[String(court)]; if (!r || !r.items) return 0;
+    const c = parseFloat(curItem), o = parseFloat(ours); if (isNaN(c) || isNaN(o)) return 0;
+    let n = 0;
+    for (const k in r.items) {
+      if (!/^over$/i.test(r.items[k])) continue;
+      const v = parseFloat(k); if (!isNaN(v) && v > c && v < o) n++;
+    }
+    return n;
+  }
+  function passoverItemsFor(ctx, court) {
+    const out = {};
+    const add = (item, after) => {
+      const n = Math.floor(parseFloat(item)); if (isNaN(n)) return;
+      const a = (after != null && after !== "") ? Math.floor(parseFloat(after)) : null;
+      if (!(n in out)) out[n] = { after: a }; else if (a != null && out[n].after == null) out[n].after = a;
+    };
+    const r = (ctx.remarksByCourt || {})[String(court)];
+    if (r && r.items) for (const k in r.items) { if (/pass\s*over/i.test(r.items[k])) add(k, null); }
+    const pm = ctx.poMarks || {};
+    for (const key in pm) { if (!pm[key]) continue; const i = key.indexOf("_"); if (i > 0 && key.slice(0, i) === String(court)) add(key.slice(i + 1), pm[key] && pm[key].after); }
+    const bpo = ctx.boardPO || {};
+    for (const key in bpo) { if (!bpo[key]) continue; const i = key.indexOf("_"); if (i > 0 && key.slice(0, i) === String(court)) add(key.slice(i + 1), null); }
+    return out;
+  }
+  function poAdjust(ctx, court, curItem, ours, seq, passIdx) {
+    const po = passoverItemsFor(ctx, court); const keys = Object.keys(po); if (!keys.length) return 0;
+    const useSeq = !!(seq && seq.length);
+    const pos = n => { n = Math.floor(parseFloat(n)); if (isNaN(n)) return null; return useSeq ? seq.indexOf(n) : n; };
+    const curP = pos(curItem), ourP = pos(ours);
+    if (curP == null || ourP == null) return 0;
+    if (useSeq && (curP < 0 || ourP < 0)) return 0;
+    if (ourP <= curP) return 0;
+    const endP = useSeq ? seq.length : Infinity;
+    const ourN = Math.floor(parseFloat(ours));
+    let delta = 0;
+    for (const k of keys) {
+      if (parseInt(k, 10) === ourN) continue;
+      const xp = pos(k); if (xp == null || (useSeq && xp < 0)) continue;
+      let rp;
+      if (po[k].after != null) { const ap = pos(po[k].after); rp = (ap != null && !(useSeq && ap < 0)) ? ap + 1 : endP; }
+      else rp = (useSeq && passIdx != null && passIdx > curP) ? passIdx : endP;
+      const aheadOrig = xp > curP && xp < ourP;
+      const recallAhead = rp > curP && rp < ourP;
+      if (aheadOrig && !recallAhead) delta--;
+      else if (!aheadOrig && recallAhead) delta++;
+    }
+    return delta;
+  }
+  function passoversBeforeOurs(ctx, court, ours) {
+    const po = passoverItemsFor(ctx, court); const ourN = Math.floor(parseFloat(ours));
+    if (isNaN(ourN)) return 0;
+    let n = 0; for (const k in po) { const kn = parseInt(k, 10); if (!isNaN(kn) && kn < ourN) n++; }
+    return n;
+  }
+  const doneOf = (ctx, court, item) => (ctx.doneMarks || {})[poKey(court, item)] || null;
+  const poFor = (ctx, court, item) => (ctx.poMarks || {})[poKey(court, item)] || null;
+  const boardPOhas = (ctx, court, item) => !!(ctx.boardPO || {})[poKey(court, item)];
+  const miscTotalFor = (ctx, court) => { const v = (ctx.miscTotalByCourt || {})[String(court)]; return (v == null ? null : v); };
+  function onRegularList(ctx, court, miscTotal) {
+    const bc = (ctx.boardByCourt || {})[court]; const cur = bc ? parseInt(bc.item, 10) : NaN;
+    if (isNaN(cur)) return false;
+    if (miscTotal == null) return false;
+    if (cur > miscTotal + 2) return true;
+    const hi = (ctx.itemHi || {})[court] || 0;
+    if (hi >= miscTotal - 3 && cur >= REG_BASE && cur < hi - 5) return true;
+    return false;
+  }
+  function classify(e, bc, ctx) {
+    ctx = ctx || {};
+    const ours = e.itemNo;
+    const dn = doneOf(ctx, e.courtNo, ours);
+    if (dn) return { tier: "passed", label: dn.v === "att" ? "over — attended" : "over — not attended", short: dn.v === "att" ? "over ✓" : "over ✗", over: true, done: true };
+    if (!bc) return { tier: "unknown", label: "court not on the board", short: "—" };
+    const seqTxt = (bc.sequence && bc.sequence.trim()) ? bc.sequence : ((ctx.seqByCourt || {})[String(e.courtNo)] || "");
+    if (/not in session/i.test(bc.status || "")) {
+      const pg = preStartGap(seqTxt, ours);
+      if (pg != null) return preStartResult(pg);
+      return { tier: "idle", label: "court not sitting", short: "not sitting" };
+    }
+    if (isMentioning(ours)) {
+      if ((ctx.nowMins || 0) > MENT_END) return { tier: "passed", label: "mentioning — over", short: "over", ment: true };
+      return { tier: "soon", label: "mentioning — watch", short: "watch", gap: 0, ment: true };
+    }
+    const curBoardNum = parseInt(bc.item, 10);
+    const oursNum = parseFloat(ours);
+    const oursSingle = oursNum >= 1600 && oursNum < 1700, oursChamber = oursNum >= 1700 && oursNum < 1800;
+    if (oursSingle || oursChamber) {
+      const inPhase = (oursSingle && curBoardNum >= 1600 && curBoardNum < 1700) || (oursChamber && curBoardNum >= 1700 && curBoardNum < 1800);
+      if (inPhase) {
+        const g = Math.floor(oursNum) - Math.floor(curBoardNum);
+        if (g < 0) return { tier: "passed", label: "matter is over", short: "over", gap: g };
+        if (g <= 1) return { tier: "now", label: g === 0 ? "ITEM ON NOW" : "NEXT — get in", short: g === 0 ? "NOW" : "NEXT", gap: g };
+        if (g <= 4) return { tier: "soon", label: "~" + g + " items away", short: g + " away", gap: g };
+        return { tier: "later", label: g + " items away", short: g + " away", gap: g };
+      }
+      return { tier: "later", label: (oursSingle ? "Single Judge" : "Chamber Judge") + " list — after the board", short: "after board", reg: true };
+    }
+    if (curBoardNum >= 800 && curBoardNum < 900) return { tier: "soon", label: "mentioning is on", short: "mentioning", ment: true };
+    if (curBoardNum >= 1500 && curBoardNum < 1600) return { tier: "soon", label: "pronouncement is on", short: "pronouncement" };
+    if (curBoardNum >= 1600 && curBoardNum < 1700) return { tier: "soon", label: "Single Judge matters on", short: "single judge" };
+    if (curBoardNum >= 1700 && curBoardNum < 1800) return { tier: "soon", label: "Chamber Judge matters on", short: "chamber" };
+    if (isOver(ctx, e.courtNo, ours)) return { tier: "passed", label: "matter is over", short: "over", over: true };
+    const { seq, passIdx } = seqInfo(seqTxt);
+    const curPos = seq.length ? seq.indexOf(parseInt(bc.item, 10)) : -1;
+    const mark = poFor(ctx, e.courtNo, ours)
+      || (isPassOver(ctx, e.courtNo, ours) ? { mode: "detail" } : null)
+      || (boardPOhas(ctx, e.courtNo, ours) ? { mode: "slot" } : null);
+    if (mark) {
+      let gap = null, tail = "";
+      if (mark.mode === "after" && mark.after) {
+        if (seq.length) { const tp = seq.indexOf(parseInt(mark.after, 10)); if (tp >= 0 && curPos >= 0) gap = Math.max(0, tp - curPos + 1); }
+        else { const cur = parseInt(bc.item, 10), tp = parseInt(mark.after, 10); if (!isNaN(cur) && !isNaN(tp)) gap = Math.max(0, tp - cur + 1); }
+        if (gap != null) tail = " · taken after item " + String(mark.after);
+      } else if (seq.length && curPos >= 0) {
+        const tp = (passIdx != null && passIdx > curPos) ? passIdx : seq.length - 1;
+        gap = Math.max(0, tp - curPos);
+      }
+      if (gap == null) {
+        const total = miscTotalFor(ctx, e.courtNo), cur = parseInt(bc.item, 10);
+        if (total != null && !isNaN(cur)) { gap = Math.max(0, total - cur) + passoversBeforeOurs(ctx, e.courtNo, ours); tail = " · taken at end"; }
+      }
+      if (gap == null) return { tier: "later", label: "passed over — awaiting its turn", short: "passed over", po: true };
+      if (gap <= 0) return { tier: "now", label: "passed over — item on now", short: "NOW", gap, po: true };
+      if (gap === 1) return { tier: "now", label: "passed over — next", short: "NEXT", gap, po: true };
+      if (gap <= 4) return { tier: "soon", label: "~" + gap + " items away · passed over" + tail, short: gap + " away", gap, po: true };
+      return { tier: "later", label: gap + " items away · passed over" + tail, short: gap + " away", gap, po: true };
+    }
+    if (/^reg/i.test((e.listType || "").trim())) {
+      const miscTotal = miscTotalFor(ctx, e.courtNo);
+      if (!onRegularList(ctx, e.courtNo, miscTotal)) {
+        const regRank = (Math.floor(oursNum) >= REG_BASE) ? (Math.floor(oursNum) - (REG_BASE - 1)) : Math.max(1, Math.floor(oursNum) || 1);
+        if (miscTotal == null && !seq.length)
+          return { tier: "later", label: "Regular list — after the Miscellaneous list", short: "after Misc", reg: true };
+        const cur = parseInt(bc.item, 10);
+        const miscDone = (seq.length && curPos >= 0) ? curPos + 1 : (isNaN(cur) ? 0 : cur);
+        const miscLeft = Math.max(0, (miscTotal != null ? miscTotal : seq.length) - miscDone);
+        const gap = miscLeft + (regRank - 1);
+        const detail = miscLeft > 0 ? "Misc: " + miscLeft + " to go" : "Misc done";
+        if (gap <= 1) return { tier: "now", label: "Regular — get in now", short: "NOW", gap, reg: true };
+        if (gap <= 4) return { tier: "soon", label: "Regular — ~" + gap + " away · " + detail, short: gap + " away", gap, reg: true };
+        return { tier: "later", label: "Regular — ~" + gap + " away · " + detail, short: gap + " away", gap, reg: true };
+      }
+    }
+    let gap = null, approx = false;
+    if (seq.length) { const op = orderPos(seq, ours), cp = orderPos(seq, bc.item); if (op != null && cp != null) gap = op - cp; }
+    if (gap == null) { const c = parseFloat(bc.item); if (!isNaN(c)) { gap = Math.floor(oursNum) - Math.floor(c); approx = true; } }
+    if (gap != null && gap > 0) { const done = overAhead(ctx, e.courtNo, bc.item, ours); if (done > 0) gap = Math.max(0, gap - done); }
+    let poNote = "";
+    if (gap != null) { const pa = poAdjust(ctx, e.courtNo, bc.item, ours, seq, passIdx); if (pa) { gap = Math.max(0, gap + pa); poNote = pa < 0 ? " · " + (-pa) + " passed over ahead" : " · " + pa + " recalled first"; } }
+    if (gap == null) { const pg = preStartGap(seqTxt, ours); if (pg != null) return preStartResult(pg); }
+    if (gap == null) return { tier: "unknown", label: "position unclear", short: "—" };
+    if (gap < 0) return { tier: "passed", label: "matter is over", short: "over", gap, approx };
+    if (gap <= 1) return { tier: "now", label: gap === 0 ? "ITEM ON NOW" : "NEXT — get in", short: gap === 0 ? "NOW" : "NEXT", gap, approx, poNote };
+    if (gap <= 4) return { tier: "soon", label: "~" + gap + " items away" + poNote, short: gap + " away", gap, approx, poNote };
+    return { tier: "later", label: gap + " items away" + poNote, short: gap + " away", gap, approx, poNote };
+  }
+  root.CRBoardEngine = { classify };
+})(typeof self !== "undefined" ? self : (typeof globalThis !== "undefined" ? globalThis : this));
+
+// ---- the scheduled tick itself ----
+const crUsable = m => m && m.court && m.item && /^\d+$/.test(String(m.court)) && +m.court>=1 && +m.court<=17;
+async function crTick(env){
+  if(!env.CR_SUBS || !env.CR_VAPID_PUBLIC || !env.CR_VAPID_PRIVATE || !env.CR_FIRESTORE_SA_KEY) return;   // not configured yet — inert
+
+  const subsList = await env.CR_SUBS.list({prefix:"cr:sub:"});
+  const uids = [...new Set(subsList.keys.map(k => k.name.split(":")[2]))];
+  if(!uids.length) return;
+
+  let boardHtml; try{ boardHtml = await (await upstream(SRC+"?ctype=c")).text(); }catch(_){ return; }
+  const board = parseBoardCR(boardHtml).courts;
+  const boardByCourt = {}; for(const c of board) if(c.court && !boardByCourt[c.court]) boardByCourt[c.court]=c;
+
+  const todayIST = new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Kolkata'});   // YYYY-MM-DD
+  let miscTotalByCourt = {};
+  try{
+    const cu = await (await fetch("https://courtreach.app/court-updates.json", {cf:{cacheTtl:60}})).json();
+    const lists = cu?.by_date?.[todayIST]?.lists?.["Miscellaneous"] || {};
+    for(const court in lists){ const rec=lists[court]||{}; let t=parseInt(rec.total,10);
+      if(isNaN(t)||t<=0){ const mm=parseInt(rec.main,10), s=parseInt(rec.supp,10); t=isNaN(mm)?NaN:(mm+(isNaN(s)?0:s)); }
+      if(!isNaN(t)&&t>0) miscTotalByCourt[String(court)]=t; }
+  }catch(_){}
+
+  let token; try{ token = await crFirestoreToken(env); }catch(_){ return; }
+  const orgMemberCache = {};   // orgId -> [{id,...}] — several subscribers can share a chamber
+
+  for(const uid of uids){
+    const user = await fsGet(token, `users/${uid}`);
+    if(!user) continue;
+    const myDoc = await fsGet(token, `usermatters/${uid}`);
+    let matters = ((myDoc && myDoc.matters) || []).map(m=>({...m, by:uid}));
+    if(user.orgId){
+      if(!orgMemberCache[user.orgId]) orgMemberCache[user.orgId] = await fsQueryEq(token, "users", "orgId", user.orgId);
+      for(const member of orgMemberCache[user.orgId]){
+        if(member.id===uid) continue;
+        const md = await fsGet(token, `usermatters/${member.id}`);
+        (md && md.matters || []).forEach(m=>{ if((m.scope||"chamber")!=="personal") matters.push({...m, by:member.id}); });
+      }
+    }
+    const todays = matters.filter(m => crUsable(m) && (m.date||todayIST)===todayIST);
+    if(!todays.length) continue;
+
+    const inrange = [];
+    for(const m of todays){
+      const bc = boardByCourt[String(m.court)];
+      const key = String(m.court)+"_"+String(m.item);
+      const doneMarks = (m.status==="over_att") ? {[key]:{v:"att"}} : (m.status==="over_absent") ? {[key]:{v:"abs"}} : {};
+      const poMarks = (m.status==="passover") ? {[key]:{mode:"detail"}} : {};
+      const k = self.CRBoardEngine.classify({courtNo:String(m.court), itemNo:String(m.item), listType:m.listType||""}, bc,
+        { nowMins: nowMinsIST(), boardByCourt, miscTotalByCourt, doneMarks, poMarks });
+      if(!k || k.ment || k.done || k.over || k.gap==null || k.preStart) continue;
+      if(k.gap<0 || k.gap>7) continue;
+      inrange.push({court:m.court, item:m.item, gap:k.gap});
+    }
+    const closest = {};
+    for(const r of inrange){ const c=String(r.court); if(!closest[c]||r.gap<closest[c].gap) closest[c]=r; }
+    const finalItems = Object.values(closest);
+    if(!finalItems.length) continue;
+
+    let stepped = false;
+    for(const r of finalItems){
+      const sk = crStateKey(uid, r.court, r.item);
+      const prevRaw = await env.CR_SUBS.get(sk);
+      const prev = prevRaw!=null ? parseInt(prevRaw,10) : null;
+      if(prev===null || r.gap<prev) stepped = true;
+      await env.CR_SUBS.put(sk, String(r.gap), {expirationTtl:60*60*20});
+    }
+    if(!stepped) continue;
+
+    const body = finalItems.length===1
+      ? (finalItems[0].gap<=0 ? `Your item ${finalItems[0].item} is on now in Court ${finalItems[0].court}`
+         : finalItems[0].gap===1 ? `Next in Court ${finalItems[0].court} — your item ${finalItems[0].item}`
+         : `Court ${finalItems[0].court} — your item ${finalItems[0].item} is ~${finalItems[0].gap} away`)
+      : finalItems.length + " of your cases are close — " + finalItems.map(r=>"C"+r.court).join(", ");
+    const payload = JSON.stringify({title:"CourtReach", body, tag:"cr-reach"});
+
+    const userSubs = await env.CR_SUBS.list({prefix:"cr:sub:"+uid+":"});
+    for(const sk of userSubs.keys){
+      const rec = await env.CR_SUBS.get(sk.name); if(!rec) continue;
+      let sub; try{ sub = JSON.parse(rec).sub; }catch(_){ continue; }
+      try{
+        const st = await sendPush(sub, payload, env.CR_VAPID_PUBLIC, env.CR_VAPID_PRIVATE, env.CR_VAPID_SUBJECT);
+        if(st===404||st===410) await env.CR_SUBS.delete(sk.name);
+      }catch(_){}
+    }
+  }
+}
+function nowMinsIST(){
+  try{ const t=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour12:false,hour:'2-digit',minute:'2-digit'});
+    const [h,m]=t.split(':').map(Number); return h*60+m; }catch(e){ const d=new Date(); return d.getUTCHours()*60+d.getUTCMinutes(); }
 }
