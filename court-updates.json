@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-13T13:59:30.809543Z",
+  "generated_at": "2026-08-13T14:55:30.353610Z",
   "parser_version": 8,
   "window": [
     "2026-08-13",
@@ -6214,6 +6214,7 @@
       "lists_found": [
         "Miscellaneous (main)",
         "Chamber (main)",
+        "Chamber (supp)",
         "Single Judge (main)",
         "Registrar (main)",
         "Registrar (supp)"
@@ -10620,7 +10621,7 @@
         "Chamber": {
           "7": {
             "coram": "HON'BLE MR. JUSTICE SANJEEV SACHDEVA",
-            "total": "21",
+            "total": "22",
             "fresh": "",
             "items": {
               "1701": "Diary No. 27383-2026 PRASHANT B. CHOUDHARY VERSUS G. R. ASHOK",
@@ -10643,7 +10644,8 @@
               "1718": "Crl.A. No. 218/2025 AJAY VERSUS THE STATE OF UTTARAKHAND",
               "1719": "Crl.A. No. 219/2025 HARI OM PAL @ MONU VERSUS THE STATE OF UTTARAKHAND AND ANR.",
               "1720": "SLP(Crl) No. SHAMIM SULTHANA AND ORS. VERSUS STATE BY TAVAREKERE PS AND ANR.",
-              "1721": "Diary No. 23192-2026 VEMULA RAMGOPAL ANAND VERSUS A LALITHA"
+              "1721": "Diary No. 23192-2026 VEMULA RAMGOPAL ANAND VERSUS A LALITHA",
+              "1722": "Diary No. 48258-2026 GURU PRASAD AND ORS. VERSUS STATE OF CHHATTISGARH"
             },
             "advocates": {
               "1701": {
@@ -10711,14 +10713,17 @@
               },
               "1721": {
                 "pet": "VIKRAM HEGDE"
+              },
+              "1722": {
+                "pet": "KAUSTUBH SHUKLA"
               }
             },
             "main": 21,
-            "supp": 0
+            "supp": 1
           },
           "11": {
             "coram": "HON'BLE MR. JUSTICE SHREE CHANDRASHEKHAR",
-            "total": "20",
+            "total": "22",
             "fresh": "",
             "items": {
               "1701": "Diary No. 19328-2026 SANTOSH KUMAR @ YOGENDRA RAM @ SANTOSH VERSUS STATE OF JHARKHAND",
@@ -10740,7 +10745,9 @@
               "1717": "Diary No. 42736-2026 APPLICATION OF MS. KANTI AOR FOR",
               "1718": "Diary No. 43240-2026 APPLICATION OF MS. TANYA TIWARI AOR FOR",
               "1719": "Diary No. 43241-2026 APPLICATION OF MR. UJJWAL SINHA AOR FOR",
-              "1720": "Diary No. 45131-2026 APPLICATION OF MS. POONAM DILIP DIPALI"
+              "1720": "Diary No. 45131-2026 APPLICATION OF MS. POONAM DILIP DIPALI",
+              "1721": "Diary No. 46860-2026 PRADEEP KUMAR VERSUS K PRATHAP KUMAR",
+              "1722": "Diary No. 47429-2026 RAJENDRA AND ORS. VERSUS STATE OF CHHATTISGARH"
             },
             "advocates": {
               "1701": {
@@ -10792,10 +10799,16 @@
               },
               "1715": {
                 "pet": "SATYA MITRA"
+              },
+              "1721": {
+                "pet": "DEEPAK PRAKASH"
+              },
+              "1722": {
+                "pet": "SHAILESH SUMAN"
               }
             },
             "main": 20,
-            "supp": 0
+            "supp": 2
           },
           "12": {
             "coram": "HON'BLE MR. JUSTICE ARUN PALLI",
@@ -18152,6 +18165,7 @@
     "2026-08-14": {
       "M_J_1": 854758,
       "M_C_1": 546381,
+      "M_C_2": 509090,
       "M_S_1": 518973,
       "M_R_1": 532720,
       "M_R_2": 509768
