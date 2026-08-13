@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-13T15:41:57.561776Z",
+  "generated_at": "2026-08-13T15:56:32.260327Z",
   "parser_version": 8,
   "window": [
     "2026-08-13",
@@ -6225,7 +6225,7 @@
         "Miscellaneous": {
           "1": {
             "coram": "HON'BLE THE CHIEF JUSTICE HON'BLE MR. JUSTICE JOYMALYA BAGCHI HON'BLE MRS. JUSTICE V. MOHANA",
-            "total": "43",
+            "total": "44",
             "fresh": "",
             "items": {
               "1": "C.A. No. 8140/2018 GENERAL MANAGER CENTRAL BANK OF INDIA AND VERSUS ACHAL KUMAR JAIN",
@@ -6282,7 +6282,8 @@
               "41.1": "Connected RAJKUMAR GULATI AND ORS. VERSUS S.D. CORPORATION PVT. LTD. AND ORS.",
               "42": "SLP(Crl) No. ALLA RAMA KRISHNA REDDY VERSUS STATE OF ANDHRA PRADESH AND ANR.",
               "43": "SLP(C) No. 26590/2024 JODHPUR VIDYUT VITRAN NIGAM LTD. AND ORS. VERSUS SOUTH WEST MINING LIMITED AND ORS.",
-              "43.1": "Connected JODHPUR VIDYUT VITRAN NIGAM LTD. VERSUS SOUTH WEST MINING LIMITED AND ORS."
+              "43.1": "Connected JODHPUR VIDYUT VITRAN NIGAM LTD. VERSUS SOUTH WEST MINING LIMITED AND ORS.",
+              "44": "T.C.(C) No. 145/2026 SONY SEBASTIAN AND ORS. VERSUS UNION OF INDIA AND ORS."
             },
             "advocates": {
               "1": {
@@ -6467,7 +6468,7 @@
               }
             },
             "main": 40,
-            "supp": 3
+            "supp": 4
           },
           "17": {
             "coram": "",
@@ -18554,7 +18555,7 @@
     },
     "2026-08-14": {
       "M_J_1": 854758,
-      "M_J_2": 592917,
+      "M_J_2": 595210,
       "M_C_1": 546381,
       "M_C_2": 509090,
       "M_S_1": 518973,
