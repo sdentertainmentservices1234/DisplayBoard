@@ -1,0 +1,28 @@
+# What GitHub Pages is allowed to publish from this repository.
+#
+# Making a repo private stops people CLONING it. It does not stop Pages serving the built
+# site: every tracked file was still fetchable by name at
+# sdentertainmentservices1234.github.io/DisplayBoard/<path>, whatever the repo's visibility.
+# That included board-dev/worker.js — the Cloudflare Worker source, carrying the proximity
+# engine, the whole Web Push/VAPID implementation and the Firestore service-account
+# plumbing — plus the setup docs and the cause-list scraper. None of it is anything a
+# browser loading board.html ever asks for.
+#
+# Pages builds this site with Jekyll (build_type: legacy), so `exclude` is the supported
+# way to say so. Nothing else about the build changes: board.html has no front matter, so
+# Jekyll copies it through byte for byte exactly as it does today.
+#
+# If a new file is added that the BOARD itself loads, it must not be excluded here.
+# Everything else should be.
+
+exclude:
+  - board-dev/          # worker source, test builds, parser scratch files, layout reference
+  - PUSH-SETUP.md
+  - CAUSELIST-SETUP.md
+  - README.md
+  - CLAUDE.md
+  - fetch_causelist.py
+  - make-board-test.py
+  - make-icon.py
+  - pace-collector.html # a calibration tool, never part of the display app
+  - _config.yml

@@ -321,8 +321,11 @@ async function sendPush(sub, payload, pub, priv, subject){
        characters that close THIS comment). Cloudflare Cron is always UTC and can't run more
        than once a minute.
    Endpoints (POST JSON):
-     /cr-push-subscribe   {uid, name, sub}       store a device
-     /cr-push-unsubscribe {uid, endpoint}        remove a device
+     /cr-push-subscribe   {idToken, name, sub}   store a device
+     /cr-push-unsubscribe {idToken, endpoint}    remove a device
+   BOTH require a valid Firebase ID token and act on the uid INSIDE it — see
+   verifyFirebaseToken(). A `uid` in the body is ignored; it used to be believed, which let
+   anyone subscribe their own phone to another advocate's court alerts.
    (No /cr-push-send — sending only ever happens from the scheduled tick below, never a
    client request, since the whole point is not depending on a client being there to ask.)
 
@@ -334,27 +337,82 @@ async function sendPush(sub, payload, pub, priv, subject){
        the main board row; wiring that in for every court any subscriber is tracking is a
        real addition, not a one-line one — left for a follow-up round once this base version
        is confirmed working.
-     • No itemHi/Regular-list-reset refinement (onRegularList's second detection path) —
-       needs state persisted across ticks the same way. Regular-list gap math still runs; it
-       just uses the simpler "current item > misc total" signal, not the reset-from-high-back-
-       to-101 one.
+     • itemHi is not persisted across ticks, so onRegularList's second detection path (the
+       reset-from-high-back-to-101 signal) has nothing to work with here even though the
+       engine supports it — the code is present and correct, the INPUT isn't. Regular-list
+       gap math still runs off the simpler "current item > misc total" signal. Feeding
+       itemHi from KV is the fix; it is a real addition, not a one-liner.
    ============================================================================ */
 const CR_FIRESTORE_PROJECT = "courtreach-ee02b";
 const crSubKey = (uid, ep) => "cr:sub:" + uid + ":" + hash32(ep);
 const crStateKey = (uid, court, item) => "cr:st:" + uid + ":" + court + ":" + item;
+
+// ---- Firebase ID-token verification -----------------------------------------------------
+// These endpoints used to believe whatever `uid` the request body claimed. There is no
+// browser-side secret that could have fixed that — anyone could POST their own push
+// endpoint against another advocate's uid and start receiving that person's court alerts
+// ("Court 7 — your item 43 is ~3 away"), which is live intelligence on someone else's
+// listings. So the caller now presents a Firebase ID token and the Worker checks the
+// signature itself, against Google's published certificates. The uid it acts on is the one
+// INSIDE the token; the body's uid is only a convenience field.
+const CR_PROJECT = "courtreach-ee02b";
+// Google publishes the same signing keys as X.509 certificates AND as a JWK set. Take the
+// JWK set: WebCrypto imports it directly, so there is no hand-rolled X.509/DER parsing
+// standing between an attacker and this check.
+const GOOGLE_JWKS = "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";
+let _jwkCache = null;   // {byKid, exp} — the keys rotate daily; honour Cache-Control
+async function googleJwks(){
+  if(_jwkCache && _jwkCache.exp > Date.now()) return _jwkCache.byKid;
+  const r = await fetch(GOOGLE_JWKS);
+  const j = await r.json();
+  const byKid = {};
+  for(const k of (j.keys||[])) if(k.kid) byKid[k.kid] = k;
+  const m = (r.headers.get("cache-control")||"").match(/max-age=(\d+)/);
+  _jwkCache = { byKid, exp: Date.now() + (m ? parseInt(m[1],10) : 3600) * 1000 };
+  return byKid;
+}
+async function verifyFirebaseToken(jwt){
+  if(typeof jwt !== "string" || jwt.split(".").length !== 3) return null;
+  const [h64, p64, s64] = jwt.split(".");
+  let head, body;
+  try{
+    head = JSON.parse(new TextDecoder().decode(b64uToBytes(h64)));
+    body = JSON.parse(new TextDecoder().decode(b64uToBytes(p64)));
+  }catch(_){ return null; }
+  if(head.alg !== "RS256" || !head.kid) return null;
+  const now = Math.floor(Date.now()/1000);
+  if(!(body.exp > now) || !(body.iat <= now + 300)) return null;
+  if(body.aud !== CR_PROJECT) return null;
+  if(body.iss !== "https://securetoken.google.com/" + CR_PROJECT) return null;
+  if(!body.sub) return null;
+  const jwk = (await googleJwks())[head.kid];
+  if(!jwk) return null;
+  let key;
+  try{
+    key = await crypto.subtle.importKey("jwk", {kty:jwk.kty, n:jwk.n, e:jwk.e, alg:"RS256", ext:true},
+      {name:"RSASSA-PKCS1-v1_5", hash:"SHA-256"}, false, ["verify"]);
+  }catch(_){ return null; }
+  const ok = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", key,
+    b64uToBytes(s64), new TextEncoder().encode(h64 + "." + p64));
+  return ok ? body.sub : null;
+}
 
 async function handleCRPush(path, req, env){
   const KV = env.CR_SUBS;
   if(!KV) return new Response(JSON.stringify({error:"KV 'CR_SUBS' not bound"}), {status:500, headers:JSONH});
   let b; try{ b = await req.json(); }catch(_){ return new Response("{}", {status:400, headers:JSONH}); }
 
+  // Whose device is this, really? Not whoever the body says.
+  const uid = await verifyFirebaseToken(b.idToken);
+  if(!uid) return new Response(JSON.stringify({error:"unauthenticated"}), {status:401, headers:JSONH});
+
   if(path === "/cr-push-subscribe"){
-    if(!b.uid || !b.sub?.endpoint) return new Response(JSON.stringify({error:"bad"}), {status:400, headers:JSONH});
-    await KV.put(crSubKey(b.uid, b.sub.endpoint), JSON.stringify({uid:b.uid, name:b.name||"", sub:b.sub}), {expirationTtl:60*60*24*45});
+    if(!b.sub?.endpoint) return new Response(JSON.stringify({error:"bad"}), {status:400, headers:JSONH});
+    await KV.put(crSubKey(uid, b.sub.endpoint), JSON.stringify({uid, name:b.name||"", sub:b.sub}), {expirationTtl:60*60*24*45});
     return new Response(JSON.stringify({ok:true}), {headers:JSONH});
   }
   if(path === "/cr-push-unsubscribe"){
-    if(b.uid && b.endpoint) await KV.delete(crSubKey(b.uid, b.endpoint));
+    if(b.endpoint) await KV.delete(crSubKey(uid, b.endpoint));
     return new Response(JSON.stringify({ok:true}), {headers:JSONH});
   }
   return new Response(JSON.stringify({error:"unknown"}), {status:404, headers:JSONH});
@@ -440,16 +498,59 @@ function parseBoardCR(html){
   return { courts };
 }
 
-/* ---- board-engine.js, embedded verbatim (self.BoardEngine) ----
-   The Cloudflare dashboard editor can't import across repos, so this is a manual copy —
-   see courtreach.html/board-engine.js's own header on why it's built portable in the first
-   place ("so the identical file can run in the browser... AND inside the Cloudflare worker").
-   Keep it byte-identical to CourtReach's copy; re-paste here if that file ever changes. */
+/* ---- board-engine.js, embedded VERBATIM (self.BoardEngine) ----
+   The Cloudflare dashboard editor can't import across repos, so this is a manual copy of
+   CourtReach's board-engine.js — see that file's own header on why it is built portable in
+   the first place ("so the identical file can run in the browser... AND inside the
+   Cloudflare worker").
+
+   It said "verbatim" before and wasn't: a hand-copied classify() had been edited here
+   independently and had missed three fixes made on the CourtReach side (the itemHi fallback
+   in the Regular branch, the miscPOLeft boundary, and the recalled-passover queue branch).
+   The visible effect was push notifications quoting distances the app itself had stopped
+   quoting — the same "21 away"/"9 away" numbers that were fixed in the app. So the partial
+   copy is gone: what follows is the whole file, unedited, and the ONLY local line is the
+   alias below it.
+
+   TO UPDATE: copy CourtReach/board-engine.js over the block between these markers, whole.
+   Do not hand-edit the engine here. Everything the worker needs is reachable through the
+   public API; if something isn't, export it THERE.
+   >>> BEGIN board-engine.js >>> */
+/* ============================================================================
+   SD Chamber Display Board — PURE proximity engine (shared, server-ready)
+   ----------------------------------------------------------------------------
+   This is board.html's classify()/seq/order/passover logic with EVERY global it
+   used to reach for lifted into an explicit `ctx`. Same maths, no DOM, no
+   Firestore, no globals — so the identical file can run in the browser (thin
+   client) AND inside the Cloudflare worker (/compute), and be unit-tested in
+   isolation. It is deliberately byte-faithful to the live engine; a cross-check
+   harness (board-engine-check) diffs it against the running board.html to prove
+   they never disagree before anything ships.
+
+   ctx (all optional; missing → treated as empty):
+     nowMins          int    minutes-into-day IST (was nowMinsIST())
+     seqByCourt       {court: "raw sequence text"}      (marquee, ?seq)
+     remarksByCourt   {court: {items:{item: "OVER"|"PASS OVER"|…}}}
+     poMarks          {"court_item": {mode,after,…}|null}   already date-filtered
+     doneMarks        {"court_item": {v:"att"|"abs",…}|null} already date-filtered
+     boardPO          {"court_item": true}                   currently outstanding, live-observed
+     recalledPO       {"court_item": true}                   confirmed recalled earlier today —
+                                                               tells classify() a court's passover
+                                                               queue is already moving, not merely
+                                                               declared
+     itemHi           {court: highestRawItemSeenToday}
+     miscTotalByCourt {court: int|null}   Misc list size (caller precomputes)
+     boardByCourt     {court: bcRow}      the parsed board keyed by court
+   ============================================================================ */
 (function (root) {
   "use strict";
-  const MENT_END = 640, REG_BASE = 101;
+  const MENT_END = 640;          // 10:40 IST — mentioning done
+  const REG_BASE = 101;          // Regular list numbered 101+
   const poKey = (court, item) => String(court) + "_" + String(item);
+
+  // ---- pure sequence maths (identical to board.html) ----
   function isMentioning(item) { const s = String(item || "").trim(); return s !== "" && !/^\d/.test(s); }
+
   function seqInfo(text) {
     if (!text) return { seq: [], passIdx: null };
     const norm = String(text).replace(/(\d)\s*[-–—]\s*(\d)/g, "$1 TO $2");
@@ -468,6 +569,24 @@ function parseBoardCR(html){
     }
     return { seq: out, passIdx };
   }
+
+  function parseSequenceLine(text) {
+    const out = {};
+    if (!text) return out;
+    const T = " " + String(text).toUpperCase().replace(/\s+/g, " ") + " ";
+    const re = /COURT\s*(?:NO\.?|NUMBER|ROOM)?\s*(\d{1,2})\b/g;
+    const anchors = []; let m;
+    while ((m = re.exec(T))) anchors.push({ court: String(parseInt(m[1], 10)), afterNum: re.lastIndex });
+    for (let i = 0; i < anchors.length; i++) {
+      const a = anchors[i];
+      const nextStart = (i + 1 < anchors.length) ? T.lastIndexOf("COURT", anchors[i + 1].afterNum) : T.length;
+      let seg = T.slice(a.afterNum, nextStart).trim();
+      seg = seg.replace(/^[:\-–.\s]+/, "");
+      if (seg && seqInfo(seg).seq.length) out[a.court] = seg;
+    }
+    return out;
+  }
+
   function orderPos(seq, item) {
     item = Math.floor(parseFloat(item)); if (isNaN(item)) return null;
     const i = seq.indexOf(item); if (i >= 0) return i;
@@ -475,6 +594,7 @@ function parseBoardCR(html){
     for (let n = 1; n < item; n++) { if (!seqSet.has(n)) before++; }
     return seq.length + before;
   }
+
   function preStartGap(seqTxt, ours) {
     const { seq } = seqInfo(seqTxt); if (!seq.length) return null;
     const op = orderPos(seq, ours); return op == null ? null : op;
@@ -484,6 +604,8 @@ function parseBoardCR(html){
     const lab = g === 0 ? "opens · you're up first" : "opens · ~" + g + " ahead in the sequence";
     return { tier: g <= 4 ? "soon" : "later", label: lab, short, gap: g, preStart: true };
   }
+
+  // ---- ctx-backed overlays (were globals) ----
   function detailRemark(ctx, court, item) {
     const r = (ctx.remarksByCourt || {})[String(court)]; if (!r || !r.items) return "";
     const s = String(item); if (r.items[s]) return r.items[s];
@@ -492,6 +614,7 @@ function parseBoardCR(html){
   }
   const isOver = (ctx, court, item) => /^over$/i.test(detailRemark(ctx, court, item));
   const isPassOver = (ctx, court, item) => /pass\s*over/i.test(detailRemark(ctx, court, item));
+
   function overAhead(ctx, court, curItem, ours) {
     const r = (ctx.remarksByCourt || {})[String(court)]; if (!r || !r.items) return 0;
     const c = parseFloat(curItem), o = parseFloat(ours); if (isNaN(c) || isNaN(o)) return 0;
@@ -502,6 +625,7 @@ function parseBoardCR(html){
     }
     return n;
   }
+
   function passoverItemsFor(ctx, court) {
     const out = {};
     const add = (item, after) => {
@@ -517,6 +641,7 @@ function parseBoardCR(html){
     for (const key in bpo) { if (!bpo[key]) continue; const i = key.indexOf("_"); if (i > 0 && key.slice(0, i) === String(court)) add(key.slice(i + 1), null); }
     return out;
   }
+
   function poAdjust(ctx, court, curItem, ours, seq, passIdx) {
     const po = passoverItemsFor(ctx, court); const keys = Object.keys(po); if (!keys.length) return 0;
     const useSeq = !!(seq && seq.length);
@@ -541,16 +666,30 @@ function parseBoardCR(html){
     }
     return delta;
   }
+  // When passovers are taken at the END of the board (no sequence), ours is recalled
+  // after every other passed-over matter with a lower item number (reached earlier).
   function passoversBeforeOurs(ctx, court, ours) {
     const po = passoverItemsFor(ctx, court); const ourN = Math.floor(parseFloat(ours));
     if (isNaN(ourN)) return 0;
     let n = 0; for (const k in po) { const kn = parseInt(k, 10); if (!isNaN(kn) && kn < ourN) n++; }
     return n;
   }
+  // Has this court recalled ANY previously passed-over item today? Direct evidence the court
+  // is actively working its passover queue rather than saving recalls for the very end —
+  // classify() uses this to choose which of two estimates for OUR OWN passed-over matter to
+  // trust (see the "mark" branch below).
+  function hasRecalledPO(ctx, court) {
+    const rp = ctx.recalledPO || {}; const prefix = String(court) + "_";
+    for (const k in rp) { if (rp[k] && k.indexOf(prefix) === 0) return true; }
+    return false;
+  }
+
   const doneOf = (ctx, court, item) => (ctx.doneMarks || {})[poKey(court, item)] || null;
   const poFor = (ctx, court, item) => (ctx.poMarks || {})[poKey(court, item)] || null;
   const boardPOhas = (ctx, court, item) => !!(ctx.boardPO || {})[poKey(court, item)];
+
   const miscTotalFor = (ctx, court) => { const v = (ctx.miscTotalByCourt || {})[String(court)]; return (v == null ? null : v); };
+
   function onRegularList(ctx, court, miscTotal) {
     const bc = (ctx.boardByCourt || {})[court]; const cur = bc ? parseInt(bc.item, 10) : NaN;
     if (isNaN(cur)) return false;
@@ -560,6 +699,8 @@ function parseBoardCR(html){
     if (hi >= miscTotal - 3 && cur >= REG_BASE && cur < hi - 5) return true;
     return false;
   }
+
+  // ---- the classifier — faithful port of board.html classify(e,bc) ----
   function classify(e, bc, ctx) {
     ctx = ctx || {};
     const ours = e.itemNo;
@@ -610,9 +751,30 @@ function parseBoardCR(html){
         const tp = (passIdx != null && passIdx > curPos) ? passIdx : seq.length - 1;
         gap = Math.max(0, tp - curPos);
       }
+      // No sequence, no explicit recall point: two different estimates, chosen by whether we
+      // have actual evidence of how this court is handling recalls today.
+      //
+      // Once the court has recalled at least one OTHER passed-over item today (hasRecalledPO),
+      // that's direct proof it's already working its passover queue interleaved with fresh
+      // business, not saving them for later — so rank purely by how many other still-
+      // outstanding passovers are ahead of ours (owner: "once passovers cases are taken up the
+      // app is failing to see sequence of passovers and failing to calculate how far our case
+      // which was 4th passover in line is"). passoversBeforeOurs() only counts items STILL in
+      // recalledPO/boardPO's live-observed set, so as each one gets recalled in turn it drops
+      // out and this count — and therefore our own gap — shrinks in step, the same way any
+      // other "N away" queue does elsewhere in this file.
+      //
+      // Before any recall has been observed for this court today, there's no evidence either
+      // way, so fall back to the original assumption: recalls wait for the rest of the list.
+      // Getting this wrong in THAT direction is the safer failure — it under-promises rather
+      // than telling someone their matter is closer than it is.
       if (gap == null) {
-        const total = miscTotalFor(ctx, e.courtNo), cur = parseInt(bc.item, 10);
-        if (total != null && !isNaN(cur)) { gap = Math.max(0, total - cur) + passoversBeforeOurs(ctx, e.courtNo, ours); tail = " · taken at end"; }
+        if (hasRecalledPO(ctx, e.courtNo)) {
+          gap = passoversBeforeOurs(ctx, e.courtNo, ours); tail = " · in the passover queue";
+        } else {
+          const total = miscTotalFor(ctx, e.courtNo), cur = parseInt(bc.item, 10);
+          if (total != null && !isNaN(cur)) { gap = Math.max(0, total - cur) + passoversBeforeOurs(ctx, e.courtNo, ours); tail = " · taken at end"; }
+        }
       }
       if (gap == null) return { tier: "later", label: "passed over — awaiting its turn", short: "passed over", po: true };
       if (gap <= 0) return { tier: "now", label: "passed over — item on now", short: "NOW", gap, po: true };
@@ -627,10 +789,51 @@ function parseBoardCR(html){
         if (miscTotal == null && !seq.length)
           return { tier: "later", label: "Regular list — after the Miscellaneous list", short: "after Misc", reg: true };
         const cur = parseInt(bc.item, 10);
-        const miscDone = (seq.length && curPos >= 0) ? curPos + 1 : (isNaN(cur) ? 0 : cur);
+        // miscDone approximates "how far into Misc has the court actually gotten" — but once
+        // recalls are happening, the board's CURRENT item can be a low-numbered passover being
+        // recalled right now, which is a temporary DIP, not real regression. Using cur alone
+        // there would read that dip as "only just started Misc" and wildly overstate what's
+        // left (owner's report: Court 8 showing 21 away with only three passovers and three
+        // Regular matters actually outstanding — 21 is explained exactly by this: cur reading
+        // a recalled low item while the court had genuinely already reached item ~97+ of a
+        // ~100 Misc list). itemHi (the highest raw item any poll has seen at this court today)
+        // never regresses on a recall the way cur does — same signal onRegularList() already
+        // trusts for its own "has this court moved past Misc" call — so take whichever is
+        // higher.
+        const hi = (ctx.itemHi || {})[e.courtNo] || 0;
+        const miscDone = (seq.length && curPos >= 0) ? curPos + 1 : Math.max(isNaN(cur) ? 0 : cur, hi);
         const miscLeft = Math.max(0, (miscTotal != null ? miscTotal : seq.length) - miscDone);
-        const gap = miscLeft + (regRank - 1);
-        const detail = miscLeft > 0 ? "Misc: " + miscLeft + " to go" : "Misc done";
+        // Misc's own outstanding passovers are still Misc business, not yet disposed, and
+        // Misc must finish before Regular starts — so they count toward the gap too (owner:
+        // "miscellaneous list comes first before the regular list and so also any passover
+        // from the miscellaneous list comes first before regular list ... unless there is a
+        // specific sequence provides for otherwise"). Concrete worked example that shaped
+        // this: Court 8, item 31 current, Misc total 35, six outstanding Misc passovers, our
+        // matter is Regular #104 (regRank 4) — expected gap = 6 (passovers) + 4 (Misc left:
+        // 32-35) + 3 (Regular ahead: 101-103) = 13.
+        //
+        // Only passovers AT OR BEHIND the court's REACH so far count here — one still ahead of
+        // that (item > miscDone) is already inside miscLeft above (it hasn't been reached OR
+        // skipped yet from our vantage point), so adding it again would double it. Boundary is
+        // miscDone (== max(cur,hi)), not cur alone, for the same reason miscDone itself uses
+        // it: a passover with item number between a temporary recall dip and the court's real
+        // peak was genuinely already reached and skipped, and using cur here would silently
+        // drop it from the gap entirely — not double-counted, just gone.
+        //
+        // The exception: if the announced sequence explicitly places Regular items BEFORE its
+        // mention of passovers (i.e. the court is saying "101-120 first, passovers after"),
+        // that overrides the default — those passovers are no longer Misc-first business.
+        const poException = seq.length && passIdx != null && seq.slice(0, passIdx).some(n => n >= REG_BASE);
+        let miscPOLeft = 0;
+        if (!poException) {
+          const po = passoverItemsFor(ctx, e.courtNo);
+          const miscCeil = miscTotal != null ? miscTotal : (REG_BASE - 1);
+          for (const k in po) { const n = parseInt(k, 10); if (!isNaN(n) && n <= miscCeil && n <= miscDone) miscPOLeft++; }
+        }
+        const gap = miscLeft + miscPOLeft + (regRank - 1);
+        const detail = (miscLeft > 0 || miscPOLeft > 0)
+          ? "Misc: " + miscLeft + " to go" + (miscPOLeft ? " · " + miscPOLeft + " passover" + (miscPOLeft === 1 ? "" : "s") : "")
+          : "Misc done";
         if (gap <= 1) return { tier: "now", label: "Regular — get in now", short: "NOW", gap, reg: true };
         if (gap <= 4) return { tier: "soon", label: "Regular — ~" + gap + " away · " + detail, short: gap + " away", gap, reg: true };
         return { tier: "later", label: "Regular — ~" + gap + " away · " + detail, short: gap + " away", gap, reg: true };
@@ -649,8 +852,16 @@ function parseBoardCR(html){
     if (gap <= 4) return { tier: "soon", label: "~" + gap + " items away" + poNote, short: gap + " away", gap, approx, poNote };
     return { tier: "later", label: gap + " items away" + poNote, short: gap + " away", gap, approx, poNote };
   }
-  root.CRBoardEngine = { classify };
+
+  const API = { classify, seqInfo, orderPos, parseSequenceLine, preStartGap, preStartResult, isMentioning, MENT_END, REG_BASE, passoverItemsFor, detailRemark };
+  root.BoardEngine = API;
+  if (typeof module !== "undefined" && module.exports) module.exports = API;
 })(typeof self !== "undefined" ? self : (typeof globalThis !== "undefined" ? globalThis : this));
+/* <<< END board-engine.js <<< */
+// The worker's own name for it. board-engine.js exports the full API as self.BoardEngine;
+// crTick() calls self.CRBoardEngine.classify(), so alias rather than re-declare — that way
+// there is exactly one implementation in this file and no second one to drift.
+self.CRBoardEngine = self.BoardEngine;
 
 // ---- the scheduled tick itself ----
 const crUsable = m => m && m.court && m.item && /^\d+$/.test(String(m.court)) && +m.court>=1 && +m.court<=17;
