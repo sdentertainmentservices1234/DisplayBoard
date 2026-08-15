@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-15T10:50:32.469319Z",
+  "generated_at": "2026-08-15T11:47:01.530238Z",
   "parser_version": 8,
   "window": [
     "2026-08-17",
@@ -2370,7 +2370,7 @@
               "304.1": "SLP(Crl) No. SANJAY CHANDRA AND ORS. VERSUS STATE GOVT. OF NCT OF DELHI AND ORS.",
               "53": "SLP(Crl) No. AAMIR VERSUS TABISH AND ANR.",
               "53.1": "Connected AAMIR VERSUS TARIQ AND ANR.",
-              "54": "SLP(Crl) No. AAMIR VERSUS RASHID AND ANR.",
+              "54": "SLP(Crl) No. AAMIR VERSUS RASHID AND ANR. SHASHANK SHEKHAR",
               "55": "SLP(Crl) No. REENA KINNAR ALIAS SAZID VERSUS STATE OF UTTAR PRADESH",
               "56": "SLP(Crl) No. PINKU GHOSH VERSUS STATE OF CHHATTISGARH AND ANR.",
               "57": "Diary No. 39446-2026 M/S M AND M INFRACON PROJECT (INDIA) PRIVATE VERSUS AILENI SRAVANTHI AND ORS.",
@@ -2595,8 +2595,7 @@
                 "resp": "SHASHANK SHEKHAR VIJENDRA SINGH"
               },
               "54": {
-                "pet": "GAURAV DHINGRA",
-                "resp": "SHASHANK SHEKHAR VIJENDRA SINGH"
+                "pet": "GAURAV DHINGRA"
               },
               "55": {
                 "pet": "AKSHAT SRIVASTAVA"
@@ -19877,7 +19876,7 @@
   "sources": {
     "2026-08-17": {
       "M_J_1": 942330,
-      "M_J_2": 636676,
+      "M_J_2": 637288,
       "M_C_1": 541810,
       "M_C_2": 509129,
       "M_S_1": 523418,
