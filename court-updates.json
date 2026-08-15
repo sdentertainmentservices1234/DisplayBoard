@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-15T11:47:01.530238Z",
+  "generated_at": "2026-08-15T13:11:14.462971Z",
   "parser_version": 8,
   "window": [
     "2026-08-17",
@@ -2926,7 +2926,7 @@
           },
           "8": {
             "coram": "HON'BLE MR. JUSTICE SANJAY KAROL HON'BLE MR. JUSTICE AUGUSTINE GEORGE MASIH",
-            "total": "59",
+            "total": "62",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 6201/2026 SANJAY PENDIWAL VERSUS RAISH SUBAMIYA KASBATI AND ANR.",
@@ -2983,6 +2983,9 @@
               "48": "SLP(C) No. PRIYANKA DEHRA VERSUS ISHANT SAGAR",
               "49": "SLP(C) No. 18193/2026 RUPAM NATH VERSUS PIYA NATH",
               "50": "CONMT.PET.(C) No. LAXMIKANT SHARMA VERSUS P. NARAHARI AND ORS.",
+              "1501": "SLP(Crl) No. 3549/2016 THE STATE OF KARNATAKA AND ANR. VERSUS PRATHIK PARASRAMPURIA",
+              "1502": "Crl.A. No. NEPAL SINGH VERSUS THE STATE OF MADHYA PRADESH",
+              "1503": "SLP(Crl) No. UNION OF INDIA VERSUS CHIDIEBERE KINGSLEY NAWCHARA AND ORS.",
               "51": "SLP(Crl) No. STATE OF PUNJAB VERSUS TARSEM SINGH @GOLU AND ORS.",
               "51.1": "Connected UNION OF INDIA AND ANR. VERSUS ABID PERVEZ @ AZAD PERVEZ",
               "52": "Diary No. 47513-2026 AMREDRA TIWARI @ AMRENDRA TRIPATHI AND VERSUS STATE OF BIHAR",
@@ -3177,6 +3180,17 @@
               "50": {
                 "pet": "MRIGANK PRABHAKAR"
               },
+              "1501": {
+                "pet": "PATIL REKHA CHANDRA",
+                "resp": "V. SHYAMOHAN"
+              },
+              "1502": {
+                "pet": "RAJNISH KUMAR JHA",
+                "resp": "HARMEET SINGH RUPRAH"
+              },
+              "1503": {
+                "pet": "GURMEET SINGH MAKKER"
+              },
               "51": {
                 "pet": "KARAN SHARMA"
               },
@@ -3233,7 +3247,7 @@
               }
             },
             "main": 50,
-            "supp": 9
+            "supp": 12
           },
           "10": {
             "coram": "HON'BLE MR. JUSTICE MANOJ MISRA HON'BLE MR. JUSTICE VIJAY BISHNOI",
@@ -19876,7 +19890,7 @@
   "sources": {
     "2026-08-17": {
       "M_J_1": 942330,
-      "M_J_2": 637288,
+      "M_J_2": 642146,
       "M_C_1": 541810,
       "M_C_2": 509129,
       "M_S_1": 523418,
