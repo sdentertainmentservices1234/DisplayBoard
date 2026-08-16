@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T13:15:48.263855Z",
+  "generated_at": "2026-08-16T15:28:18.371799Z",
   "parser_version": 8,
   "window": [
     "2026-08-17",
@@ -5365,119 +5365,6 @@
             "main": 22,
             "supp": 1
           },
-          "7": {
-            "coram": "HON'BLE MR. JUSTICE SHEEL NAGU",
-            "total": "23",
-            "fresh": "",
-            "items": {
-              "1701": "Diary No. 39318-2026 EEDHI DURGA RAO VERSUS THE STATE OF ANDHRA PRADESH",
-              "1702": "Diary No. 60718-2025 NASEEM BANO VERSUS THE STATE OF UTTAR PRADESH AND ORS.",
-              "1703": "Diary No. 38570-2026 KAILASH GHADEI VERSUS STATE OF ODISHA",
-              "1704": "Diary No. 45185-2026 C.KRISHNAVENI VERSUS THE STATE BY INSPECTOR OF POLICE",
-              "1705": "Crl.A. No. 784/2019 AFSAR PATEL VERSUS MEHRAB KHAN@KALLU AND ORS.",
-              "1706": "SLP(C) No. 15609/2019 AMMAKKA (DEAD) VERSUS ROYAL SUNDRAM ALLIANCE INSURANCE CO LTD",
-              "1707": "SLP(C) No. 23562/2019 M/S SURINDER KUMAR JOGINDER PAL VERSUS MADALSA AND ANR.",
-              "1708": "SLP(Crl) No. RAMESH VERSUS THE STATE OF HARYANA AND ORS. AKSHAY AMRITANSHU [R",
-              "1709": "C.A. No. 8994/2022 K. MADHUSUDHAN RAO VERSUS M/S LODHA HEALTHY CONSTRUCTIONS AND",
-              "1710": "C.A. No. 9321/2022 STATE OF RAJASTHAN VERSUS UNION OF INDIA AND ORS.",
-              "1711": "SLP(C) No. THE STATE OF KERALA AND ANR. VERSUS THEKKUMBHAGAM SERVICE COOPERATIVE BANK",
-              "1712": "SLP(C) No. 1781/2025 GAUTAM DHARIWAL AND ANR. VERSUS DINESH KUMAR SINGH CHOUHAN AND ORS.",
-              "1713": "SLP(C) No. 3402/2025 THE ASSOCIATION OF PLANTERS OF KERALA AND VERSUS THE STATE OF KERALA AND ORS.",
-              "1714": "SLP(C) No. 30160/2025 VIJAY KUMAR VERSUS NATIONAL INSURANCE COMPANY LTD. AND ORS.",
-              "1715": "SLP(C) No. 25913/2025 DATTATRAYA KISANRAO ZALKE VERSUS MAHARASHTRA STATE ROAD TRANSPORT",
-              "1716": "SLP(C) No. BODDU JAYA KRISHNA VERSUS BODDU NAGA PRAVEENA",
-              "1717": "SLP(C) No. 22923/2025 PARVATIBAI DAYARAM SURVE VERSUS TULSHIRAM AND ANR.",
-              "1718": "SLP(C) No. 23762/2025 PARTHA PRATIM HAZARIKA VERSUS BIJAY BHARGAVA AND ORS.",
-              "1719": "SLP(C) No. SAJI GEORGE AND ORS. VERSUS STATE OF KERALA AND ANR.",
-              "1720": "SLP(C) No. 30204/2025 HARVINDER SINGH VERSUS THE CENTRAL GOVT., THROUGH FINANCIAL",
-              "1721": "SLP(C) No. SARASWATI MITRA VERSUS BISWAJIT KUNDU AND ORS.",
-              "1722": "SLP(C) No. 20879/2025 RAMIDI SANDEEP REDDY VERSUS THE STATE OF TELANGANA AND ORS.",
-              "1723": "Diary No. 60269-2025 T. MAHAVEER VERSUS K SHASHANKA AND ORS."
-            },
-            "advocates": {
-              "1701": {
-                "pet": "DISHA SINGH"
-              },
-              "1702": {
-                "pet": "SATISH KUMAR"
-              },
-              "1703": {
-                "pet": "ANIRUDH SANGANERIA"
-              },
-              "1704": {
-                "pet": "T. HARISH KUMAR"
-              },
-              "1705": {
-                "pet": "MOHD. ZAHID HUSSAIN"
-              },
-              "1707": {
-                "pet": "HIMANSHU SHARMA",
-                "resp": "YADAV NARENDER SINGH"
-              },
-              "1708": {
-                "pet": "PREM MALHOTRA"
-              },
-              "1709": {
-                "pet": "ASHUTOSH JHA",
-                "resp": "ANKIT YADAV , AMRITA"
-              },
-              "1710": {
-                "pet": "SAURABH RAJPAL",
-                "resp": "GURMEET SINGH MAKKER SAURABH MISHRA"
-              },
-              "1711": {
-                "pet": "NISHE RAJEN SHONKER",
-                "resp": "HARSHAD V. HAMEED"
-              },
-              "1712": {
-                "pet": "K. PAARI VENDHAN",
-                "resp": "AMBHOJ KUMAR SINHA"
-              },
-              "1713": {
-                "pet": "ATUL SHANKAR VINOD",
-                "resp": "NISHE RAJEN SHONKER K. PAARI VENDHAN"
-              },
-              "1714": {
-                "pet": "RAVINDRA S. GARIA",
-                "resp": "AMIT KUMAR SINGH"
-              },
-              "1715": {
-                "pet": "ALPANA SHARMA",
-                "resp": "MAYURI RAGHUVANSHI"
-              },
-              "1716": {
-                "pet": "ANURAG OJHA"
-              },
-              "1717": {
-                "pet": "SWETA RANI",
-                "resp": "RAJAT BHARDWAJ"
-              },
-              "1718": {
-                "pet": "SYED MEHDI IMAM",
-                "resp": "KRITIKA AGRAWAL ATISHI DIPANKAR"
-              },
-              "1719": {
-                "pet": "P. S. SUDHEER"
-              },
-              "1720": {
-                "pet": "ANKIT ANANDRAJ SHAH",
-                "resp": "KARAN SHARMA"
-              },
-              "1721": {
-                "pet": "KUNAL CHATTERJI",
-                "resp": "TATINI BASU"
-              },
-              "1722": {
-                "pet": "VENKAT PALWAI LAW",
-                "resp": "DEVINA SEHGAL"
-              },
-              "1723": {
-                "pet": "VARUN THAKUR &"
-              }
-            },
-            "main": 23,
-            "supp": 0
-          },
           "11": {
             "coram": "HON'BLE MR. JUSTICE VIPUL M. PANCHOLI",
             "total": "24",
@@ -6423,8 +6310,7 @@
       "lists_found": [
         "Miscellaneous (main)",
         "Regular (main)",
-        "Registrar (main)",
-        "Curative & Review (main)"
+        "Registrar (main)"
       ],
       "lists": {
         "Miscellaneous": {
@@ -19891,7 +19777,7 @@
     "2026-08-17": {
       "M_J_1": 942330,
       "M_J_2": 642146,
-      "M_C_1": 541810,
+      "M_C_1": 531235,
       "M_C_2": 509129,
       "M_S_1": 523418,
       "M_S_2": 514043,
@@ -19901,8 +19787,7 @@
     "2026-08-18": {
       "M_J_1": 1225523,
       "F_J_1": 657394,
-      "M_R_1": 536334,
-      "M_CC_1": 568959
+      "M_R_1": 536334
     },
     "2026-08-19": {
       "M_J_1": 1032072,
