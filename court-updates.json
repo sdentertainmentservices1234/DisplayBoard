@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T11:00:49.059081Z",
+  "generated_at": "2026-08-17T11:53:15.934810Z",
   "parser_version": 8,
   "window": [
     "2026-08-17",
@@ -19,7 +19,6 @@
     "2026-08-17": {
       "lists_found": [
         "Miscellaneous (main)",
-        "Miscellaneous (supp)",
         "Chamber (main)",
         "Chamber (supp)",
         "Single Judge (main)",
@@ -31,7 +30,7 @@
         "Miscellaneous": {
           "1": {
             "coram": "HON'BLE THE CHIEF JUSTICE HON'BLE MR. JUSTICE JOYMALYA BAGCHI HON'BLE MRS. JUSTICE V. MOHANA",
-            "total": "53",
+            "total": "46",
             "fresh": "",
             "items": {
               "1": "C.A. No. 13473/2024 KIKIBEN AND ORS. VERSUS THE STATE OF GUJARAT AND ANR.",
@@ -100,14 +99,7 @@
               "43": "W.P.(C) No. 259/2026 RUCHI SHARMA AND ORS. VERSUS HIGH COURT OF GUJARAT AND ORS.",
               "43.1": "Connected ARUN PRATAP SANJAY SINGH SINGH VERSUS HIGH COURT OF GUJARAT AND ORS.",
               "44": "W.P.(C) No. 697/2026 K.S. RAJU LEGAL TRUST VERSUS UNION OF INDIA AND ANR.",
-              "45": "SLP(C) No. 18196/2026 RANJANA DEVI VERSUS HIGH COURT OF JUDICATURE AT ALLAHABAD",
-              "46": "W.P.(C) No. 996/2026 SHRI. NARAYAN DASS SHARMA AND ANR. VERSUS STATE OF HARYANA AND ORS.",
-              "47": "W.P.(C) No. 997/2026 TAUFIQ UR REHMAN AND ANR. VERSUS STATE OF HARYANA AND ORS.",
-              "48": "W.P.(C) No. 1012/2026 ARMAAN KAPOOR VERSUS STATE OF HARYANA AND ORS.",
-              "49": "SLP(C) No. 28329/2026 ALOK KUMAR GUPTA VERSUS STATE BAR COUNCIL OF MADHYA PRADESH AND",
-              "50": "Diary No. 44902-2026 DEEPAK VERMA AND ORS. VERSUS JAIPUR VIDYUT VITRAN NIGAM LIMITED AND ORS.",
-              "51": "Diary No. 26729-2026 LAKSHAYA M AND ANR. VERSUS UNION OF INDIA AND ORS.",
-              "52": "W.P.(Crl.) No. 253/2026 NAMITA RANI AND ANR. VERSUS THE UNION OF INDIA AND ORS."
+              "45": "SLP(C) No. 18196/2026 RANJANA DEVI VERSUS HIGH COURT OF JUDICATURE AT ALLAHABAD"
             },
             "advocates": {
               "1": {
@@ -323,38 +315,14 @@
               "45": {
                 "pet": "ADITI GUPTA",
                 "resp": "PREETIKA DWIVEDI"
-              },
-              "46": {
-                "pet": "VARUN KAPUR"
-              },
-              "47": {
-                "pet": "MUDDAM THIRUPATHI"
-              },
-              "48": {
-                "pet": "MUDDAM THIRUPATHI"
-              },
-              "49": {
-                "pet": "VARUN THAKUR &"
-              },
-              "50": {
-                "pet": "WAHEB HUSSAINI",
-                "resp": "SANJAY KUMAR SINGH"
-              },
-              "51": {
-                "pet": "YASHWANT SINGH",
-                "resp": "CASES]"
-              },
-              "52": {
-                "pet": "J. JOE ANTON BENO",
-                "resp": "TULIKA MUKHERJEE"
               }
             },
             "main": 46,
-            "supp": 7
+            "supp": 0
           },
           "2": {
             "coram": "HON'BLE MR. JUSTICE VIKRAM NATH HON'BLE MR. JUSTICE SANDEEP MEHTA",
-            "total": "65",
+            "total": "59",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 271/2026 HAZI ABDUL RAJJAK VERSUS STATE OF MADHYA PRADESH",
@@ -426,15 +394,7 @@
               "57": "SLP(C) No. PRIMARY AGRICULTURAL CREDIT COOP SOCIETY VERSUS STATE COOPERATIVE ELECTION AUTHORITY",
               "57.1": "Connected SHESHERAO VERSUS MAHARASHTRA STATE COOPERATIVE ELECTION",
               "58": "SLP(C) No. SHREYAS LOKCHAND JAMDAL AND ORS. VERSUS JAWAHAR NAVODAYA VIDYALAYA SAMITI AND ORS.",
-              "59": "W.P.(Crl.) No. 391/2021 KAZEEM AHMAD SHERWANI VERSUS THE STATE OF UTTAR PRADESH AND ORS.",
-              "60": "C.A. No. 10081/2026 ARYAN RENEWABLE ENERGY PRIVATE PVT. LTD VERSUS CENTRAL ELECTRICITY REGULATORY COMMISSION",
-              "61": "MA 2445/2026 in C.A. STATE OF TAMIL NADU VERSUS STATE OF KARNATAKA AND ORS.",
-              "61.1": "Connected STATE OF KARNATAKA VERSUS STATE OF TAMIL NADU AND ORS.",
-              "62": "Diary No. 46982-2026 STATE OF ODISHA AND ORS. VERSUS YUDHISTHIRA BARIK",
-              "63": "W.P.(C) No. 764/2024 COMMUNITY AGAINST DRUNKEN DRIVING VERSUS THE UNION OF INDIA AND ORS.",
-              "63.1": "Connected COMMUNITY AGAINST DRUNKEN DRIVING VERSUS THE UNION OF INDIA AND ORS.",
-              "64": "SLP(C) No. 28701/2026 JASIMUDDIN KAZI AND ANR. VERSUS KOLKATA MUNICIPAL CORPORATION AND ANR.",
-              "65": "SLP(Crl) No. NITIN SHARMA AND ANR. VERSUS STATE OF U.P. AND ORS."
+              "59": "W.P.(Crl.) No. 391/2021 KAZEEM AHMAD SHERWANI VERSUS THE STATE OF UTTAR PRADESH AND ORS."
             },
             "advocates": {
               "1": {
@@ -663,39 +623,14 @@
               "59": {
                 "pet": "TALHA ABDUL RAHMAN",
                 "resp": "RUCHIRA GOEL"
-              },
-              "60": {
-                "pet": "DIVYA ROY"
-              },
-              "61": {
-                "pet": "B. KARUNAKARAN",
-                "resp": "NISHANTH PATIL"
-              },
-              "61.1": {
-                "pet": "ANURADHA ARPUTHAM"
-              },
-              "62": {
-                "pet": "SRISATYA MOHANTY"
-              },
-              "63": {
-                "pet": "VIPIN NAIR"
-              },
-              "63.1": {
-                "pet": "VIPIN NAIR"
-              },
-              "64": {
-                "pet": "ROBIN KHOKHAR"
-              },
-              "65": {
-                "pet": "LAWFIC"
               }
             },
             "main": 59,
-            "supp": 6
+            "supp": 0
           },
           "3": {
             "coram": "HON'BLE MRS. JUSTICE B.V. NAGARATHNA HON'BLE MR. JUSTICE R. MAHADEVAN",
-            "total": "52",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "Diary No. 25110-2025 DR. ABHILASHA PATHAK AND ANR. VERSUS SUDHIR VISHNU WADKAR AND ANR.",
@@ -751,9 +686,7 @@
               "47": "SLP(C) No. 23723/2026 M/S. VDB INFRA AND REALTY RESPONDENT VERSUS PARTH GHORPADE AND ORS.",
               "48": "SLP(C) No. GEETHA A.S. AND ORS. VERSUS THE STATE OF KERALA AND ANR.",
               "49": "C.A. No. 7006/2025 NICCO AND ASSOCIATED COMPANIES SENIOR VERSUS VINOD KUMAR KOTHARI",
-              "50": "C.A. No. 479/2026 JANAKSINH KUSHALSINH PARMAR VERSUS MOEF AND CC AND ORS. DEEPANWITA PRIYANKA",
-              "51": "Crl.A. No. 805/2018 PUSHPENDRA KUMAR VERSUS THE STATE OF MADHYA PRADESH",
-              "52": "SLP(Crl) No. THE STATE, THROUGH STATION HOUSE OFFICER VERSUS ABHISHAK R"
+              "50": "C.A. No. 479/2026 JANAKSINH KUSHALSINH PARMAR VERSUS MOEF AND CC AND ORS. DEEPANWITA PRIYANKA"
             },
             "advocates": {
               "1": {
@@ -934,21 +867,14 @@
               },
               "50": {
                 "pet": "PRAGYA PARIJAT SINGH"
-              },
-              "51": {
-                "pet": "ASHUTOSH DUBEY",
-                "resp": "MRINAL GOPAL ELKER"
-              },
-              "52": {
-                "pet": "SHREEKANT NEELAPPA"
               }
             },
             "main": 50,
-            "supp": 2
+            "supp": 0
           },
           "4": {
             "coram": "HON'BLE MR. JUSTICE M.M. SUNDRESH HON'BLE MR. JUSTICE PRASANNA B. VARALE",
-            "total": "63",
+            "total": "61",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 4570/2026 AKHILESH KUMAR @ AKHILESH MAHTO VERSUS THE STATE OF BIHAR",
@@ -1028,9 +954,7 @@
               "58.9": "Connected MANAGER, NATIONAL THERMAL POWER VERSUS MUSA ISAP BAPU AND ORS.",
               "0": "SLP(C) No. 14477/2026 CORPORATION LTD., BHARUCH VERSUS AMARSINH BECHARSINH RAJ AND ANR.",
               "59": "SLP(C) No. RAJASTHAN STATE INDUSTRIAL DEVELOPMENT VERSUS M/S KARAM BHOOMI ESTATES LZAFEER AHMAD B. F.",
-              "60": "SLP(C) No. 17931/2026 ASHA CHOUBEY VERSUS K.P. SINGH AND ORS.",
-              "61": "SLP(Crl) No. ABHIMANYU KUMAR VERSUS STATE OF JHARKHAND",
-              "62": "Diary No. 49290-2026 DEVENDER AND ORS. VERSUS STATE OF HARYANA AND ANR."
+              "60": "SLP(C) No. 17931/2026 ASHA CHOUBEY VERSUS K.P. SINGH AND ORS."
             },
             "advocates": {
               "1": {
@@ -1293,20 +1217,14 @@
               "60": {
                 "pet": "PUSHKAR SHARMA",
                 "resp": "RUCHIRA GOEL"
-              },
-              "61": {
-                "pet": "MITHLESH KUMAR"
-              },
-              "62": {
-                "pet": "UMANG SHANKAR"
               }
             },
             "main": 61,
-            "supp": 2
+            "supp": 0
           },
           "9": {
             "coram": "HON'BLE MR. JUSTICE AHSANUDDIN AMANULLAH HON'BLE MR. JUSTICE MANMOHAN",
-            "total": "65",
+            "total": "62",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. MUHAMAMED SHARIF VERSUS STATE OF PUNJAB",
@@ -1374,10 +1292,7 @@
               "60": "SLP(C) No. CHELLAPPAN VERSUS M. MANIKANDAN AND ORS.",
               "301": "SLP(C) No. 5582/2023 THE ORIENTAL INSURANCE CO. LTD. VERSUS TUNI PATI AND ORS.",
               "301.1": "C.A. No. 6865/2026 NATIONAL INSURANCE COMPANY LIMITED VERSUS K. SARAVANAN AND ORS.",
-              "302": "SLP(C) No. 14566/2025 INTEGRAL UNIVERSITY AND ORS. VERSUS GANI MOHAMMAD KHAN AND ANR.",
-              "1501": "SLP(C) No. 31245/2025 M/S SANTOSH ASSOCIATE PRIVATE LIMITED VERSUS HARYANA STATE INDUSTRIAL AND",
-              "61": "SLP(Crl) No. MD. ADIB @ IMRAN ALAM @ ADIB AHMAD @ ADEEB VERSUS THE STATE OF BIHAR",
-              "62": "SLP(C) No. 25881/2026 ASISH RAY AND ORS. VERSUS AMIT SEN AND ORS."
+              "302": "SLP(C) No. 14566/2025 INTEGRAL UNIVERSITY AND ORS. VERSUS GANI MOHAMMAD KHAN AND ANR."
             },
             "advocates": {
               "1": {
@@ -1615,22 +1530,10 @@
               "302": {
                 "pet": "KAKALI ROY",
                 "resp": "TALHA ABDUL RAHMAN"
-              },
-              "1501": {
-                "pet": "RISHI KAPOOR",
-                "resp": "SAMAR VIJAY SINGH"
-              },
-              "61": {
-                "pet": "AFTAB ALI KHAN",
-                "resp": "PRABHAT RANJAN RAJ"
-              },
-              "62": {
-                "pet": "KSHITIJ MUDGAL",
-                "resp": "SIDDHARTHA CHOWDHURY"
               }
             },
             "main": 62,
-            "supp": 3
+            "supp": 0
           },
           "5": {
             "coram": "HON'BLE MR. JUSTICE PAMIDIGHANTAM SRI NARASIMHA HON'BLE MR. JUSTICE ALOK ARADHE",
@@ -1734,12 +1637,12 @@
               "07": "Diary No. 6186-2026 VERSUS RAM DARSHAN ROY AND ANR.",
               "08": "Diary No. 10365-2026 VERSUS SOHANA RAM DARA",
               "09": "Diary No. 10352-2026 VERSUS CHANDER SHEKHAR",
-              "51": "Diary No. 41323-2026 UNION OF INDIA AND ORS. VERSUS JAIMAL SINGH",
-              "52": "SLP(C) No. 27680/2026 INDIAN OIL CORPORATION LIMITED VERSUS AMBE PLYWOODS PRIVATE LIMITED",
-              "53": "Diary No. 43121-2026 UNION OF INDIA AND ORS. VERSUS DEVINDER SINGH",
-              "54": "W.P.(C) No. 161/2025 SOFTWARE FREEDOM LAW CENTER, INDIA AND VERSUS UNION OF INDIA AND ANR.",
-              "55": "Diary No. 43106-2025 BHASKAR PRASAD AND ORS. VERSUS ALKA TIWARI AND ORS.",
-              "56": "Diary No. 41330-2026 UNION OF INDIA AND ORS. VERSUS CHETNA RAM",
+              "51": "Diary No. 16811-2026 VERSUS RAM SINGH",
+              "52": "Diary No. 3046-2026 VERSUS RADHAKRISHNAN K",
+              "53": "Diary No. 1482-2026 VERSUS SASIDHARAN S.",
+              "54": "Diary No. 7617-2026 VERSUS BIJU V S",
+              "55": "SLP(C) No. 26471/2025 VERSUS SATWINDER SINGH",
+              "56": "Diary No. 18150-2026 VERSUS AKESH SINGH",
               "57": "Diary No. 16801-2026 VERSUS BAHADUR SINGH HARIJANS",
               "58": "Diary No. 16813-2026 VERSUS SUNIL KUMAR",
               "59": "Diary No. 19869-2026 VERSUS MOHANAN NAIR",
@@ -1779,12 +1682,7 @@
               "96": "Diary No. 29449-2026 VERSUS ARUN BALA",
               "97": "Diary No. 26172-2026 VERSUS OM PRAKASH TIWARI",
               "98": "Diary No. 28474-2026 VERSUS GANESH DUTT",
-              "99": "Diary No. 28477-2026 VERSUS GOPI RAM",
-              "54.1": "Connected AAM AADMI PARTY SECRETARY AND ANR. VERSUS UNION OF INDIA AND ORS. MADHULIKA UPADHYAY",
-              "55.1": "Connected ANIL KUMAR YADAV AND ORS. VERSUS AVINASH KUMAR AND ORS.",
-              "55.2": "Connected TULSI MAHTO AND ORS. VERSUS AVINASH KUMAR AND ORS.",
-              "56.1": "Connected UNION OF INDIA AND ORS. VERSUS SATWINDER SINGH AND ANR.",
-              "56.2": "Connected UNION OF INDIA AND ORS. VERSUS MALKIT SINGH"
+              "99": "Diary No. 28477-2026 VERSUS GOPI RAM"
             },
             "advocates": {
               "1": {
@@ -2141,19 +2039,16 @@
                 "pet": "TERDAL"
               },
               "52": {
-                "pet": "TERDAL",
-                "resp": "RANJEETA ROHATGI"
+                "pet": "TERDAL"
               },
               "53": {
                 "pet": "TERDAL"
               },
               "54": {
-                "pet": "TERDAL",
-                "resp": "MADHULIKA UPADHYAY"
+                "pet": "TERDAL"
               },
               "55": {
-                "pet": "TERDAL",
-                "resp": "PALLAVI LANGAR ROHINI PRASAD SOMANATHA PADHAN"
+                "pet": "TERDAL"
               },
               "56": {
                 "pet": "TERDAL"
@@ -2283,21 +2178,6 @@
               },
               "99": {
                 "pet": "TERDAL"
-              },
-              "54.1": {
-                "pet": "SIDDHANT SHARMA"
-              },
-              "55.1": {
-                "pet": "EQUITY LEX ASSOCIATES"
-              },
-              "55.2": {
-                "pet": "AMRITA PANDA"
-              },
-              "56.1": {
-                "pet": "SHREEKANT NEELAPPA"
-              },
-              "56.2": {
-                "pet": "SHREEKANT NEELAPPA"
               }
             },
             "main": 107,
@@ -2305,7 +2185,7 @@
           },
           "6": {
             "coram": "HON'BLE MR. JUSTICE J.B. PARDIWALA HON'BLE MR. JUSTICE K. VINOD CHANDRAN",
-            "total": "67",
+            "total": "57",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. VIJAY KUMAR VERSUS STATE OF HIMACHAL PRADESH",
@@ -2367,19 +2247,7 @@
               "303": "T.P.(C) No. 3147/2024 DIMPAL VERSUS NISHANT PRAVINBHAI SONI",
               "304": "C.A. No. 10856/2016 BHUPINDER SINGH VERSUS UNITECH LTD. AND ORS. PAWANSHREE AGRAWAL",
               "2023": "IN SLP(CRL)",
-              "304.1": "SLP(Crl) No. SANJAY CHANDRA AND ORS. VERSUS STATE GOVT. OF NCT OF DELHI AND ORS.",
-              "53": "SLP(Crl) No. AAMIR VERSUS TABISH AND ANR.",
-              "53.1": "Connected AAMIR VERSUS TARIQ AND ANR.",
-              "54": "SLP(Crl) No. AAMIR VERSUS RASHID AND ANR. SHASHANK SHEKHAR",
-              "55": "SLP(Crl) No. REENA KINNAR ALIAS SAZID VERSUS STATE OF UTTAR PRADESH",
-              "56": "SLP(Crl) No. PINKU GHOSH VERSUS STATE OF CHHATTISGARH AND ANR.",
-              "57": "Diary No. 39446-2026 M/S M AND M INFRACON PROJECT (INDIA) PRIVATE VERSUS AILENI SRAVANTHI AND ORS.",
-              "58": "SLP(C) No. 27541/2024 MANAV BHANOT VERSUS NATIONAL HIGHWAY AUTHORITY OF INDIA",
-              "59": "SLP(Crl) No. NIKHIL KUMAR VERSUS U.T. CHANDIGARH",
-              "60": "MA 2491/2026 in C.A. T.S. MURALI VERSUS SARVESH KASHYAP AND ANR.",
-              "61": "C.A. No. 10713/2026 MAHESH B. KHAIRNAR AND ANR. VERSUS DHAVAL JITENDRAKUMAR MISTRY AND ORS.",
-              "62": "T.P.(C) No. 3417/2024 SUNIL DUTT BHARDWAJ VERSUS FRANCINA BHARDWAJ",
-              "62.1": "Connected SUNIL DUTT BHARDWAJ VERSUS FRANCINA BHARDWAJ AND ORS."
+              "304.1": "SLP(Crl) No. SANJAY CHANDRA AND ORS. VERSUS STATE GOVT. OF NCT OF DELHI AND ORS."
             },
             "advocates": {
               "1": {
@@ -2585,58 +2453,14 @@
               },
               "304": {
                 "pet": "RANJEETA ROHATGI"
-              },
-              "53": {
-                "pet": "GAURAV DHINGRA",
-                "resp": "SHASHANK SHEKHAR VIJENDRA SINGH"
-              },
-              "53.1": {
-                "pet": "GAURAV DHINGRA",
-                "resp": "SHASHANK SHEKHAR VIJENDRA SINGH"
-              },
-              "54": {
-                "pet": "GAURAV DHINGRA"
-              },
-              "55": {
-                "pet": "AKSHAT SRIVASTAVA"
-              },
-              "56": {
-                "pet": "SAMEER SHRIVASTAVA",
-                "resp": "SIDDHARTHA SINHA"
-              },
-              "57": {
-                "pet": "ARUNA GUPTA"
-              },
-              "58": {
-                "pet": "ABHIJEET SHRIVASTAVA",
-                "resp": "PAROMITA MAJUMDAR"
-              },
-              "59": {
-                "pet": "PUSHPINDER SINGH",
-                "resp": "SURJEET SINGH"
-              },
-              "60": {
-                "pet": "VAIBHAV MANU",
-                "resp": "PANKAJ KUMAR GURMEET SINGH MAKKER"
-              },
-              "61": {
-                "pet": "PAWAN RELEY",
-                "resp": "ANUJ TIWARI"
-              },
-              "62": {
-                "pet": "DEEPAK GOEL",
-                "resp": "TOMY CHACKO"
-              },
-              "62.1": {
-                "pet": "DEEPAK GOEL"
               }
             },
             "main": 57,
-            "supp": 10
+            "supp": 0
           },
           "7": {
             "coram": "HON'BLE MR. JUSTICE DIPANKAR DATTA HON'BLE MR. JUSTICE SHEEL NAGU",
-            "total": "58",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "Crl.A. No. 459/2025 SANJEEV @ KALA VERSUS STATE OF HARYANA",
@@ -2693,15 +2517,7 @@
               "47": "CONMT.PET.(C) No. NARAYAN BEHERA AND ANR. VERSUS ASWATHY S. AND ORS.",
               "48": "SLP(C) No. GANAPATHI VERSUS DEMANNA AND ANR.",
               "49": "SLP(C) No. 15605/2026 VIJAY GHANSHYAM GADIYA VERSUS UNION OF INDIA AND ANR.",
-              "50": "SLP(C) No. 17854/2026 SANTANU SAHA VERSUS UNION OF INDIA AND ORS.",
-              "51": "SLP(Crl) No. ANDREAS BAGH AND ANR. VERSUS STATE OF MADHYA PRADESH",
-              "52": "SLP(Crl) No. BIJENDER TAK VERSUS STATE OF HARYANA",
-              "53": "Diary No. 43952-2026 AIRPORT AUTHORITY OF INDIA VERSUS ROBY BABY M. AND ORS.",
-              "54": "Diary No. 45548-2026 VISHNU @ UNNI VERSUS STATE OF KERALA",
-              "55": "SLP(C) No. 7576/2023 ISRAWATI DEVI VERSUS BOARD OF REVENUE UP AT",
-              "56": "SLP(C) No. 36214/2025 GIRISHDEV MISHRA VERSUS THE STATE OF BIHAR AND ORS.",
-              "57": "SLP(C) No. 35136/2025 STATE OF GUJARAT AND ORS. VERSUS GOVABHAI SOMABHAI PARMAR",
-              "58": "SLP(C) No. 26478/2026 KULJEET GAHLOT VERSUS AJEET MALIK"
+              "50": "SLP(C) No. 17854/2026 SANTANU SAHA VERSUS UNION OF INDIA AND ORS."
             },
             "advocates": {
               "1": {
@@ -2890,43 +2706,14 @@
               },
               "50": {
                 "pet": "ASHISH PANDEY"
-              },
-              "51": {
-                "pet": "AKSHAT SHRIVASTAVA",
-                "resp": "YASHRAJ SINGH BUNDELA"
-              },
-              "52": {
-                "pet": "MOHIT KUMAR GUPTA"
-              },
-              "53": {
-                "pet": "ANSHUL RAI",
-                "resp": "HIMINDER LAL"
-              },
-              "54": {
-                "pet": "MANU KRISHNAN G"
-              },
-              "55": {
-                "pet": "SARVSHREE",
-                "resp": "TANMAYA AGARWAL"
-              },
-              "56": {
-                "pet": "SANJAY KUMAR",
-                "resp": "AZMAT HAYAT AMANULLAH"
-              },
-              "57": {
-                "pet": "DEEPANWITA PRIYANKA",
-                "resp": "REETU SHARMA"
-              },
-              "58": {
-                "pet": "SATYA VEER SINGH"
               }
             },
             "main": 50,
-            "supp": 8
+            "supp": 0
           },
           "8": {
             "coram": "HON'BLE MR. JUSTICE SANJAY KAROL HON'BLE MR. JUSTICE AUGUSTINE GEORGE MASIH",
-            "total": "62",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 6201/2026 SANJAY PENDIWAL VERSUS RAISH SUBAMIYA KASBATI AND ANR.",
@@ -2982,25 +2769,7 @@
               "47": "SLP(C) No. ANAND KUMAR SINGH VERSUS UNITED INDIA INSURANCE COMPANY LIMITED",
               "48": "SLP(C) No. PRIYANKA DEHRA VERSUS ISHANT SAGAR",
               "49": "SLP(C) No. 18193/2026 RUPAM NATH VERSUS PIYA NATH",
-              "50": "CONMT.PET.(C) No. LAXMIKANT SHARMA VERSUS P. NARAHARI AND ORS.",
-              "1501": "SLP(Crl) No. 3549/2016 THE STATE OF KARNATAKA AND ANR. VERSUS PRATHIK PARASRAMPURIA",
-              "1502": "Crl.A. No. NEPAL SINGH VERSUS THE STATE OF MADHYA PRADESH",
-              "1503": "SLP(Crl) No. UNION OF INDIA VERSUS CHIDIEBERE KINGSLEY NAWCHARA AND ORS.",
-              "51": "SLP(Crl) No. STATE OF PUNJAB VERSUS TARSEM SINGH @GOLU AND ORS.",
-              "51.1": "Connected UNION OF INDIA AND ANR. VERSUS ABID PERVEZ @ AZAD PERVEZ",
-              "52": "Diary No. 47513-2026 AMREDRA TIWARI @ AMRENDRA TRIPATHI AND VERSUS STATE OF BIHAR",
-              "53": "Diary No. 40739-2026 THE STATE OF RAJASTHAN AND ORS. VERSUS RATAN LAL",
-              "54": "SLP(Crl) No. 4393/2026 SAJID ALI ALIAS GUDDU VERSUS STATE OF U.P. AND ANR.",
-              "55": "C.A. No. 4409/2024 BHANWAR LAL VERSUS SHOBHA CHADHDHA AND ORS.",
-              "56": "SLP(C) No. 1359/2023 JITENDRA KUMAR SHARMA AND ORS. VERSUS THE STATE OF JHARKHAND AND ORS.",
-              "56.1": "Connected MD. MAHTAB KHAN VERSUS THE STATE OF JHARKHAND AND ORS.",
-              "56.2": "Connected VISHNU KANT PANDEY AND ORS. VERSUS THE STATE OF JHARKHAND AND ORS.",
-              "56.3": "Connected PRAKASH KUMAR PANDEY AND ORS. VERSUS THE STATE OF JHARKHAND AND ORS.",
-              "56.4": "Connected MITHILESH KUMAR MAHTO AND ORS. VERSUS THE STATE OF JHARKHAND AND ORS.",
-              "56.5": "Connected VISHAL KUMAR AND ORS. VERSUS THE STATE OF JHARKHAND AND ORS.",
-              "57": "SLP(C) No. 8/2026 SUJATA AND ORS. VERSUS RAJESHWARI @ RAJSHRI AND ORS. SHLOKA NARAYANAN [R-",
-              "58": "SLP(C) No. 12093/2026 RAJKUMAR SATNAMI VERSUS PANNA LAL SATNAMI AND ANR.",
-              "59": "SLP(C) No. 17612/2026 SHRITIKA AMITKUMAR BAGDIA VERSUS AMITKUMAR MADHUSUDAN BAGDIA"
+              "50": "CONMT.PET.(C) No. LAXMIKANT SHARMA VERSUS P. NARAHARI AND ORS."
             },
             "advocates": {
               "1": {
@@ -3179,79 +2948,14 @@
               },
               "50": {
                 "pet": "MRIGANK PRABHAKAR"
-              },
-              "1501": {
-                "pet": "PATIL REKHA CHANDRA",
-                "resp": "V. SHYAMOHAN"
-              },
-              "1502": {
-                "pet": "RAJNISH KUMAR JHA",
-                "resp": "HARMEET SINGH RUPRAH"
-              },
-              "1503": {
-                "pet": "GURMEET SINGH MAKKER"
-              },
-              "51": {
-                "pet": "KARAN SHARMA"
-              },
-              "51.1": {
-                "pet": "N. VISAKAMURTHY"
-              },
-              "52": {
-                "pet": "RAM SANKAR & CO"
-              },
-              "53": {
-                "pet": "S.. UDAYA KUMAR SAGAR"
-              },
-              "54": {
-                "pet": "CHANCHAL KUMAR",
-                "resp": "TULIKA MUKHERJEE SHILPA SINGH"
-              },
-              "55": {
-                "pet": "ANUJ BHANDARI",
-                "resp": "PUNIT VINAY SUMIT TETERRWAL"
-              },
-              "56": {
-                "pet": "F. I. CHOUDHURY"
-              },
-              "56.1": {
-                "pet": "VATSALYA VIGYA",
-                "resp": "MADHUSMITA BORA ANIL KUMAR JHA"
-              },
-              "56.2": {
-                "pet": "ANILENDRA PANDEY",
-                "resp": "MADHUSMITA BORA ANIL KUMAR JHA"
-              },
-              "56.3": {
-                "pet": "VATSALYA VIGYA",
-                "resp": "MADHUSMITA BORA ANIL KUMAR JHA ANIL K. JHA"
-              },
-              "56.4": {
-                "pet": "F. I. CHOUDHURY",
-                "resp": "MADHUSMITA BORA ANIL K. JHA"
-              },
-              "56.5": {
-                "pet": "ANILENDRA PANDEY",
-                "resp": "MADHUSMITA BORA ANIL K. JHA"
-              },
-              "57": {
-                "pet": "KRISHNA & NISHANI LAW"
-              },
-              "58": {
-                "pet": "DHAWESH PAHUJA",
-                "resp": "PRANIT KULKARNI AC ASWATHI M.K"
-              },
-              "59": {
-                "pet": "BRAJESH PANDEY &",
-                "resp": "KUNAL CHEEMA"
               }
             },
             "main": 50,
-            "supp": 12
+            "supp": 0
           },
           "10": {
             "coram": "HON'BLE MR. JUSTICE MANOJ MISRA HON'BLE MR. JUSTICE VIJAY BISHNOI",
-            "total": "58",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 5287/2026 SHIVSHANKAR GAUTAM @LALLI VERSUS THE STATE OF MADHYA PRADESH",
@@ -3311,16 +3015,7 @@
               "47": "Diary No. 57951-2025 ARUN KUMAR E N AND ORS. VERSUS THE STATE OF KARNATAKA AND ORS.",
               "48": "SLP(C) No. 5739/2026 RAJEEV YADAV VERSUS UNION OF INDIA AND ORS.",
               "49": "Diary No. 16332-2026 THE DISTRICT COLLECTOR AND ANR. VERSUS K.ESWARAMOORTHY",
-              "50": "SLP(C) No. 11398/2026 OFFICIAL LIQUIDATOR OF M/S. KIRLOSKAR VERSUS M.C. SOMASHEKAR AND ORS.",
-              "51": "SLP(Crl) No. 9025/2026 SRINIVAS RAO KAKI VERSUS STATE OF KARNATAKA",
-              "52": "SLP(Crl) No. 9516/2026 DHRAMVEER MAHTO @ DHARMVEER KUMAR VERSUS THE STATE OF BIHAR",
-              "53": "SLP(Crl) No. 9988/2026 JAMIR SALIM SHAIKH VERSUS THE STATE OF MAHARASHTRA",
-              "54": "SLP(Crl) No. RAJJAN DWIVEDI VERSUS THE STATE OF MADHYA PRADESH AND ANR.",
-              "55": "SLP(C) No. 28314/2026 ABSTERGE REAL ESTATE PVT LTD VERSUS MASIHI SAHITYA SANSTHA",
-              "56": "Diary No. 48026-2026 SHAKTI ARORA VERSUS STATE OF HARYANA",
-              "57": "SLP(Crl) No. SURESH JATANGI VERSUS STATE OF TELANGANA",
-              "58": "SLP(Crl) No. 5024/2026 PRAHALAD KALAL VERSUS STATE OF CHHATTISGARH",
-              "58.1": "Connected DURGALAL MEWADA VERSUS STATE OF CHHATTISGARH"
+              "50": "SLP(C) No. 11398/2026 OFFICIAL LIQUIDATOR OF M/S. KIRLOSKAR VERSUS M.C. SOMASHEKAR AND ORS."
             },
             "advocates": {
               "1": {
@@ -3522,46 +3217,14 @@
               "50": {
                 "pet": "ROHINI MUSA",
                 "resp": "HARISHA S.R"
-              },
-              "51": {
-                "pet": "KRISHNA & NISHANI LAW",
-                "resp": "SANCHIT GARGA"
-              },
-              "52": {
-                "pet": "SOUMYA DUTTA",
-                "resp": "MANISH KUMAR"
-              },
-              "53": {
-                "pet": "SACHIN PATIL",
-                "resp": "AADITYA ANIRUDDHA PANDE"
-              },
-              "54": {
-                "pet": "LOKESH KUMAR"
-              },
-              "55": {
-                "pet": "KARTIKEYA SINGH"
-              },
-              "56": {
-                "pet": "SUGANDH RATHOR"
-              },
-              "57": {
-                "pet": "B. SHRAVANTH SHANKER",
-                "resp": "CASES]"
-              },
-              "58": {
-                "pet": "NISHANT BISHNOI",
-                "resp": "SIDDHARTHA SINHA"
-              },
-              "58.1": {
-                "pet": "NISHANT BISHNOI"
               }
             },
             "main": 50,
-            "supp": 8
+            "supp": 0
           },
           "11": {
             "coram": "HON'BLE MR. JUSTICE VIPUL M. PANCHOLI HON'BLE MR. JUSTICE SANJEEV SACHDEVA",
-            "total": "52",
+            "total": "48",
             "fresh": "",
             "items": {
               "15": "Dno 37771-2026 Vs.",
@@ -3612,11 +3275,7 @@
               "47.1": "Connected MANISH GURJAR AND ORS. VERSUS THE STATE OF RAJASTHAN THROUGH ITS",
               "48": "SLP(C) No. 21252/2026 VIKRAMJEET SINGH CHIB VERSUS THE UNION OF INDIA AND ORS.",
               "49": "SLP(C) No. 22352/2026 MAHESH SHANTILAL DHAROD AND ORS. VERSUS NITTANY TRADING PRIVATE LIMITED",
-              "50": "SLP(C) No. NETAJI SHEKUMBAR BHOPALE, ETC. VERSUS THE COMMISSIONER AND ORS.",
-              "51": "SLP(Crl) No. VIVEK KUMAR VERSUS STATE OF HIMACHAL PRADESH",
-              "52": "Diary No. 42791-2026 ADITYA KUMAR SINGH AND ORS. VERSUS M/S KANT CONSTRUCTION COMPANY AND ORS.",
-              "53": "C.A. No. 10646/2026 M/S DECENT BUILDWELL PVT. LTD. VERSUS SHRI RADHA AQUA GARDENS BUYERS",
-              "54": "Diary No. 11600-2025 SANTOSH B NAIK VERSUS STATE OF GOA AND ORS. KAJAL DALAL [R-1], [R-2],"
+              "50": "SLP(C) No. NETAJI SHEKUMBAR BHOPALE, ETC. VERSUS THE COMMISSIONER AND ORS."
             },
             "advocates": {
               "15": {
@@ -3779,36 +3438,22 @@
               "50": {
                 "pet": "SAMRAT KRISHNARAO",
                 "resp": "BLACK & WHITE SOLICITORS"
-              },
-              "51": {
-                "pet": "ANIKET VIJAY SETH"
-              },
-              "52": {
-                "pet": "SHARAD CHAUHAN",
-                "resp": "VISHAL ARUN MISHRA"
-              },
-              "53": {
-                "pet": "AKSHAY SRIVASTAVA",
-                "resp": "MAREESH PRAVIR SAHAY"
-              },
-              "54": {
-                "pet": "SALVADOR SANTOSH"
               }
             },
             "main": 48,
-            "supp": 4
+            "supp": 0
           },
           "12": {
             "coram": "HON'BLE MR. JUSTICE PRASHANT KUMAR MISHRA HON'BLE MR. JUSTICE SHREE CHANDRASHEKHAR",
-            "total": "58",
+            "total": "50",
             "fresh": "",
             "items": {
-              "1": "C.A. No. 7336/2025 SECRETARY AND ORS. VERSUS SUDHAKAR CHABURAO KAMBLE AND ORS.",
-              "2": "Diary No. 72780-2025 RATNAGIRI AND ANR. VERSUS VINOD SADANAND PALKAR AND ORS.",
+              "1": "SLP(Crl) No. 702/2026 IKBAL VERSUS THE STATE OF MADHYA PRADESH",
+              "2": "SLP(Crl) No. 8766/2026 DINESH KUMAR @ DINESH YADAV VERSUS STATE OF BIHAR",
               "3": "SLP(Crl) No. 8839/2026 RAMAN BOOLCHANDANI VERSUS STATE OF MADHYA PRADESH",
               "4": "SLP(Crl) No. PRADEEP KUMAR VERSUS STATE OF UTTAR PRADESH AND ANR.",
               "5": "SLP(Crl) No. 9759/2026 DEEPAK KINDO VERSUS STATE OF ODISHA",
-              "6": "C.A. No. 7365/2025 DEPARTMENT AND ANR. VERSUS PARMESHWAR APPARAO KAKDE AND ORS.",
+              "6": "SLP(Crl) No. 9969/2026 POORAN LAL VERSUS STATE OF U.P AND ANR.",
               "7": "SLP(Crl) No. JAYARAM VAJENDLA VERSUS STATE OF CHHATTISGARH",
               "8": "SLP(Crl) No. ASHIF VERSUS STATE OF UTTAR PRADESH AND ANR.",
               "9": "SLP(Crl) No. M RAMESH VERSUS STATE OF TAMIL NADU AND ORS.",
@@ -3860,26 +3505,7 @@
               "47": "SLP(C) No. 7191/2026 DUWASIA AND ORS. VERSUS THE NEW INDIA ASSURANCE COMPANY LTD AND",
               "48": "SLP(C) No. 10032/2026 SANTHOSH S.R NAIR VERSUS GOVT. OF NCT OF DELHI AND ANR.",
               "49": "SLP(C) No. 19310/2026 SANTOSH KUMAR TIWARI VERSUS GENERAL MANAGER, NORTH CENTRAL RAILWAY",
-              "50": "SLP(C) No. 17710/2026 RAHUL SINGH TOLIA VERSUS UNION OF INDIA AND ANR.",
-              "51": "SLP(Crl) No. DALER SINGH VERSUS STATE OF HARYANA",
-              "52": "Diary No. 10824-2026 RAJEEV PATHAK VERSUS STATE OF UTTAR PRADESH AND ANR.",
-              "53": "T.P.(Crl.) No. 861/2026 RAVI SINGH AND ORS. VERSUS PRIYANKA VERMA",
-              "54": "SLP(C) No. 15995/2023 SANJAY MOHAN VOLVOIKAR VERSUS SHRIRAM TRANSPORT FIN COMP LTD. VANYA GUPTA [R-1]",
-              "55": "SLP(C) No. 16289/2026 ASWATHI S VERSUS GREESHMA PRADEEP AND ORS.",
-              "56": "C.A. No. 7288/2025 THE STATE OF MAHARASHTRA THROUGH ITS VERSUS KAMLESH DHAKAL THAKHNE AND ORS.",
-              "56.1": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS HAJIMIYA NASIR AHMED SHAIKH AND ORS.",
-              "56.2": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS ANNASAHEB ASARAM DAHIHANDE AND ORS.",
-              "56.3": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS AMIN DILAVARKHA PATHAN AND ORS.",
-              "56.4": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS VIKAS POPAT KASHID AND ORS.",
-              "56.5": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS SOMNATH CHHAGANRAO HAKAM AND ORS.",
-              "56.6": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS SHAIKH ALLADDIN SHAIKH MUNIR AND ORS.",
-              "56.7": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS PADMAKAR KONDIBA RAHIRE AND ORS.",
-              "56.8": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS TUKARAM RAMRAO PARSE AND ORS.",
-              "56.9": "Connected THE STATE OF MAHARASHTRA AND ORS. VERSUS SANTOSH PRAKASH MORE AND ANR.",
-              "0": "Diary No. 72746-2025 RATNAGIRI AND ANR. VERSUS RAJESH RAMCHANDRA GUHAGARKAR AND ORS.",
-              "57": "SLP(C) No. 28728/2026 G. THALAYAN VERSUS P. B. THEERTHAGIRI AND ORS.",
-              "57.1": "Connected THALAYAN. G AND ANR. VERSUS R. KARTHIKEYAN AND ORS.",
-              "57.2": "Connected S. MOHANDOSS AND ANR. VERSUS R. KARTHIKEYAN AND ORS."
+              "50": "SLP(C) No. 17710/2026 RAHUL SINGH TOLIA VERSUS UNION OF INDIA AND ANR."
             },
             "advocates": {
               "1": {
@@ -4073,80 +3699,14 @@
               },
               "50": {
                 "pet": "KAUSTUBH SHUKLA"
-              },
-              "51": {
-                "pet": "UMANG SHANKAR"
-              },
-              "52": {
-                "pet": "KANCHAN KAUR DHODI",
-                "resp": "ASHISH YADAV"
-              },
-              "53": {
-                "pet": "ALPANA SHARMA"
-              },
-              "54": {
-                "pet": "SUSHIL BALWADA"
-              },
-              "55": {
-                "pet": "ATUL SHANKAR VINOD",
-                "resp": "LAKSHMEESH S. KAMATH NISHE RAJEN SHONKER"
-              },
-              "56": {
-                "pet": "AADITYA ANIRUDDHA",
-                "resp": "PULKIT AGARWAL"
-              },
-              "56.1": {
-                "pet": "AADITYA ANIRUDDHA"
-              },
-              "56.2": {
-                "pet": "AADITYA ANIRUDDHA"
-              },
-              "56.3": {
-                "pet": "AADITYA ANIRUDDHA"
-              },
-              "56.4": {
-                "pet": "AADITYA ANIRUDDHA",
-                "resp": "PULKIT AGARWAL"
-              },
-              "56.5": {
-                "pet": "AADITYA ANIRUDDHA",
-                "resp": "PULKIT AGARWAL"
-              },
-              "56.6": {
-                "pet": "AADITYA ANIRUDDHA"
-              },
-              "56.7": {
-                "pet": "T. R. B. SIVAKUMAR",
-                "resp": "PULKIT AGARWAL"
-              },
-              "56.8": {
-                "pet": "BLACK & WHITE"
-              },
-              "56.9": {
-                "pet": "AADITYA ANIRUDDHA",
-                "resp": "PULKIT AGARWAL"
-              },
-              "0": {
-                "pet": "PANDE",
-                "resp": "RAJ BAHADUR YADAV"
-              },
-              "57": {
-                "pet": "SIDDHARTHA IYER"
-              },
-              "57.1": {
-                "pet": "PREETIKA DWIVEDI",
-                "resp": "SIDDHARTHA IYER"
-              },
-              "57.2": {
-                "pet": "SIDDHARTHA IYER"
               }
             },
             "main": 50,
-            "supp": 8
+            "supp": 0
           },
           "13": {
             "coram": "HON'BLE MR. JUSTICE K.V. VISWANATHAN HON'BLE MR. JUSTICE ARUN PALLI",
-            "total": "56",
+            "total": "51",
             "fresh": "",
             "items": {
               "1": "Crl.A. No. 2999/2026 ALOK GOCHHAYAT VERSUS STATE OF ORISSA",
@@ -4214,13 +3774,7 @@
               "48.1": "Connected SUBHASH AND ORS. VERSUS STATE OF HARYANA AND ORS.",
               "49": "SLP(C) No. 17483/2026 MUKHTAR AHMAD VERSUS STATE OF U.P AND ORS.",
               "49.1": "Connected FARMAN ILAHI VERSUS THE STATE OF UTTAR PRADESH AND ORS.",
-              "50": "SLP(C) No. 22288/2026 K. RAJKUMAR VERSUS L.JESSE RABEKAH",
-              "1501": "SLP(Crl) No. 2815/2026 KESHVENDRA SINGH VERSUS SHANKAR SINGH AND ANR.",
-              "51": "SLP(Crl) No. GAUTAM MAHTO @GAUTAM KUMAR MAHTO AND VERSUS THE STATE OF BIHAR",
-              "52": "SLP(C) No. 26305/2026 ROYAL CITY DEVELOPER PRIVATE LIMITED VERSUS CARLOYN JOYCE TADAMALA",
-              "53": "Diary No. 21935-2026 DINESH G. TAHILIANI VERSUS M/S BHAVANI HOMES PRIVATE LTD.",
-              "54": "SLP(C) No. PUNEET NAWAL SINGH AND ANR. VERSUS SHREE SUKHAKARTA DEVELOPERS PVT. LTD. AND",
-              "54.1": "Connected SHREE SUKHAKARTA DEVELOPERS PVT. LTD. AND VERSUS PUNEET NAWAL SINGH AND ANR."
+              "50": "SLP(C) No. 22288/2026 K. RAJKUMAR VERSUS L.JESSE RABEKAH"
             },
             "advocates": {
               "1": {
@@ -4453,37 +4007,14 @@
               },
               "50": {
                 "pet": "A. SELVIN RAJA"
-              },
-              "1501": {
-                "pet": "AVIRAL KASHYAP",
-                "resp": "ASHISH PANDEY , ARUP BANERJEE"
-              },
-              "51": {
-                "pet": "ROHIT KUMAR SINGH"
-              },
-              "52": {
-                "pet": "RISHABH DHEER",
-                "resp": "PALEM AKHILA SANTOSHI"
-              },
-              "53": {
-                "pet": "ANOOP PRAKASH AWASTHI",
-                "resp": "ABHINAY"
-              },
-              "54": {
-                "pet": "AKSHAY SRIVASTAVA",
-                "resp": "BHASKAR NAYAK"
-              },
-              "54.1": {
-                "pet": "BHASKAR NAYAK",
-                "resp": "AKSHAY SRIVASTAVA"
               }
             },
             "main": 51,
-            "supp": 5
+            "supp": 0
           },
           "14": {
             "coram": "HON'BLE MR. JUSTICE UJJAL BHUYAN HON'BLE MR. JUSTICE ATUL S. CHANDURKAR",
-            "total": "53",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 5330/2026 MUNAF YUSUFBHAI LAKUM VERSUS STATE OF GUJARAT",
@@ -4539,10 +4070,7 @@
               "49": "CONMT.PET.(C) No. NAZISH PRAVEEN VERSUS EZAZ AHMAD",
               "50": "SLP(C) No. 15202/2026 CENTRAL BANK OF INDIA AND ORS. VERSUS MD TARIQUE AND ANR.",
               "50.1": "Connected MD. TARIQUE VERSUS UNION OF INDIA AND ORS.",
-              "50.2": "Connected MD. TARIQUE VERSUS T.V. SOMANATHAN, SECRETARY, MINISTRY OF",
-              "51": "SLP(Crl) No. ABHISHEK KUMAR SINGH @ABHISHEK KUMAR VERSUS STATE OF BIHAR",
-              "52": "SLP(Crl) No. ARPIT VIPINCHANDRA SHAH VERSUS STATE OF GUJARAT AND ANR.",
-              "53": "SLP(Crl) No. MURALI KABIRDASS VERSUS SHRAVAN MANOHAR"
+              "50.2": "Connected MD. TARIQUE VERSUS T.V. SOMANATHAN, SECRETARY, MINISTRY OF"
             },
             "advocates": {
               "1": {
@@ -4722,24 +4250,14 @@
               },
               "50.2": {
                 "pet": "PRIYANSHA SHARMA"
-              },
-              "51": {
-                "pet": "JYOTI SHARMA"
-              },
-              "52": {
-                "pet": "ISHAAN GEORGE"
-              },
-              "53": {
-                "pet": "YADAV NARENDER SINGH",
-                "resp": "SIDDHARTHA IYER"
               }
             },
             "main": 50,
-            "supp": 3
+            "supp": 0
           },
           "15": {
             "coram": "HON'BLE MR. JUSTICE S.V.N. BHATTI HON'BLE MR. JUSTICE N.V. ANJARIA",
-            "total": "51",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "MA 2079/2026 in S. GAYATHIRI VERSUS V.R. SELVARAJULU AND ANR.",
@@ -4795,8 +4313,7 @@
               "47": "SLP(C) No. 21633/2026 SHOBHAMMA VERSUS PUSHPALATHA AND ORS.",
               "48": "SLP(C) No. 19238/2026 RAMADEVI MARUTI KAMBLE AND ORS. VERSUS CHETANA DASHARATH KAMBLE AND ANR.",
               "49": "C.A. No. 9306/2026 M/S MANJEET COTTON PVT. LTD. VERSUS PHOENIX ARC PVT. LTD.",
-              "50": "SLP(C) No. SURESH MOHAN PATIL VERSUS THE SENIOR CONSULTANT (GENERAL",
-              "51": "T.P.(C) No. 2420/2026 P. SHIRIRAM RAO VERSUS G R SWAATHISHREE"
+              "50": "SLP(C) No. SURESH MOHAN PATIL VERSUS THE SENIOR CONSULTANT (GENERAL"
             },
             "advocates": {
               "1": {
@@ -4982,17 +4499,14 @@
               "50": {
                 "pet": "SANJAY KUMAR VISEN",
                 "resp": "NISHANT RAMAKANTRAO"
-              },
-              "51": {
-                "pet": "SANJAY KUMAR VISEN"
               }
             },
             "main": 50,
-            "supp": 1
+            "supp": 0
           },
           "16": {
             "coram": "HON'BLE MR. JUSTICE SATISH CHANDRA SHARMA HON'BLE MR. JUSTICE NONGMEIKAPAM KOTISWAR SINGH",
-            "total": "57",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. GAURAV VERSUS THE STATE OF RAJASTHAN",
@@ -5044,15 +4558,7 @@
               "47": "SLP(C) No. 19721/2026 MUNICIPAL CORPORATION OF GREATER MUMBAI VERSUS SHUBH APARTMENTS CHS LIMITED AND ORS.",
               "48": "SLP(C) No. 21707/2026 NARENDRA KUMAR JOSHI VERSUS MRS. TAPASYA AND ORS.",
               "49": "T.P.(Crl.) No. SAPNA MISHRA VERSUS STATE OF CHHATTISGARH AND ANR.",
-              "50": "SLP(C) No. 22243/2024 S. JAYALAKSHMI AND ANR. VERSUS M. SUNDARRAJ",
-              "51": "Crl.A. No. 3357/2026 INDRA SINGH AND ORS. VERSUS STATE OF RAJASTHAN",
-              "51.1": "Connected YOGENDRA SINGH VERSUS STATE OF RAJASTHAN AND ORS.",
-              "52": "Diary No. 47641-2026 ARBIND KUMAR AND ORS. VERSUS THE STATE OF BIHAR",
-              "53": "Diary No. 35735-2026 JASHIM MIAN @ JASIM MIAN @ JSIMUDDIN MIYAN VERSUS THE STATE OF JHARKHAND",
-              "54": "SLP(C) No. 25714/2026 MISS RAJNESH VERSUS UNION OF INDIA AND ORS.",
-              "55": "SLP(Crl) No. SUDHA RAKESH AND ORS. VERSUS THE STATE OF KARNATAKA AND ANR.",
-              "56": "Diary No. 34332-2026 RAJASTHAN RAJYA VIDYUT UTPADAN NIGAM VERSUS PARSA KENTE COLLIERIES LIMITED",
-              "57": "SLP(Crl) No. ANEESH VERSUS STATE OF KERALA AND ORS."
+              "50": "SLP(C) No. 22243/2024 S. JAYALAKSHMI AND ANR. VERSUS M. SUNDARRAJ"
             },
             "advocates": {
               "1": {
@@ -5218,38 +4724,10 @@
               "50": {
                 "pet": "VIKASH SINGH",
                 "resp": "G. BALAJI"
-              },
-              "51": {
-                "pet": "AMIT PAWAN",
-                "resp": "T. HARI HARA SUDHAN SAURABH RAJPAL"
-              },
-              "51.1": {
-                "pet": "T. HARI HARA SUDHAN",
-                "resp": "AMIT PAWAN"
-              },
-              "52": {
-                "pet": "KUMAR MIHIR"
-              },
-              "53": {
-                "pet": "SHIVAM KUMAR"
-              },
-              "54": {
-                "pet": "RABIN MAJUMDER"
-              },
-              "55": {
-                "pet": "T. MAHIPAL",
-                "resp": "SANCHIT GARGA CHARULATA CHAUDHARY"
-              },
-              "56": {
-                "pet": "CHAMBERS OF KARTIK",
-                "resp": "KHAITAN & CO"
-              },
-              "57": {
-                "pet": "VISHNU P"
               }
             },
             "main": 50,
-            "supp": 7
+            "supp": 0
           }
         },
         "Chamber": {
@@ -20680,7 +20158,6 @@
   "sources": {
     "2026-08-17": {
       "M_J_1": 942330,
-      "M_J_2": 642146,
       "M_C_1": 531235,
       "M_C_2": 536201,
       "M_S_1": 518483,
