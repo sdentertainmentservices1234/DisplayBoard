@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T16:01:19.938042Z",
+  "generated_at": "2026-08-18T16:26:54.139456Z",
   "parser_version": 8,
   "window": [
     "2026-08-18",
@@ -8840,7 +8840,7 @@
           },
           "2": {
             "coram": "HON'BLE MR. JUSTICE VIKRAM NATH HON'BLE MR. JUSTICE SANDEEP MEHTA",
-            "total": "40",
+            "total": "42",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. RAHUL KUMAR VERSUS THE STATE OF BIHAR AND ANR.",
@@ -8894,7 +8894,10 @@
               "37.4": "Connected MUNICIPAL COUNCIL BALOTRA VERSUS DIGVIJAY SINGH AND ORS.",
               "38": "SLP(Crl) No. RISHU GARG @ SHUBHAM GARG VERSUS STATE OF PUNJAB",
               "39": "Diary No. 8656-2026 M/S. THARU AND SONS VERSUS M/S LEOTECH PROCESS AND ORS.",
-              "40": "Diary No. 42176-2026 SUDHIR.K.C AND ORS. VERSUS DR. P.V. SREENIVASAN AND ANR."
+              "40": "Diary No. 42176-2026 SUDHIR.K.C AND ORS. VERSUS DR. P.V. SREENIVASAN AND ANR.",
+              "41": "Diary No. 49158-2026 DEEPAK MADHAV SURLAKAR VERSUS THE STATE OF GOA AND ORS.",
+              "41.1": "Connected DEEPAK MADHAV SURLAKAR VERSUS THE STATE OF GOA AND ORS.",
+              "42": "SLP(Crl) No. STATE OF GOA VERSUS ROHAN P. PAI DHUNGAT AND ANR. SALVADOR SANTOSH"
             },
             "advocates": {
               "1": {
@@ -9074,10 +9077,21 @@
               "40": {
                 "pet": "ZULFIKER ALI P. S",
                 "resp": "RAHUL JAIN"
+              },
+              "41": {
+                "pet": "DCOSTA IVO MANUEL",
+                "resp": "SHIVRAJ GAONKAR"
+              },
+              "41.1": {
+                "pet": "DCOSTA IVO MANUEL",
+                "resp": "SALVADOR SANTOSH REBELLO"
+              },
+              "42": {
+                "pet": "SURBHI KAPOOR"
               }
             },
             "main": 37,
-            "supp": 3
+            "supp": 5
           },
           "3": {
             "coram": "HON'BLE MRS. JUSTICE B.V. NAGARATHNA HON'BLE MR. JUSTICE R. MAHADEVAN",
@@ -9633,7 +9647,7 @@
           },
           "4": {
             "coram": "HON'BLE MR. JUSTICE M.M. SUNDRESH HON'BLE MR. JUSTICE PRASANNA B. VARALE",
-            "total": "49",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. JAHAN YADAV VERSUS STATE OF U.P.",
@@ -9702,7 +9716,8 @@
               "35": "Diary No. 43109-2026 SUFI NAFIS TANTRIK @ SHAH NAFIR AHMAD RAHI VERSUS STATE OF U.P. AND ORS.",
               "36": "SLP(Crl) No. RAMPHAL SAINI VERSUS STATE OF HARYANA",
               "37": "Diary No. 45055-2026 STATE OF HIMACHAL PRADESH AND ORS. VERSUS SHER SINGH ALIAS NIKU AND ORS.",
-              "38": "SLP(C) No. 27260/2026 SHRI. KULSWAMINI AMBABAI KHAAN MAJOOR VERSUS THE STATE OF MAHARASHTRA AND ORS."
+              "38": "SLP(C) No. 27260/2026 SHRI. KULSWAMINI AMBABAI KHAAN MAJOOR VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "39": "SLP(Crl) No. PROSENJIT NAG VERSUS THE STATE OF WEST BENGAL"
             },
             "advocates": {
               "1": {
@@ -9918,10 +9933,14 @@
               },
               "38": {
                 "pet": "OMKAR JAYANT"
+              },
+              "39": {
+                "pet": "HARSHIKA VERMA",
+                "resp": "SARAD KUMAR SINGHANIA"
               }
             },
             "main": 44,
-            "supp": 5
+            "supp": 6
           },
           "5": {
             "coram": "HON'BLE MR. JUSTICE PAMIDIGHANTAM SRI NARASIMHA HON'BLE MR. JUSTICE ALOK ARADHE",
@@ -20217,7 +20236,7 @@
     },
     "2026-08-19": {
       "M_J_1": 1032072,
-      "M_J_2": 642921,
+      "M_J_2": 648595,
       "F_J_1": 1025088,
       "F_J_2": 658436,
       "M_R_1": 539500,
