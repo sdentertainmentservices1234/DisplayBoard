@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T14:37:55.876074Z",
+  "generated_at": "2026-08-18T15:05:23.454148Z",
   "parser_version": 8,
   "window": [
     "2026-08-18",
@@ -12537,7 +12537,7 @@
         "Regular": {
           "1": {
             "coram": "HON'BLE THE CHIEF JUSTICE HON'BLE MR. JUSTICE JOYMALYA BAGCHI HON'BLE MRS. JUSTICE V. MOHANA",
-            "total": "20",
+            "total": "21",
             "fresh": "",
             "items": {
               "101": "C.A. No. 329-330/2004 GHAZI SAADUDDIN VERSUS STATE OF MAHARAHSTRA THR. SECY AND ORS.",
@@ -12712,7 +12712,8 @@
               "118.1": "C.A. No. 5839/2022 LIMITED JALARAM CO OPERATIVE HOUSING SOCIETY VERSUS THE SECRETARY REVENUE DEPARTMENT AND ORS.",
               "119": "C.A. No. 2954/2023 THE STATE OF WEST BENGAL AND ORS. VERSUS DINESH AGARWAL",
               "120": "C.A. No. SEI ADHAVAN POWER PRIVATE LIMITED VERSUS JINNENG CLEAN ENERGY TECHNOLOGY LTD. AND",
-              "120.1": "C.A. No. 3277/2025 LIMITED SUNEDISON SOLAR POWER INDIA PRIVATE VERSUS JINNENG CLEAN ENERGY TECHNOLOGY LTD. AND"
+              "120.1": "C.A. No. 3277/2025 LIMITED SUNEDISON SOLAR POWER INDIA PRIVATE VERSUS JINNENG CLEAN ENERGY TECHNOLOGY LTD. AND",
+              "121": "Diary No. 35405-2026 T. S. SHANTHI KUMAR VERSUS UNION OF INDIA AND ANR."
             },
             "advocates": {
               "101": {
@@ -12785,10 +12786,13 @@
               "120": {
                 "pet": "DUA ASSOCIATES",
                 "resp": "SASWAT PATTNAIK"
+              },
+              "121": {
+                "pet": "SHREY RAVI DAMBHARE"
               }
             },
             "main": 20,
-            "supp": 0
+            "supp": 1
           },
           "2": {
             "coram": "HON'BLE MR. JUSTICE VIKRAM NATH HON'BLE MR. JUSTICE SANDEEP MEHTA",
@@ -15361,9 +15365,10 @@
           },
           "15": {
             "coram": "HON'BLE MR. JUSTICE UJJAL BHUYAN HON'BLE MR. JUSTICE ATUL S. CHANDURKAR",
-            "total": "20",
+            "total": "21",
             "fresh": "",
             "items": {
+              "1501": "Crl.A. No. 1177/2015 RAFIKMIYA AHMEDMIYA MALEK VERSUS STATE OF GUJARAT",
               "101": "Crl.A. No. 662/2022 ASHISH BAGGA VERSUS THE STATE OF RAJASTHAN AND ANR.",
               "101.1": "Crl.A. No. 663/2022 PRABHU CHAWLA VERSUS THE STATE OF RAJASTHAN AND ANR.",
               "101.2": "Crl.A. No. 664/2022 JAGDISH UPASANE AND ANR. VERSUS THE STATE OF RAJASTHAN AND ANR.",
@@ -15396,6 +15401,10 @@
               "120.1": "Crl.A. No. 643/2018 ANIL KUMAR AND ORS. VERSUS THE STATE OF HARYANA"
             },
             "advocates": {
+              "1501": {
+                "pet": "SUDHANSU PALO",
+                "resp": "SWATI GHILDIYAL"
+              },
               "101": {
                 "pet": "JAYANT MOHAN",
                 "resp": "SAURABH RAJPAL"
@@ -15478,13 +15487,14 @@
               }
             },
             "main": 0,
-            "supp": 20
+            "supp": 21
           },
           "16": {
             "coram": "HON'BLE MR. JUSTICE S.V.N. BHATTI HON'BLE MR. JUSTICE N.V. ANJARIA",
-            "total": "20",
+            "total": "21",
             "fresh": "",
             "items": {
+              "1501": "C.A. No. REENA VERSUS THE MANAGING DIRECTOR, KARNATAKA STATE",
               "101": "C.A. No. 9190/2013 ASST. COMMISSIOER OF INCOME TAX . AND ANR. VERSUS OMAXE LTD.",
               "102": "C.A. No. 4376/2015 M/S GANAPATI FINANCE LTD. VERSUS COMMISSIONER OF INCOME TAX IV, NEW DELHI",
               "103": "C.A. No. 8932/2013 LAKSHMI SUGAR MILLS CO. LTD. VERSUS COMMISSIONER OF INCOME TAX DELHI II",
@@ -15521,6 +15531,9 @@
               "120": "C.A. No. 99/2014 JUSTICE G.K. MATHUR (RETD.) VERSUS COMMISSIONER OF INCOME TAX AND ANR."
             },
             "advocates": {
+              "1501": {
+                "resp": "P. SRINIVASAN , YASH"
+              },
               "101": {
                 "pet": "SUDARSHAN LAMBA",
                 "resp": "ANIKET DEEPAK AGRAWAL"
@@ -15597,7 +15610,7 @@
               }
             },
             "main": 0,
-            "supp": 20
+            "supp": 21
           }
         },
         "Registrar": {
@@ -20124,7 +20137,7 @@
       "M_J_1": 1032072,
       "M_J_2": 617573,
       "F_J_1": 1025088,
-      "F_J_2": 652724,
+      "F_J_2": 658436,
       "M_R_1": 539500,
       "M_CC_1": 514940
     },
