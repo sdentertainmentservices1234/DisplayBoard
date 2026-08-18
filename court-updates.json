@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T16:26:54.139456Z",
+  "generated_at": "2026-08-18T17:57:05.665536Z",
   "parser_version": 8,
   "window": [
     "2026-08-18",
@@ -8513,8 +8513,10 @@
             "total": "41",
             "fresh": "",
             "items": {
+              "11": "EKTA SAMITI AND ORS. ANKIT YADAV",
+              "31": "Vs. AKSHAY AMRITANSHU [R-2],",
               "1": "C.A. No. UNION OF INDIA AND ORS. VERSUS JOBY VARGHESE",
-              "2": "C.A. No. 9565/2019 POONAM BUILDERS VERSUS ORCHID TOWER CO-OPERATIVE HOUSING SOCIETY",
+              "2": "C.A. No. 9565/2019 POONAM BUILDERS VERSUS ORCHID TOWER CO-OPERATIVE HOUSING SOCIETY BHARAT T",
               "3": "Crl.A. No. 1656/2023 RANJEET SINGH @ RANA BHOM SINGH VERSUS THE STATE OF MADHYA PRADESH",
               "4": "C.A. No. 4759/2023 M/S ADOBE MARKETING PRIVATE LIMITED VERSUS HARYANA STATE INDUSTRIAL AND",
               "5": "SLP(Crl) No. SUMIT ROY VERSUS STATE OF WEST BENGAL",
@@ -8533,11 +8535,10 @@
               "10.8": "Connected INCOME TAX OFFICER WARD 3 (1) AND ORS. VERSUS BAHADUR SINGH BADESHA",
               "10.9": "Connected ASSISTANT COMMISSIONER OF INCOME TAX AND VERSUS SHRAVAN KUMAR GOVIL",
               "0": "Diary No. 43205-2026 VERSUS HIMANSHU",
-              "11": "W.P.(C) No. 970/2026 MAHIRA AASHAWADEE PRYATNWADEE VERSUS UNION OF INDIA AND ORS.",
               "12": "SLP(Crl) No. ANITA PANDEY VERSUS STATE OF UP AND ANR.",
               "13": "W.P.(Crl.) No. 317/2026 SERAJUDDIN ANSARI VERSUS UNION OF INDIA AND ORS.",
               "14": "SLP(Crl) No. UNION OF INDIA VERSUS BHODU SEKH AND ORS.",
-              "14.1": "Connected UNION OF INDIA VERSUS AMIR KHAN AND ORS.",
+              "14.1": "Connected UNION OF INDIA VERSUS AMIR KHAN AND ORS. SOUMYA DUTTA [CAVEAT],",
               "15": "SLP(C) No. 16389/2026 DIRECTOR INCHARGE (FORMERLY CHIEF VERSUS SANJAY KUMAR GUPTA",
               "16": "W.P.(C) No. 509/2026 REEPAK KANSAL VERSUS UNION OF INDIA AND ORS.",
               "17": "CONMT.PET.(C) No. DELHI METRO RAIL CORPORATION LTD. VERSUS DELHI AIRPORT METRO EXPRESS PVT LTD AND",
@@ -8571,7 +8572,6 @@
               "29": "MA 2473/2026 in AMRISH KUMAR JAIN VERSUS THE STATE OF PUNJAB",
               "30": "C.A. No. 877/2009 JAIDEV NAGRATH (D) THR LRS. VERSUS BIKRAMJIT NAGRATH (D)THR. LRS. AND ORS.",
               "30.1": "Connected RASHMI DEV NAGRATH AND ANR. VERSUS BIKRAMJIT NAGRATH (D) AND ORS. B. VIJAYALAKSHMI ME",
-              "31": "W.P.(C) No. 160/2024 NITIN LALI AND ORS. VERSUS UNION OF INDIA AND ORS.",
               "31.1": "Connected MAHIRA HOMES-104 BUYERS WELFARE VERSUS UNION OF INDIA AND ORS.",
               "31.2": "Connected MAHIRA HOMES 63 A BUYERS WELFARE VERSUS UNION OF INDIA AND ORS.",
               "32": "SLP(C) No. ATIBIR INDUSTRIES CO. LTD VERSUS STATE BANK OF INDIA AND ANR.",
@@ -8589,13 +8589,18 @@
               "40.1": "Connected UDDHAV THACKERAY VERSUS EKNATHRAO SAMBHAJI SHINDE AND ANR."
             },
             "advocates": {
+              "11": {
+                "pet": "DELETED"
+              },
+              "31": {
+                "pet": "SMITA MAAN"
+              },
               "1": {
                 "pet": "ANIL KATIYAR",
                 "resp": "T. G. NARAYANAN NAIR R. C. KAUSHIK"
               },
               "2": {
-                "pet": "PINKY BEHERA",
-                "resp": "BHARAT THAKORLAL"
+                "pet": "PINKY BEHERA"
               },
               "3": {
                 "pet": "VIKRANT SINGH BAIS",
@@ -8603,7 +8608,7 @@
               },
               "4": {
                 "pet": "ABHAY KUMAR TAYAL",
-                "resp": "AKSHAY AMRITANSHU"
+                "resp": "SAMAR VIJAY SINGH"
               },
               "5": {
                 "pet": "KARISHMA MARIA",
@@ -8651,9 +8656,6 @@
               "10.9": {
                 "pet": "SUDARSHAN LAMBA"
               },
-              "11": {
-                "pet": "ANKIT YADAV"
-              },
               "12": {
                 "pet": "RAM SANKAR & CO",
                 "resp": "VIJAY SINGH"
@@ -8662,12 +8664,11 @@
                 "pet": "EKANSH BANSAL"
               },
               "14": {
-                "pet": "ARVIND KUMAR SHARMA",
-                "resp": "SOUMYA DUTTA KUNAL MIMANI"
+                "pet": "N. VISAKAMURTHY",
+                "resp": "SOUMYA DUTTA NISHANT AWANA"
               },
               "14.1": {
-                "pet": "ARVIND KUMAR SHARMA",
-                "resp": "SOUMYA DUTTA KUNAL MIMANI"
+                "pet": "N. VISAKAMURTHY"
               },
               "15": {
                 "pet": "PRABHAS BAJAJ"
@@ -8777,9 +8778,6 @@
               },
               "30.1": {
                 "pet": "MOHIT PAUL"
-              },
-              "31": {
-                "pet": "SMITA MAAN"
               },
               "31.1": {
                 "pet": "SUKANT VIKRAM"
@@ -20235,8 +20233,8 @@
       "M_CC_1": 568959
     },
     "2026-08-19": {
-      "M_J_1": 1032072,
-      "M_J_2": 648595,
+      "M_J_1": 1033451,
+      "M_J_2": 649869,
       "F_J_1": 1025088,
       "F_J_2": 658436,
       "M_R_1": 539500,
