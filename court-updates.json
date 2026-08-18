@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T10:58:11.140468Z",
+  "generated_at": "2026-08-18T13:30:10.322687Z",
   "parser_version": 8,
   "window": [
     "2026-08-18",
@@ -8501,6 +8501,7 @@
       "lists_found": [
         "Miscellaneous (main)",
         "Regular (main)",
+        "Regular (supp)",
         "Registrar (main)",
         "Curative & Review (main)"
       ],
@@ -12328,7 +12329,7 @@
           },
           "3": {
             "coram": "HON'BLE MRS. JUSTICE B.V. NAGARATHNA HON'BLE MR. JUSTICE R. MAHADEVAN",
-            "total": "20",
+            "total": "21",
             "fresh": "",
             "items": {
               "101": "Crl.A. No. 1908/2011 SHIVRAJ SINGH VERSUS THE STATE OF MADHYA PRADESH",
@@ -12380,7 +12381,8 @@
               "117.1": "SLP(C) No. 11759/2023 KUMAR SANJEEV RAJ VERSUS DR. ASHISH KUMAR SINHA AND ORS.",
               "118": "C.A. No. 829-830/2026 YOGADA SATSANGA SOCIETY OF INDIA, VERSUS SWAMI YOGESWARANANDA GIRI AND ORS.",
               "119": "C.A. No. 12372/2025 KOSARAJU VENKATESH AND ORS. VERSUS KOSARAJU GOPALA KRISHNA (SINCE DECEASED",
-              "120": "C.A. No. 3438/2026 THE STATE OF WEST BENGAL AND ORS. VERSUS SRIMATI BINAPANI MURMU AND ORS."
+              "120": "C.A. No. 3438/2026 THE STATE OF WEST BENGAL AND ORS. VERSUS SRIMATI BINAPANI MURMU AND ORS.",
+              "3": "EXCEPT PART HEARD MATTERS, IF ANY, AND THIS BENCH WILL SIT UPTO 3.25 P"
             },
             "advocates": {
               "101": {
@@ -12462,7 +12464,7 @@
               }
             },
             "main": 20,
-            "supp": 0
+            "supp": 1
           },
           "10": {
             "coram": "HON'BLE MR. JUSTICE AHSANUDDIN AMANULLAH HON'BLE MR. JUSTICE MANMOHAN",
@@ -12582,7 +12584,7 @@
           },
           "4": {
             "coram": "HON'BLE MR. JUSTICE M.M. SUNDRESH HON'BLE MR. JUSTICE PRASANNA B. VARALE",
-            "total": "20",
+            "total": "21",
             "fresh": "",
             "items": {
               "101": "Crl.A. No. 1005/2011 DEVADOSS AND ANR. VERSUS THE STATE OF TAMIL NADU",
@@ -12795,7 +12797,9 @@
               "120.146": "Diary No. 6290-2026 KEHAR SINGH AND ORS. VERSUS THE STATE OF HARYANA AND ORS.",
               "120.147": "Diary No. 8034-2026 ROHIT YADAV AND ORS. VERSUS STATE OF HARYANA AND ORS.",
               "120.148": "SLP(C) No. 12127/2026 SURAJ MAL YADAV AND ORS. VERSUS THE STATE OF HARYANA AND ORS.",
-              "120.149": "Diary No. 12747-2026 KANWAR PAL AND ORS. VERSUS STATE OF HARYANA AND ORS."
+              "120.149": "Diary No. 12747-2026 KANWAR PAL AND ORS. VERSUS STATE OF HARYANA AND ORS.",
+              "121": "C.A. No. 7592/2022 BENGALURU DEVELOPMENT AUTHORITY AND ANR. VERSUS GAUTAM KAMAT HOTELS PRIVATE LIMITED AND",
+              "121.1": "C.A. No. BENGALURU DEVELOPMENT AUTHORITY VERSUS K.P. GHANASHAM AND ANR."
             },
             "advocates": {
               "101": {
@@ -12873,10 +12877,14 @@
               "120": {
                 "pet": "BHAVNA KAPUR",
                 "resp": "ANIL KUMAR MUKUL KUMAR"
+              },
+              "121": {
+                "pet": "ANKUR S. KULKARNI",
+                "resp": "SRISHTI AGNIHOTRI"
               }
             },
             "main": 20,
-            "supp": 0
+            "supp": 1
           },
           "5": {
             "coram": "HON'BLE MR. JUSTICE PAMIDIGHANTAM SRI NARASIMHA HON'BLE MR. JUSTICE ALOK ARADHE",
@@ -13044,7 +13052,7 @@
           },
           "6": {
             "coram": "HON'BLE MR. JUSTICE J.B. PARDIWALA HON'BLE MR. JUSTICE K. VINOD CHANDRAN",
-            "total": "21",
+            "total": "23",
             "fresh": "",
             "items": {
               "2": "There will be passover of final hearing matters only once. In the seco",
@@ -13074,7 +13082,9 @@
               "118": "C.A. No. UNION OF INDIA AND ANR. VERSUS M/S. KOTHARI PRODUCTS LTD THROUGH MANAGER",
               "118.1": "C.A. No. SERVICE TAX DIBRUGARH COMMISSIONER OF CENTRAL EXCISE AND VERSUS M/S DEWANCHAND RAMSARAN INDUSTRIES",
               "119": "C.A. No. 9364/2011 COMMR.OF INCOME TAX,PATIALA VERSUS HARYANA STATE COUNSELLING SOCIETY",
-              "120": "C.A. No. SATISH GARG AND ORS. VERSUS CENTURY GALAXY DEVELOPMENT LIMITED"
+              "120": "C.A. No. SATISH GARG AND ORS. VERSUS CENTURY GALAXY DEVELOPMENT LIMITED",
+              "1501": "C.A. No. 7838/2024 SINGAPOGU BABU RAO AND ORS. VERSUS SPECIAL DEPUTY COLLECTOR (LAND ACQUISITION)",
+              "1502": "C.A. No. 7947/2013 M/S TVS MOTOR COMPANY LIMITED VERSUS COMMISSIONER OF CENTRAL EXCISE, CHENNAI-III"
             },
             "advocates": {
               "2": {
@@ -13158,10 +13168,18 @@
               "120": {
                 "pet": "AMIT PAI",
                 "resp": "YOOTHICA PALLAVI"
+              },
+              "1501": {
+                "pet": "GAICHANGPOU GANGMEI",
+                "resp": "P. PARMESWARAN"
+              },
+              "1502": {
+                "pet": "R. PARTHASARATHY",
+                "resp": "GURMEET SINGH MAKKER"
               }
             },
             "main": 21,
-            "supp": 0
+            "supp": 2
           },
           "8": {
             "coram": "HON'BLE MR. JUSTICE SANJAY KAROL HON'BLE MR. JUSTICE AUGUSTINE GEORGE MASIH",
@@ -13808,13 +13826,139 @@
             "supp": 0
           },
           "11": {
-            "coram": "",
-            "total": "0",
+            "coram": "HON'BLE MR. JUSTICE MANOJ MISRA HON'BLE MR. JUSTICE VIJAY BISHNOI",
+            "total": "24",
             "fresh": "",
-            "items": {},
-            "advocates": {},
+            "items": {
+              "101": "Crl.A. No. 244/2017 STATE OF UTTARAKHAND VERSUS MOHD. IRFAN",
+              "102": "Crl.A. No. 441/2018 THE STATE OF UTTARAKHAND HOME DEPARTMENT VERSUS RAJU",
+              "103": "Crl.A. No. 1074/2015 NEERAJ KUMAR VERSUS SURAJ PRAKASH AND ORS.",
+              "104": "Crl.A. No. 999/2016 PALJI NARAYAN SAPARIA VERSUS THE STATE OF MAHARASHTRA",
+              "105": "Crl.A. No. 1238/2015 STATE OF KARNATAKA VERSUS A. SHANTHAKUMAR @ KUMAR",
+              "106": "Crl.A. No. 67/2018 THE STATE OF HIMACHAL PRADESH VERSUS VARINDER VERMA@JATTI AND ANR.",
+              "107": "Crl.A. No. AMIRKA PRASAD (DECEASED) THROUGH LR ARUN VERSUS THE STATE OF UTTAR PRADESH AND ANR. ETC.",
+              "108": "Crl.A. No. 1622/2015 SURENDRA RAMCHANDRA MESTRI VERSUS THE STATE OF MAHARASHTRA",
+              "109": "Crl.A. No. 1325/2015 KISHORI LAL VERSUS THE STATE OF HIMACHAL PRADESH S. GOWTHAMAN [R-1][G",
+              "109.1": "SLP(Crl) No. 1505/2016 BIHARI LAL AND ANR. VERSUS THE STATE OF HIMACHAL PRADESH",
+              "110": "Crl.A. No. 1675/2019 STATE OF UTTARAKHAND VERSUS SUDHIR KUMAR SAXENA",
+              "111": "Crl.A. No. 1029/2019 STATE OF NCT OF DELHI VERSUS PARVEZ AHMED RADOO @ RAJU @ TAHIR.",
+              "112": "Crl.A. No. 1298/2026 M. M. NAGARAJ VERSUS THE STATE OF KARNATAKA",
+              "112.1": "Crl.A. No. 1299/2026 UDAY K.H. VERSUS THE STATE OF KARNATAKA",
+              "113": "Crl.A. No. 543/2026 TAUHID KHAN VERSUS THE STATE OF BIHAR SAMIR ALI KHAN [R-1]",
+              "113.1": "Crl.A. No. 544/2026 SARTAJ KHAN VERSUS THE STATE OF BIHAR",
+              "114": "Crl.A. No. SIDDHARTH TIWARI VERSUS STATE OF U.P. AND ORS.",
+              "114.1": "Crl.A. No. 5421/2025 SATYA PRAKASH JAISWAL VERSUS STATE OF UTTAR PRADESH",
+              "115": "C.A. No. K.S GITA VERSUS BEENA KOSARAJU AND ORS.",
+              "116": "Crl.A. No. 2336/2011 VIKAS VERSUS THE STATE OF HARYANA",
+              "116.1": "Crl.A. No. 2330/2011 MUKHPAL VERSUS THE STATE OF HARYANA",
+              "116.2": "Crl.A. No. 2335/2011 VIKAS VERSUS RANBIR AND ORS.",
+              "116.3": "SLP(Crl) No. GULAB SINGH VERSUS VIKAS AND ORS.",
+              "117": "Crl.A. No. 1260/2019 SHIV SHANKAR MAHTO AND ORS. VERSUS THE STATE OF BIHAR AND ANR.",
+              "118": "C.A. No. 2732/2012 ADVANTA INDIA LIMITED VERSUS B.N.SHIVANNA AND ANR.",
+              "118.1": "Diary No. 32663-2023 B.N. SHIVANNA VERSUS M/S. ADVANTA INDIA LIMITED",
+              "119": "Crl.A. No. 1999/2017 LIEUTENANT COLON EL TIRUNGRI KISHAN (RETD) VERSUS UNION OF INDIA AND ORS.",
+              "120": "Crl.A. No. 2778/2026 MD. MOBARAK VERSUS THE STATE OF WEST BENGAL",
+              "121": "Crl.A. No. 457/2021 JAGANATHAN @ ASSLAN VERSUS STATE REPRESENTED BY ITS THE INSPECTOR OF",
+              "121.1": "Crl.A. No. 159/2017 RENGAN @ CHINNATHAMBI VERSUS THE STATE BY THE INSPECTOR OF POLICE",
+              "122": "Crl.A. No. SINDHURA REDDY VEMULA VERSUS THE STATE OF TELANGANA AND ANR ETC.",
+              "123": "C.A. No. 5487/2025 LORDS SOCIAL WELFARE ASSOCIATION VERSUS NEW OKHLA INDUSTRIAL DEVELOPMENT",
+              "123.1": "C.A. No. 12256/2024 DEVELOPERS PRIVATE LIMITED THROUGH MR COMMITTEE OF VERSUS NEW OKHLA INDUSTRIAL DEVELOPMENT",
+              "124": "Crl.A. No. SATHISHA @ ASPATRE SATHISHA VERSUS STATE OF KARNATAKA"
+            },
+            "advocates": {
+              "101": {
+                "pet": "SUDARSHAN SINGH RAWAT",
+                "resp": "VARINDER KUMAR SHARMA"
+              },
+              "102": {
+                "pet": "SUDARSHAN SINGH RAWAT",
+                "resp": "GUNNAM VENKATESWARA RAO"
+              },
+              "103": {
+                "pet": "ABINASH KUMAR MISHRA",
+                "resp": "VISHWA PAL SINGH"
+              },
+              "104": {
+                "pet": "NIDHI",
+                "resp": "AADITYA ANIRUDDHA PANDE"
+              },
+              "105": {
+                "pet": "ROOH-E-HINA DUA",
+                "resp": "ANU GUPTA"
+              },
+              "106": {
+                "pet": "KETAN PAUL",
+                "resp": "RABIN MAJUMDER , P N. PURI"
+              },
+              "107": {
+                "pet": "DINESH KUMAR GARG"
+              },
+              "108": {
+                "pet": "SOUMYA DUTTA",
+                "resp": "AADITYA ANIRUDDHA PANDE"
+              },
+              "109": {
+                "pet": "RAKESH MISHRA"
+              },
+              "110": {
+                "pet": "AKSHAT KUMAR",
+                "resp": "UDITA SINGH"
+              },
+              "111": {
+                "pet": "N. VISAKAMURTHY",
+                "resp": "GAURAV KHANNA"
+              },
+              "112": {
+                "pet": "SURBHI MEHTA"
+              },
+              "113": {
+                "pet": "MANJEET KIRPAL"
+              },
+              "114": {
+                "pet": "PREM MALHOTRA"
+              },
+              "115": {
+                "pet": "DISHA SINGH"
+              },
+              "116": {
+                "pet": "PREETI SINGH",
+                "resp": "SAMAR VIJAY SINGH"
+              },
+              "117": {
+                "pet": "SHANTANU SAGAR",
+                "resp": "SAMIR ALI KHAN , BRAJ KISHORE MISHRA"
+              },
+              "118": {
+                "pet": "SANJEEV MALHOTRA",
+                "resp": "SANJEEV MALHOTRA AKSHAY AMRITANSHU"
+              },
+              "119": {
+                "pet": "ABHISHEK RITABH SHUKLA",
+                "resp": "SHREEKANT NEELAPPA TERDAL"
+              },
+              "120": {
+                "pet": "MANJU JETLEY",
+                "resp": "KUNAL MIMANI"
+              },
+              "121": {
+                "pet": "S. GOWTHAMAN",
+                "resp": "D.KUMANAN"
+              },
+              "122": {
+                "pet": "VERITAS LEGIS",
+                "resp": "DEVINA SEHGAL , D BHARATHI REDDY"
+              },
+              "123": {
+                "pet": "VIKASH CHANDRA SHUKLA",
+                "resp": "RACHIT MITTAL"
+              },
+              "124": {
+                "pet": "PRIYESH MOHAN",
+                "resp": "SANCHIT GARGA ROOH-E-HINA DUA MUDIT GUPTA"
+              }
+            },
             "main": 0,
-            "supp": 0
+            "supp": 24
           },
           "12": {
             "coram": "HON'BLE MR. JUSTICE ARAVIND KUMAR HON'BLE MR. JUSTICE VIPUL M. PANCHOLI",
@@ -14191,13 +14335,554 @@
             "supp": 0
           },
           "7": {
-            "coram": "",
-            "total": "0",
+            "coram": "HON'BLE MR. JUSTICE DIPANKAR DATTA HON'BLE MR. JUSTICE SHEEL NAGU",
+            "total": "22",
             "fresh": "",
-            "items": {},
-            "advocates": {},
+            "items": {
+              "2": "THEREAFTER REGULAR HEARING MATTERS WILL BE TAKEN UP.",
+              "3": "AFTER NOTICE MATTERS AND SPECIALLY DIRECTED MATTERS",
+              "101": "C.A. No. 372/2016 THE CHAIRMAN AND MANAGING DIRECTOR VERSUS COL. MUKUL KUMAR GOGOI (RETD.)",
+              "102": "C.A. No. 3922/2016 VICE CHANCELLOR, MAHARSHI DAYANAND VERSUS SURESH CHANDRA SHARMA (DEAD) THROUGH LRS.",
+              "102.1": "C.A. No. 3924/2016 ANR. MAHARSHI DAYANAND SARSWATI UNIVERSITY AND VERSUS CYRIL RAJENDRA KUMAR",
+              "102.2": "C.A. No. 3923/2016 ANR. MAHARSHI DAYANAND SARSWATI UNIVERSITY AND VERSUS LAXMI NARAIN TAK (DEAD) THR. LRS.",
+              "103": "C.A. No. 3916/2016 THE STATE OF TRIPURA AND ORS. VERSUS SMT. SANCHAYEETA DEB",
+              "103.1": "C.A. No. 12028/2016 THE STATE OF TRIPURA AND ORS. VERSUS KANU CHAKRABORTY AND ANR.",
+              "104": "C.A. No. 6094/2016 VIKAS YADAV VERSUS THE STATE OF RAJASTHAN AND ORS. AND ORS.",
+              "104.1": "C.A. No. HANUMAN JAT AND ORS. VERSUS STATE OF RAJASTHAN AND ORS. AND ANR.",
+              "104.2": "SLP(C) No. 21663/2018 RAJASTHAN PUBLIC SERVICE COMMISSION VERSUS RAVINDRA MOHAN SHARMA AND ANR.",
+              "104.3": "SLP(C) No. 21910/2018 THE RAJASTHAN PUBLIC SERVICE COMMISSION VERSUS GARIMA SHARMA AND ANR. MILIND KUMAR [R-2]",
+              "105": "C.A. No. ARUN L. DESAI VERSUS STATE OF GOA AND ANR.",
+              "105.1": "C.A. No. SANDIP JACQUES VERSUS STATE OF GOA AND ORS.",
+              "106": "C.A. No. ANAND MUNICIPALITY THRU ITS CHIEF OFFICER VERSUS BHASKARBHAI HIRABHAI PATEL . AND ORS.",
+              "107": "C.A. No. PRITHVIRAJ S. SINGH ETC.ETC. VERSUS THE SECRETARY, SCHOOL EDUCATION",
+              "108": "C.A. No. 10195/2016 SECRETARY TO GOVT. OF GUJARAT AND ORS. VERSUS PRAKASH MOHANLAL SUTARIYA",
+              "109": "C.A. No. RADHA RANI SARANGI VERSUS STATE OF ORISSA . AND ORS.",
+              "109.1": "SLP(C) No. 11185/2021 DR. PRASANNA KUMAR DASH VERSUS SASWAT MISHRA AND ORS.",
+              "110": "C.A. No. 1248/2017 THE STATE OF U.P. SECRETARY OF REVENUE VERSUS JAGDAMBIKA PRASAD SHUKLA",
+              "110.1": "SLP(C) No. 8530/2017 DEPARTMENT AND ORS. STATE OF UP THROUGH SECRETARY VERSUS JAGDAMBIKA PRASAD SHUKLA",
+              "111": "C.A. No. 3305/2023 MOH. TAHIR VERSUS HIGH COURT OF UTTARAKHAND THROUGH ITS",
+              "112": "C.A. No. 7864/2019 THE STATE OF BIHAR AND ORS. VERSUS ANWARI KHATOON AND ORS.",
+              "113": "C.A. No. 9225/2018 THE KOLKATA MUNICIPAL CORPORATION AND VERSUS PABITRA KUMAR MANDAL AND ANR.",
+              "114": "C.A. No. 5948/2016 MUSAMMAT GOMATI DEVI VERSUS RAM DARAS . AND ORS.",
+              "115": "C.A. No. 9404/2013 K.R.ANANDA (SINCE DECEASED) BY HER LRS. AND VERSUS K.L.VENUGOPAL (SINCE DECEASED) BY HIS LRS.",
+              "115.1": "C.A. No. K.SARASWATI AND ANR. VERSUS K.R.ANANDA(D) BY LRS. AND ORS.",
+              "115.2": "CONMT.PET.(C) No. K.L.VENUGOPAL (D) BY LRS. AND ORS. VERSUS K.R.SHANTHA . AND ORS.",
+              "116": "Crl.A. No. 1831/2014 MUNIRAJU VERSUS STATE OF KARNATAKA",
+              "117": "C.A. No. 6400/2023 R. CHANDRAKALA AND ORS. VERSUS THE GAVIPURAM EXTENSION COOPERATIVE",
+              "117.1": "C.A. No. OPERATIVE SOCIETY LTD. THE GAVIPURAM EXTENSION HOUSE BUILDING VERSUS THE STATE OF KARNATAKA AND ORS. SANCHIT GARGA [R-1",
+              "117.2": "C.A. No. R. CHANDRAKALA AND ANR. VERSUS THE GAVIPURAM EXTENSION COOPERATIVE",
+              "117.3": "C.A. No. VENU VERSUS THE GAVIPURAM EXTENSION COOPERATIVE",
+              "117.4": "C.A. No. KAMALAMMA AND ORS. VERSUS THE GAVIPURAM EXTENSION COOPERATIVE",
+              "117.5": "C.A. No. 6407/2023 HOUSE BUILDING SOCIETY LIMITED THE GAVIPURAM EXTENS VERSUS THE STATE OF KARNATAKA AND ORS.",
+              "117.6": "C.A. No. SRINIVASA MURTHY V VERSUS THE GAVIPURAM EXTENSION CO OPERATIVE",
+              "117.7": "SLP(C) No. 5029/2024 OPERATIVE SOCIETY LTD THE GAVIPURAM EXTENSION HOU VERSUS SRINIVAS AND ORS.",
+              "117.8": "CONMT.PET.(C) No. OPERATIVE SOCIETY LTD THE GAVIPURAM EXTENSION HOUSE  VERSUS SRINIVAS AND ORS.",
+              "118": "Crl.A. No. 370/2026 R. KARPURA SUNDARA PANDIAN VERSUS THE STATE",
+              "118.1": "Crl.A. No. 371/2026 R. KARPURA SUNDARA PANDIAN VERSUS THE STATE",
+              "119": "C.A. No. SHANKAR @ SHIVASHANKAR AND ORS. VERSUS THE STATE OF KARNATAKA AND ORS.",
+              "119.1": "C.A. No. PRAHALAD AND ORS. VERSUS ULTRATECH CEMENT LIMITED AND ORS.",
+              "119.2": "C.A. No. MALLIKARJUN AND ORS. VERSUS ULTRA TECH CEMENT LIMITED AND ORS.",
+              "120": "Crl.A. No. 2847/2026 MAHESH MALI VERSUS THE STATE OF MADHYA PRADESH AND ANR."
+            },
+            "advocates": {
+              "2": {
+                "resp": "SUPRIYA JUNEJA"
+              },
+              "3": {
+                "pet": "WILL BE TAKEN UP",
+                "resp": "ASHUTOSH DUBEY"
+              },
+              "101": {
+                "pet": "LAXMI KUMARI",
+                "resp": "RAMESHWAR PRASAD GOYAL"
+              },
+              "102": {
+                "pet": "SOMIRAN SHARMA",
+                "resp": "SUPRIYA JUNEJA"
+              },
+              "103": {
+                "pet": "SHUVODEEP ROY",
+                "resp": "ASHA GOPALAN NAIR"
+              },
+              "104": {
+                "pet": "AMAN MALIK"
+              },
+              "105": {
+                "pet": "JAYANT MOHAN",
+                "resp": "SANCHIT GARGA SHISHIR DESHPANDE"
+              },
+              "106": {
+                "pet": "SHEKHAR KUMAR",
+                "resp": "K. V. BHARATHI UPADHYAYA DEEPANWITA PRIYANKA"
+              },
+              "107": {
+                "pet": "AJIT PRAVIN WAGH",
+                "resp": "NISHANT RAMAKANTRAO"
+              },
+              "108": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "109": {
+                "pet": "SANJEEV KUMAR",
+                "resp": "SHOUMENDU MUKHERJI SANJEEV KUMAR"
+              },
+              "110": {
+                "pet": "VISHWA PAL SINGH",
+                "resp": "SUSHIL BALWADA"
+              },
+              "111": {
+                "pet": "AMITA SINGH KALKAL",
+                "resp": "D. BHARATHI REDDY"
+              },
+              "112": {
+                "pet": "AZMAT HAYAT AMANULLAH",
+                "resp": "EJAZ MAQBOOL IRSHAD AHMAD"
+              },
+              "113": {
+                "pet": "KUNAL CHATTERJI",
+                "resp": "BIJAN KUMAR GHOSH NANDINI SEN MUKHERJEE"
+              },
+              "114": {
+                "pet": "DEVVRAT",
+                "resp": "PRAVEEN SWARUP"
+              },
+              "115": {
+                "pet": "VIKAS MEHTA",
+                "resp": "VIKAS MEHTA"
+              },
+              "116": {
+                "pet": "DEVASA & CO",
+                "resp": "D. L. CHIDANANDA"
+              },
+              "117": {
+                "pet": "ASHUTOSH DUBEY",
+                "resp": "ASHUTOSH DUBEY"
+              },
+              "118": {
+                "pet": "KSN & CO",
+                "resp": "SHREEKANT NEELAPPA TERDAL"
+              },
+              "119": {
+                "pet": "SUPREETA SHARANAGOUDA",
+                "resp": "KHAITAN & CO NISHANTH PATIL SANCHIT GARGA"
+              },
+              "120": {
+                "pet": "AMOL CHITRAVANSHI",
+                "resp": "PASHUPATHI NATH RAZDAN"
+              }
+            },
             "main": 0,
-            "supp": 0
+            "supp": 22
+          },
+          "13": {
+            "coram": "HON'BLE MR. JUSTICE PRASHANT KUMAR MISHRA HON'BLE MR. JUSTICE SHREE CHANDRASHEKHAR",
+            "total": "29",
+            "fresh": "",
+            "items": {
+              "1501": "SLP(Crl) No. PRAMOD KUMAR SHUKLA VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "101": "C.A. No. 8694/2012 M/S. MEPCO INDUSTRIES LTD. VERSUS COMMISSIONER OF INCOME TAX COMPANY",
+              "102": "C.A. No. 2640/2017 UNION OF INDIA AND ORS. VERSUS RAMESH CHANDER",
+              "103": "C.A. No. RATI RAM SINGH AND ORS. VERSUS GOVT. OF NCT OF DELHI AND ORS.",
+              "104": "C.A. No. 14615/2015 RATTAN KAUR AND ORS. VERSUS THE CHANDIGARH ADMINISTRATION AND ORS.",
+              "104.1": "C.A. No. 14616/2015 AVTAR SINGH (DEAD) THROUGH LRS. VERSUS UNION TERRITORY CHANDIGARH AND ORS.",
+              "105": "C.A. No. 9016/2017 THE STATE OF GUJARAT AND ANR. VERSUS PARMAR MAHESHKUMAR PUNJABHAI AND ORS.",
+              "106": "C.A. No. 3842/2015 CHANDRAMATHY (DEAD) VERSUS ARUNDHATHI . AND ANR.",
+              "106.1": "C.A. No. 3843/2015 CHANDRAMATHI (DEAD) VERSUS ARUNDHATHI AND ANR.",
+              "107": "C.A. No. 14606/2015 TERRITORY CHANDIGARH. . AND ORS. VERSUS M/S NEW BOMBAY CLOTH HOUSE",
+              "107.1": "C.A. No. 14614/2015 THE CHIEF ADMINISTRATOR AND ORS. VERSUS SHAM LAL SHARMA",
+              "108": "C.A. No. 6002/2014 B.G MANJUNATHA SWAMY VERSUS P. T. DEEPAK AND ORS.",
+              "109": "C.A. No. 2823/2012 U.P. STATE BRIDGE CORPORATION LTD. AND ANR. VERSUS SURENDRA KUMAR DIXIT (D) THR. LRS.",
+              "110": "W.P.(C) No. 338/2006 SANJAY GUPTA AND ORS. VERSUS STATE OF UTTAR PRADESH THROUGH ITS CHIEF",
+              "111": "C.A. No. KATTERI SRI VENUGOPALASWAMY DEVASTHANAM VERSUS R.VARADACHARI (DEAD) THR. LRS. AND ORS ETC.",
+              "112": "C.A. No. 7625/2012 M/S JAIPRAKASH ASSOCIATES LTD. VERSUS THE STATE OF HIMACHAL PRADESH AND ORS. RAJIV KUMAR",
+              "113": "C.A. No. 14369/2015 THE CHAIRMAN NATIONAL BOOK TRUST INDIA . VERSUS AR ABDUL GAFFAR . AND ORS.",
+              "114": "C.A. No. 8555/2015 MAKHAN SINGH VERSUS BALDEV SINGH AND ORS.",
+              "115": "C.A. No. UNION OF INDIA AND ORS. VERSUS YATEENDRA SINGH JAFA AND ANR.",
+              "116": "C.A. No. HARI TUKARAM BHAVAR (D) THR. LRS. VERSUS KRUSHANT SAKHARAM BHAVAR (DEAD) THROUGH",
+              "116.1": "CONMT.PET.(C) No. KRISHNA SAKHARAM BHAVAR . VERSUS SHIRRANG PANDURANG BABAR AND ORS.",
+              "117": "C.A. No. STATE OF TELANGANA AND ANR ETC ETC VERSUS AMARINDAR SINGH ETC ETC",
+              "117.1": "Diary No. 33939-2026 PRAKHAR SRIVASTAVA VERSUS THE ESTATE INVESTMENT COMPANY PVT. LTD.",
+              "118": "C.A. No. MAHARASHTRA HYBRID SEEDS CO.LTD. VERSUS UNION OF INDIA AND ORS.",
+              "119": "C.A. No. 6375/2021 DIRECTOR UP RAJYA KRISHI UTPADAN MANDI VERSUS AMAR NATH INDUSTRIES AND ORS.",
+              "120": "C.A. No. 10195/2024 USHA SANJAY MITHARI AND ANR. VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "120.1": "C.A. No. 10201/2024 SOU. JYOTI SIDDHESHWAR DIXIT VERSUS THE JILHA PARISHAD SATARA AND ORS.",
+              "120.2": "C.A. No. 10196/2024 MOHITE AND ORS. KAVITA HINDURAO SHELAKE @ INDIRA R VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "120.3": "C.A. No. 10197/2024 PATIL AND ORS. SUVARNA DILIP KANASE @ SUVARNA DATT VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "120.4": "C.A. No. KARISHMA ALLABAKSH INAMDAR VERSUS THE JILHA PARISHAD SATARA AND ORS. BLACK & WHITE",
+              "120.5": "C.A. No. 10200/2024 SANDHYA DEVANAND BENDRE AND ANR. VERSUS THE JILHA PARISHAD SATARA AND ORS.",
+              "121": "C.A. No. 6640/2013 VIKAS JAIN VERSUS STATE OF U.P. AND ORS.",
+              "122": "C.A. No. 1338/2013 N.SUBBIAH VERSUS R.MANOHARAN (DEAD) THR. LRS.",
+              "123": "C.A. No. 4015/2014 C.I.T. -3 MUMBAI VERSUS SMALL INDUSTRIES DEVLOPMENT BANK OFINDIA",
+              "124": "C.A. No. 2645/2013 K. RAMACHANDRAN (DEAD) THR. LRS. VERSUS ISTHALINGAM AND ORS.",
+              "125": "C.A. No. 9676/2014 RAVI SHANKER (DEAD) AND ORS. VERSUS RAM DULAR AND ORS.",
+              "126": "C.A. No. STATE OF GUJARAT AND ORS. VERSUS RELIANCE INDUSTRIES LTD. & ANR. ETC.",
+              "126.1": "SLP(C) No. 21643/2023 SOUTH WEST PORT LIMITED VERSUS STATE OF GOA AND ORS.",
+              "126.2": "SLP(C) No. 22289/2023 M/S. VEDANTA LIMITED VERSUS THE STATE OF GOA AND ORS.",
+              "126.3": "SLP(C) No. 22558/2023 M/S BMM ISPAT LTD. VERSUS THE STATE OF GOA AND ANR.",
+              "126.4": "SLP(C) No. 26191/2023 M/S GOA CARBON LIMITED VERSUS THE STATE OF GOA AND ORS.",
+              "126.5": "SLP(C) No. 25912/2023 WEST COAST PAPER MILLS LTD. VERSUS THE STATE OF GOA AND ORS.",
+              "126.6": "SLP(C) No. 26624/2023 JSW STEEL LIMITED VERSUS THE STATE OF GOA AND ANR.",
+              "126.7": "Diary No. 22296-2024 ZUARI AGRO CHEMICALS LIMITED VERSUS STATE OF GOA AND ORS.",
+              "126.8": "W.P.(C) No. 488/2025 JSW ENERGY LIMITED AND ANR. VERSUS STATE OF GOA AND ORS.",
+              "126.9": "W.P.(C) No. 781/2025 JSW VIJAYANAGAR METALLICS LTD. AND ANR. VERSUS STATE OF GOA AND ORS.",
+              "127": "C.A. No. 6644/2014 COMMISSIONER OF INCOME TAX VERSUS SCHOOL OF ADVANCED MANAGEMENT STUDIES",
+              "128": "C.A. No. S SULOCHANA AND ANR. VERSUS M GOVINDASAMY AND ANR."
+            },
+            "advocates": {
+              "1501": {
+                "pet": "AKSHAT SRIVASTAVA",
+                "resp": "ADARSH UPADHYAY PARUL SHUKLA"
+              },
+              "101": {
+                "pet": "RADHA RANGASWAMY",
+                "resp": "SUDARSHAN LAMBA"
+              },
+              "102": {
+                "pet": "ARVIND KUMAR SHARMA",
+                "resp": "DIKSHA RAI"
+              },
+              "103": {
+                "pet": "JAYDIP PATI",
+                "resp": "MUKESH KUMAR MARORIA"
+              },
+              "104": {
+                "pet": "PRERNA MEHTA",
+                "resp": "SHREEKANT NEELAPPA TERDAL"
+              },
+              "105": {
+                "pet": "SWATI GHILDIYAL",
+                "resp": "JYOTI MENDIRATTA SATYA MITRA"
+              },
+              "106": {
+                "pet": "RAMESHWAR PRASAD",
+                "resp": "SHILPA SINGH"
+              },
+              "107": {
+                "pet": "SHREEKANT NEELAPPA",
+                "resp": "DEEPAK GOEL"
+              },
+              "108": {
+                "pet": "V. N. RAGHUPATHY",
+                "resp": "BALAJI SRINIVASAN DR. RAJEEV SHARMA"
+              },
+              "109": {
+                "pet": "DIVYANSHU SAHAY",
+                "resp": "SANJAY KUMAR VISEN"
+              },
+              "110": {
+                "pet": "PREM MALHOTRA",
+                "resp": "RUCHIRA GOEL"
+              },
+              "111": {
+                "pet": "R. CHANDRACHUD",
+                "resp": "ROHINI MUSA , S"
+              },
+              "112": {
+                "pet": "SHARMILA UPADHYAY"
+              },
+              "113": {
+                "pet": "NITESH RANJAN"
+              },
+              "114": {
+                "pet": "SUDARSHAN RAJAN",
+                "resp": "ANURADHA MUTATKAR"
+              },
+              "115": {
+                "pet": "ARVIND KUMAR SHARMA",
+                "resp": "RAHUL PRATAP AADITYA ANIRUDDHA PANDE"
+              },
+              "116": {
+                "pet": "SUNIL KUMAR SHARMA",
+                "resp": "SUBHASH CHANDRA JAIN"
+              },
+              "117": {
+                "resp": "PRERNA MEHTA JAYDIP PATI"
+              },
+              "118": {
+                "pet": "CHARANYA",
+                "resp": "MADHULIKA UPADHYAY RANJAN KUMAR PANDEY"
+              },
+              "119": {
+                "pet": "PRADEEP MISRA",
+                "resp": "JITENDRA KUMAR RAJIV YADAV"
+              },
+              "120": {
+                "pet": "GOPAL BALWANT SATHE"
+              },
+              "121": {
+                "pet": "SAHIL MONGA",
+                "resp": "SHAURYA SAHAY"
+              },
+              "122": {
+                "pet": "VIJAY KUMAR",
+                "resp": "S. RAMAMANI"
+              },
+              "123": {
+                "pet": "SUDARSHAN LAMBA",
+                "resp": "PRATEEK K CHADHA"
+              },
+              "124": {
+                "pet": "MRINAL KANWAR",
+                "resp": "R. CHANDRACHUD"
+              },
+              "125": {
+                "pet": "ABHAY KUMAR",
+                "resp": "YASH PAL DHINGRA ANKUR YADAV"
+              },
+              "126": {
+                "pet": "S. DEBABRATA REDDY"
+              },
+              "127": {
+                "pet": "SUDARSHAN LAMBA",
+                "resp": "HARISH PANDEY"
+              },
+              "128": {
+                "pet": "R. CHANDRACHUD",
+                "resp": "K. K. MANI"
+              }
+            },
+            "main": 0,
+            "supp": 29
+          },
+          "15": {
+            "coram": "HON'BLE MR. JUSTICE UJJAL BHUYAN HON'BLE MR. JUSTICE ATUL S. CHANDURKAR",
+            "total": "20",
+            "fresh": "",
+            "items": {
+              "101": "Crl.A. No. 662/2022 ASHISH BAGGA VERSUS THE STATE OF RAJASTHAN AND ANR.",
+              "101.1": "Crl.A. No. 663/2022 PRABHU CHAWLA VERSUS THE STATE OF RAJASTHAN AND ANR.",
+              "101.2": "Crl.A. No. 664/2022 JAGDISH UPASANE AND ANR. VERSUS THE STATE OF RAJASTHAN AND ANR.",
+              "101.3": "Crl.A. No. 665/2022 MANOJ VERMA VERSUS THE STATE OF RAJASTHAN AND ORS.",
+              "102": "Crl.A. No. 107/2018 SANTOSH GURUNG VERSUS THE STATE OF SIKKIM",
+              "103": "Crl.A. No. 393/2018 KARTAR SINGH VERSUS STATE OF M.P.",
+              "104": "Crl.A. No. 222/2018 CHAGAN KARSHANBHAI KARAVADRA VERSUS THE STATE OF GUJARAT AND ORS.",
+              "104.1": "Crl.A. No. 546/2018 BHIMABHAI DULABHAI ODEDARA MER VERSUS THE STATE OF GUJARAT THROUGH PUBLIC",
+              "105": "Crl.A. No. ANMOL JHA AND ANR. ETC. VERSUS THE STATE OF BIHAR",
+              "106": "Crl.A. No. 316/2018 THE STATE OF UTTAR PRADESH VERSUS SUKHBIRI AND ANR.",
+              "107": "Crl.A. No. 230/2017 KAMLESH PRASAD VERSUS THE STATE OF BIHAR AND ANR.",
+              "108": "Crl.A. No. 899/2021 STATE OF UTTAR PRADESH VERSUS CHANDRA SHEKHAR @ CHHOTU",
+              "109": "Crl.A. No. 726/2016 LALA RAM VERSUS CENTRAL BUREAU OF INVESTIGATION",
+              "109.1": "Crl.A. No. 727/2016 BHAG CHAND VERSUS CBI",
+              "109.2": "Crl.A. No. 749/2016 DIWAN CHAND PRUTHI VERSUS CBI",
+              "110": "Crl.A. No. 464-465/2018 SUSHIL KUMAR SINGH VERSUS THE STATE OF BIHAR AND ORS.",
+              "110.1": "Crl.A. No. 780-781/2024 THE STATE OF BIHAR VERSUS ABHAYANKER SINGH @ PANNA SINGH ETC.",
+              "111": "Crl.A. No. 1888/2011 SURINDER VERSUS THE STATE OF HARYANA",
+              "112": "Crl.A. No. 269/2022 STATE THROUGH INSPECTOR OF POLICE VERSUS K. MALAISAMY",
+              "113": "Crl.A. No. 1298/2019 SAGAR MONDAL AND ORS. VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "113.1": "Crl.A. No. 1299/2019 KHITISH MONDAL @ KSHITISH MONDAL VERSUS THE STATE OF WEST BENGAL",
+              "114": "Crl.A. No. 1532/2021 MANIBEN MULABHAI CHANDPA VERSUS THE STATE OF GUJARAT AND ORS.",
+              "115": "Crl.A. No. GULAB VERSUS KRISHNA AND ORS.",
+              "115.1": "SLP(Crl) No. THE STATE OF MAHARASHTRA VERSUS KRISHNA",
+              "116": "Crl.A. No. 948/2012 SUBHASH AND ANR. VERSUS THE STATE OF HARYANA",
+              "117": "Crl.A. No. 1523/2017 LILADHAR LATKAN SAPKALE VERSUS THE STATE OF MAHARASHTRA",
+              "118": "Crl.A. No. 322/2017 THE STATE REP. BY THE DEPUTY VERSUS S.S. KRISHNAMOORTHY AND ANR.",
+              "119": "Crl.A. No. 403-406/2020 KAMAL KUMAR @ MILAN RAI VERSUS THE STATE OF BIHAR AND ANR. ETC.",
+              "120": "Crl.A. No. 1309/2017 VEERWATI AND ANR. VERSUS ANIL KUMAR AND ORS.",
+              "120.1": "Crl.A. No. 643/2018 ANIL KUMAR AND ORS. VERSUS THE STATE OF HARYANA"
+            },
+            "advocates": {
+              "101": {
+                "pet": "JAYANT MOHAN",
+                "resp": "SAURABH RAJPAL"
+              },
+              "102": {
+                "pet": "SANGEETA KUMAR",
+                "resp": "SAMEER ABHYANKAR"
+              },
+              "103": {
+                "pet": "DEEPAK GOEL",
+                "resp": "YASHRAJ SINGH BUNDELA"
+              },
+              "104": {
+                "pet": "SHUBHRANSHU PADHI",
+                "resp": "SWATI GHILDIYAL EJAZ MAQBOOL"
+              },
+              "105": {
+                "pet": "KUMAR MIHIR",
+                "resp": "SAMIR ALI KHAN"
+              },
+              "106": {
+                "pet": "VIJENDRA SINGH",
+                "resp": "ANUPAM MISHRA"
+              },
+              "107": {
+                "pet": "FARRUKH RASHEED",
+                "resp": "SAMIR ALI KHAN"
+              },
+              "108": {
+                "pet": "SHAURYA SAHAY",
+                "resp": "DUSHYANT PARASHAR"
+              },
+              "109": {
+                "pet": "ASHOK MATHUR",
+                "resp": "MUKESH KUMAR MARORIA"
+              },
+              "110": {
+                "pet": "SAMIR ALI KHAN",
+                "resp": "MANISH KUMAR KRISHNA KUMAR SINGH"
+              },
+              "111": {
+                "pet": "NEERAJ SHEKHAR",
+                "resp": "SAMAR VIJAY SINGH MOHAMMAD ASLAM"
+              },
+              "112": {
+                "pet": "S. GOWTHAMAN",
+                "resp": "categories(Cases"
+              },
+              "113": {
+                "pet": "MD. SHAHID ANWAR",
+                "resp": "NISHANT AWANA"
+              },
+              "114": {
+                "pet": "SUSHIL BALWADA",
+                "resp": "SWATI GHILDIYAL , C GEORGE THOMAS"
+              },
+              "115": {
+                "pet": "NISHANT RAMAKANTRAO",
+                "resp": "SACHIN PATIL AADITYA ANIRUDDHA PANDE"
+              },
+              "116": {
+                "pet": "RAMESHWAR PRASAD",
+                "resp": "SAMAR VIJAY SINGH"
+              },
+              "117": {
+                "pet": "SUSHIL BALWADA",
+                "resp": "AADITYA ANIRUDDHA PANDE"
+              },
+              "118": {
+                "pet": "VRINDA BHANDARI",
+                "resp": "SIDDHARTHA IYER"
+              },
+              "119": {
+                "pet": "SUBHRO SANYAL",
+                "resp": "AZMAT HAYAT AMANULLAH SHISHIR PINAKI"
+              },
+              "120": {
+                "pet": "RABIN MAJUMDER",
+                "resp": "SAMAR VIJAY SINGH"
+              }
+            },
+            "main": 0,
+            "supp": 20
+          },
+          "16": {
+            "coram": "HON'BLE MR. JUSTICE S.V.N. BHATTI HON'BLE MR. JUSTICE N.V. ANJARIA",
+            "total": "20",
+            "fresh": "",
+            "items": {
+              "101": "C.A. No. 9190/2013 ASST. COMMISSIOER OF INCOME TAX . AND ANR. VERSUS OMAXE LTD.",
+              "102": "C.A. No. 4376/2015 M/S GANAPATI FINANCE LTD. VERSUS COMMISSIONER OF INCOME TAX IV, NEW DELHI",
+              "103": "C.A. No. 8932/2013 LAKSHMI SUGAR MILLS CO. LTD. VERSUS COMMISSIONER OF INCOME TAX DELHI II",
+              "104": "C.A. No. 9002/2017 SUSHIL SINGH VERSUS ZAFARUDDIN @ ZAFAR QURESHI",
+              "105": "C.A. No. 1889/2015 THE GEM & JEWELLERY EXPORT PROMOTION COU VERSUS STATE OF MAHARASHTRA . AND ORS. AADITYA ANIRUDDHA",
+              "106": "C.A. No. 785/2016 THE ASSESSING OFFICER, TEXTILES COMMITTEE VERSUS M/S. PREMIUM SUITING PVT. LTD. AND ANR.",
+              "107": "C.A. No. 2447/2015 NATIONAL INSTITUTE OF FASHION TECHNOLOGY VERSUS O.P. SHARMA",
+              "108": "C.A. No. 8632/2011 UTTAR PRADESH JAL NIGAM THROUGH ITS VERSUS L.I.C. EMPLOYEES COOPERATIVE HOUSING",
+              "109": "C.A. No. 4105/2015 M/S GEM GRANITES VERSUS THE STATE OF TAMIL NADU AND ORS. REP. BY",
+              "110": "C.A. No. 10318/2011 STELLA KANAGARAJ AND ANR AND ANR. VERSUS R.PETER P. RAYAN (D) BY LRS AND ORS AND ORS.",
+              "111": "C.A. No. 8530/2011 U.P. STATE SPINNING MILLS COMPANY NO. 1 VERSUS MADHUSUDAN PRASAD",
+              "112": "C.A. No. 5299/2012 BHANU PRATAP SINGH AND ANR. VERSUS THE STATE OF UTTAR PRADESH THR. PRINCIPAL",
+              "112.1": "SLP(C) No. 26896/2013 RAM RATTAN SINGH VERSUS STATE OF U.P THROUGH CHIEF SECRETARY AND",
+              "113": "C.A. No. QUIPPO CONSTRUCTION EQUIPMENT LTD VERSUS COMMISSIONER OF TAXES ASSAM AND ORS SHUVODEEP ROY ",
+              "114": "C.A. No. 1086/2007 SAGAR BUILDERS AND DEVELOPERS AND ORS. AND VERSUS MEHERBAI KARL KHANDALAWALA AND ORS. AND",
+              "114.1": "C.A. No. 1090/2007 TALERA HOTELIERS PVT. LTD. VERSUS BOMBAY ENVIRONMENTAL ACTION GROUP . AND",
+              "114.2": "C.A. No. 1091/2007 THROUGH ITS COMMISSIONER THE MUNICIPAL CORPORATION  VERSUS BOMBAY ENVIRONMENTAL ACTION GROUP",
+              "114.3": "C.A. No. 1087/2007 JAMUNA VIHAR CO-OP. HSG. SOC. LTD. VERSUS KARL KHANDALAWALA AND ORS. AND ORS.",
+              "114.4": "C.A. No. 1089/2007 THROUGH ITS CHAIRMAN JAMUNA VIHAR CO-OP. HOUSING SO VERSUS MEHERBAI KARL KHANDALAWALA AND ORS. AND",
+              "115": "C.A. No. 10348/2010 A.S.I. THROUGH SUPDT.ARCHAEOLOGIST VERSUS UP SUNNI CENTRAL WAKF BOARD AND ORS.",
+              "116": "C.A. No. 3908/2012 KALPANAMATI GRIHA RACHNA SANSTHA MARYADT VERSUS THE STATE OF MAHARASHTRA DEPARTMENT OF",
+              "116.1": "C.A. No. 3911/2012 SACHIN SAMPAT LAL PARAKH AND ORS. VERSUS SUBHASH VITHAL KAHIRE . AND ORS.",
+              "116.2": "C.A. No. 3909/2012 HOLDER MR. SAMEER RAJNIKANT BIRLA AND ORS. RAJNIKAN VERSUS SUBHASH VITHAL KHAIRE . AND ORS. NARESH BAKSHI , J",
+              "116.3": "C.A. No. 3912/2012 INDUMATI SOPANRAO LANDGE AND ORS. VERSUS SUBHASH VITHAL KHAIRE . AND ORS.",
+              "116.4": "C.A. No. 3910/2012 SOCIETY LTD. AND ANR. RAMYANAGARI NO. 2 COOPERATIVE VERSUS STATE OF MAHARASHTRA . AND ORS.",
+              "116.5": "C.A. No. 3913/2012 ANIL BHARAT GADVE AND ORS. VERSUS MADAN MADHAV GAGAWALE AND ORS.",
+              "116.6": "C.A. No. 3914/2012 M/S AUTI BROTHERS AND ANR. VERSUS SUBHASH V. KHAIRE . AND ORS.",
+              "116.7": "C.A. No. 3916/2012 M/S. A.V. BHAT & CO. VERSUS SUBHASH VITHAL KHAIRE . AND ORS.",
+              "116.8": "C.A. No. 3915/2012 NEW INDIA ASSURANCE CO. LTD. VERSUS STATE OF MAHARASHTRA . AND ORS. NARESH BAKSHI , J ",
+              "117": "C.A. No. 6561/2008 CCE,MUMBAI-III VERSUS M/S BUNTS INDUSTRIES PVT. LTD.",
+              "117.1": "C.A. No. CCE, MUMBAI -III VERSUS M/S. BUNTS INDUSTRIES PVT. LTD.",
+              "118": "W.P.(C) No. 191/2009 TAJ TELEVISION (I) PVT. LTD.. AND ORS. VERSUS UNION OF INDIA AND ANR.",
+              "119": "W.P.(C) No. 501/2009 HEALTH FOR MILLIONS VERSUS UNION OF INDIA AND ORS.",
+              "120": "C.A. No. 99/2014 JUSTICE G.K. MATHUR (RETD.) VERSUS COMMISSIONER OF INCOME TAX AND ANR."
+            },
+            "advocates": {
+              "101": {
+                "pet": "SUDARSHAN LAMBA",
+                "resp": "ANIKET DEEPAK AGRAWAL"
+              },
+              "102": {
+                "pet": "KAMAL MOHAN GUPTA",
+                "resp": "SUDARSHAN LAMBA"
+              },
+              "103": {
+                "pet": "SIDDHARTHA CHOWDHURY",
+                "resp": "SUDARSHAN LAMBA"
+              },
+              "104": {
+                "pet": "PRASHANT CHAUDHARY",
+                "resp": "KAMAKSHI S. MEHLWAL"
+              },
+              "105": {
+                "pet": "BINDI GIRISH DAVE"
+              },
+              "106": {
+                "pet": "CHIRAG M. SHROFF",
+                "resp": "TANMAYA AGARWAL"
+              },
+              "107": {
+                "pet": "VIVEK SINGH"
+              },
+              "108": {
+                "pet": "MRIDULA RAY BHARADWAJ",
+                "resp": "K. K. MOHAN , VINAY"
+              },
+              "109": {
+                "resp": "VRINDA BHANDARI"
+              },
+              "110": {
+                "pet": "SHOBHA RAMAMOORTHY",
+                "resp": "PRASANNA S"
+              },
+              "111": {
+                "pet": "RAKESH UTTAMCHANDRA",
+                "resp": "ANIL KUMAR MISHRA"
+              },
+              "112": {
+                "pet": "PURUSHOTTAM SHARMA",
+                "resp": "ADARSH UPADHYAY"
+              },
+              "113": {
+                "pet": "SHASHANK MANISH"
+              },
+              "114": {
+                "pet": "RAMNI TANEJA AND",
+                "resp": "E. C. AGRAWALA"
+              },
+              "115": {
+                "pet": "ANNAM VENKATESH",
+                "resp": "FUZAIL AHMAD AYYUBI AFTAB ALI KHAN"
+              },
+              "116": {
+                "pet": "MANJEET CHAWLA",
+                "resp": "NARESH BAKSHI , J S"
+              },
+              "117": {
+                "pet": "MUKESH KUMAR MARORIA",
+                "resp": "K. RAJEEV"
+              },
+              "118": {
+                "pet": "PAREKH & CO"
+              },
+              "119": {
+                "pet": "PRASHANT BHUSHAN",
+                "resp": "K. RAJEEV"
+              },
+              "120": {
+                "resp": "SUDARSHAN LAMBA"
+              }
+            },
+            "main": 0,
+            "supp": 20
           }
         },
         "Registrar": {
@@ -18722,6 +19407,7 @@
     "2026-08-19": {
       "M_J_1": 1032072,
       "F_J_1": 1025088,
+      "F_J_2": 652724,
       "M_R_1": 539500,
       "M_CC_1": 514940
     },
