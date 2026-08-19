@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T19:53:47.948637Z",
+  "generated_at": "2026-08-19T13:27:46.120458Z",
   "parser_version": 8,
   "window": [
     "2026-08-19",
@@ -7756,6 +7756,7 @@
       "lists_found": [
         "Miscellaneous (main)",
         "Registrar (main)",
+        "Registrar (supp)",
         "Curative & Review (main)"
       ],
       "lists": {
@@ -11231,7 +11232,7 @@
             "total": "30",
             "fresh": "",
             "items": {
-              "1": "SLP(C) No. 30013/2018 SK. MUJIBUR RAHEMAN VERSUS SK. KAMARUDDDIN (SINCE DEAD) THROUGH LRS.",
+              "1": "ORGNL.SUIT No. THE STATE OF KARNATAKA VERSUS THE STATE OF TAMIL NADU AND ORS.",
               "2": "C.A. No. VASANTHAKUMARI ETC VERSUS A. PTICHUMANI CHETTIAR AND ORS.",
               "3": "SLP(Crl) No. 3445/2026 R.V. NATRAAJ VERSUS V RAJA AND ANR.",
               "4": "C.A. No. 2419/2026 S N SUBBAREDDY ALIAS CHINNAKAYALAPALLI VERSUS C MUNIRAJU AND ORS.",
@@ -16022,6 +16023,7 @@
     "2026-08-20": {
       "M_J_1": 797988,
       "M_R_1": 522588,
+      "M_R_2": 505077,
       "M_CC_1": 531531
     },
     "2026-08-21": {
