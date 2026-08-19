@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T16:00:29.202280Z",
+  "generated_at": "2026-08-19T16:27:20.288616Z",
   "parser_version": 8,
   "window": [
     "2026-08-19",
@@ -12131,9 +12131,11 @@
           },
           "2": {
             "coram": "HON'BLE MR. JUSTICE VIKRAM NATH HON'BLE MR. JUSTICE SANDEEP MEHTA",
-            "total": "21",
+            "total": "23",
             "fresh": "",
             "items": {
+              "1501": "SLP(Crl) No. 5113/2023 RAMKRISHNA CHAUHAN VERSUS STATE OF U. P. AND ANR.",
+              "1502": "SLP(Crl) No. 9661/2026 SUJATA KUMARI AND ORS. VERSUS RAHUL KUMAR AND ANR.",
               "101": "C.A. No. SUNIL KUMAR TYAGI VERSUS GHAZIABAD DEVELOPMENT AUTHORITY AND ORS.",
               "102": "C.A. No. 439/2015 KRISHNA (D) BY HIS LRS. AND ANR. VERSUS BHEEMRAO",
               "103": "C.A. No. 6103/2024 THE M.P. PUBLIC SERVICE COMMISSION VERSUS DEEPAK SINGHAL AND ANR.",
@@ -12265,6 +12267,14 @@
               "120.1": "CONMT.PET.(C) No. SH. SHYAM LAL AND ANR. VERSUS MOHINDER SINGH . AND ANR."
             },
             "advocates": {
+              "1501": {
+                "pet": "ANUSHREE PRASHIT",
+                "resp": "SUDEEP KUMAR"
+              },
+              "1502": {
+                "pet": "MIMANSAK BHARDWAJ",
+                "resp": "MANJU JETLEY VIJENDRA SINGH"
+              },
               "101": {
                 "pet": "VENKITA SUBRAMONIAM",
                 "resp": "SAKSHI KAKKAR ABHISTH KUMAR"
@@ -12341,7 +12351,7 @@
                 "resp": "DEEPAK PRAKASH"
               }
             },
-            "main": 21,
+            "main": 23,
             "supp": 0
           },
           "3": {
@@ -13401,12 +13411,13 @@
           },
           "8": {
             "coram": "HON'BLE MR. JUSTICE SANJAY KAROL HON'BLE MR. JUSTICE NONGMEIKAPAM KOTISWAR SINGH",
-            "total": "23",
+            "total": "24",
             "fresh": "",
             "items": {
               "1501": "Crl.A. No. 2938/2025 THE STATE OF UTTAR PRADESH AND ANR. VERSUS BRIJ PAL SINGH AND ANR.",
-              "1502": "Crl.A. No. 937/2014 RAVI KUMAR SINGH MALHOTRA VERSUS STATE OF M.P.",
-              "1503": "SLP(C) No. 39/2026 JAMNABAI AND ANR. VERSUS VASUDEV AND ORS.",
+              "1502": "C.A. No. 238/2026 SHAILENDRA KUMAR PATEL VERSUS STATE OF CHHATTISGARH AND ORS.",
+              "1503": "Crl.A. No. 937/2014 RAVI KUMAR SINGH MALHOTRA VERSUS STATE OF M.P.",
+              "1504": "SLP(C) No. 39/2026 JAMNABAI AND ANR. VERSUS VASUDEV AND ORS.",
               "101": "Crl.A. No. 2269/2014 THE STATE OF RAJASTHAN VERSUS RAM MURTI",
               "102": "C.A. No. SADHURAM GURJAR AND ANOTHER ETC.ETC. AND VERSUS THE STATE OF RAJASTHAN AND OTHERS ETC. AND",
               "102.1": "C.A. No. 1784/2018 DILIP KUMAR AND ANR. AND ANR. VERSUS THE STATE OF RAJASTHAN AND ORS.",
@@ -13444,10 +13455,14 @@
                 "resp": "RAJ SINGH RANA MADHULIKA UPADHYAY"
               },
               "1502": {
+                "pet": "PARUL SHUKLA",
+                "resp": "RAVINDER KUMAR YADAV"
+              },
+              "1503": {
                 "pet": "RAJ KISHOR CHOUDHARY",
                 "resp": "MRINAL GOPAL ELKER"
               },
-              "1503": {
+              "1504": {
                 "pet": "AAYUSHMAAN VATSYAYANA"
               },
               "101": {
@@ -13526,7 +13541,7 @@
                 "pet": "ARAVINDH S"
               }
             },
-            "main": 23,
+            "main": 24,
             "supp": 0
           },
           "9": {
@@ -19876,7 +19891,7 @@
     "2026-08-20": {
       "M_J_1": 797988,
       "M_J_2": 648199,
-      "F_J_1": 1182563,
+      "F_J_1": 1185316,
       "M_R_1": 522588,
       "M_R_2": 505077,
       "M_CC_1": 531531
