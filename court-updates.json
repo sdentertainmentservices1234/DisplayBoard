@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T12:03:45.590557Z",
+  "generated_at": "2026-08-20T13:29:49.693698Z",
   "parser_version": 8,
   "window": [
     "2026-08-20",
@@ -7528,13 +7528,15 @@
     "2026-08-21": {
       "lists_found": [
         "Miscellaneous (main)",
-        "Registrar (main)"
+        "Miscellaneous (supp)",
+        "Registrar (main)",
+        "Registrar (supp)"
       ],
       "lists": {
         "Miscellaneous": {
           "1": {
             "coram": "HON'BLE THE CHIEF JUSTICE HON'BLE MR. JUSTICE JOYMALYA BAGCHI HON'BLE MRS. JUSTICE V. MOHANA",
-            "total": "98",
+            "total": "99",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. N UDAY RAO VERSUS STATE OF CHHATTISGARH",
@@ -7785,7 +7787,8 @@
               "237.1": "Diary No. 69171-2025 CENTRAL CIRCLE 5 (2) MUMBAI AND ORS. ASSISTANT CO VERSUS BABITA PANKAJ RATHOD",
               "237.2": "SLP(C) No. 10596/2026 UNION OF INDIA AND ORS. VERSUS SIMRAN KAUR",
               "237.3": "Diary No. 40601-2025 CENTRAL CIRCLE 1(3), PUNE AND ANR. ASSISTANT COMM VERSUS R.R. CONSTRUCTIONS AND INFRASTRUCTURE",
-              "237.4": "Diary No. 61514-2025 TAX AND ORS. THE PRINCIPAL CHIEF COMMISSIONER OF  VERSUS LINGA REDDY CHINNINTI"
+              "237.4": "Diary No. 61514-2025 TAX AND ORS. THE PRINCIPAL CHIEF COMMISSIONER OF  VERSUS LINGA REDDY CHINNINTI",
+              "238": "SLP(C) No. 13917/2025 THE ORIENTAL INSURANCE CO. LTD. VERSUS PRAVTI DEVI AND ORS."
             },
             "advocates": {
               "1": {
@@ -8278,14 +8281,17 @@
               },
               "237": {
                 "pet": "MADHULIKA UPADHYAY"
+              },
+              "238": {
+                "pet": "SUDHIR NAAGAR"
               }
             },
             "main": 98,
-            "supp": 0
+            "supp": 1
           },
           "2": {
             "coram": "HON'BLE MR. JUSTICE VIKRAM NATH HON'BLE MR. JUSTICE SANDEEP MEHTA",
-            "total": "49",
+            "total": "50",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. N. RAMJEE @ J.N. JAHATH RAMJEE VERSUS THE STATE OF TAMIL NADU AND ORS.",
@@ -8343,7 +8349,56 @@
               "222": "SLP(C) No. 10933/2019 MAGMA HDI GENERAL INSURANCE CO. LTD. VERSUS SMT. NASARIN AND ORS.",
               "222.1": "SLP(C) No. 10934/2019 MAGMA HDI GENERAL INSURANCE CO. LTD VERSUS SMT. NAAJREEN AND ORS.",
               "223": "SLP(C) No. 37/2021 RAJIV BAL VERSUS HARRISON INDUSTRIES AND ORS. SHANTANU KUMAR [R-1],",
-              "224": "T.P.(C) No. 3494/2025 SUN JOT SINGH PRITHVI PAL SINGH SOHAL VERSUS JASVINDER KAUR SAINI"
+              "224": "T.P.(C) No. 3494/2025 SUN JOT SINGH PRITHVI PAL SINGH SOHAL VERSUS JASVINDER KAUR SAINI",
+              "225": "SLP(C) No. 26719/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD VERSUS FAIJULLAKHA AMIRKHA PATHAN AND ORS.",
+              "225.1": "SLP(C) No. 26613/2025 MUMBAI BRANCH AT MAHAL NAGPUR MAHARASHTRA STATE  VERSUS AJTABRAO VISHWANATH THOTE, AND ORS.",
+              "225.2": "SLP(C) No. 26860/2025 MUMBAI BRANCH AT MAHAL, NAGPUR THE MAHARASHTRA S VERSUS BHAUDAS GANAPAT LOHATE AND ORS.",
+              "225.3": "SLP(C) No. 27126/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD VERSUS SUBHASH CHIMANA CHAWAHAN AND ORS.",
+              "225.4": "SLP(C) No. 27168/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS SUNDARSING KEWALSING PAWAR AND ORS.",
+              "225.5": "SLP(C) No. 27151/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS VASANTA LALU MUDE AND ORS.",
+              "225.6": "SLP(C) No. 27576/2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STA VERSUS GANESH DHARMA CHAWHAN AND ORS.",
+              "225.7": "SLP(C) No. 27322/2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STA VERSUS GANGADHAR DIGAMBAR CHANDALE AND ORS.",
+              "225.8": "SLP(C) No. 27622/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS RAMRAO LAKSHMAN SURYAWANSHI AND ORS.",
+              "225.9": "SLP(C) No. 27385/2025 MUMBAI BRANCH AT MAHAL NAGPUR THE MAHARASHTRA ST VERSUS PANDHURANG NARHARI CHAWHAN AND ORS.",
+              "225.10": "SLP(C) No. 27292/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS BALU DEVIDAS RATHOD AND ORS.",
+              "225.11": "SLP(C) No. 27897/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS KARIMKHA CHOTTEKHA PATHAN AND ORS.",
+              "225.12": "SLP(C) No. 27932/2025 MUMBAI THE MAHARASHTRA STATE SAHAKARI BANK LTD., VERSUS BHAURAO TUKARAM GHONGADE AND ORS.",
+              "225.13": "SLP(C) No. 27677/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS SK SADIK SK AKBAR AND ORS.",
+              "225.14": "SLP(C) No. 27964/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS PRALHAD MIDHU RATHOD AND ORS.",
+              "225.15": "SLP(C) No. 28206/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS DEVIDAS THAVARA CHAWHAN AND ORS.",
+              "225.16": "SLP(C) No. 27954/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS BANU RUPLA JADHAV AND ORS. AMOL NIRMALKUMAR",
+              "225.17": "SLP(C) No. 28076/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS SUDAMA RAMJATAN PRASAD AND ORS.",
+              "225.18": "SLP(C) No. 27554/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD VERSUS SHUBHASH GOBARA CHAWHAN AND ORS.",
+              "225.19": "SLP(C) No. 27550/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS ARUN BALWANT KSHIRSAGAR AND ORS.",
+              "225.20": "SLP(C) No. 27639/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS PRABHAKAR NAMDEO NAGPURKAR AND ORS.",
+              "225.21": "SLP(C) No. 28227/2025 BRANCH AT MAHAL NAGPUR THE MAHARASHTRA SAHAKARI  VERSUS RAVINDRA GUNWANTRAO VYAVHARE AND ORS.",
+              "225.22": "SLP(C) No. 28258/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS YADAV KARNIRAM CHAWHAN AND ORS.",
+              "225.23": "SLP(C) No. 28259/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS VIJAN DHONDBA KALKAR AND ORS. AMOL NIRMALKUMAR",
+              "225.24": "SLP(C) No. 28517/2025 MUMBAI, BRANCH MAHAL , NAGPUR THE MAHARASHTRA ST VERSUS BABURAO DAWADA RATHOD AND ORS.",
+              "225.25": "SLP(C) No. 28153/2025 MUMBAI BRANCH MAHAL, NAGPUR THE MAHARASHTRA STAT VERSUS NAMDEO SALABA GANJEWAR AND ORS.",
+              "225.26": "Diary No. 50715-2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE  VERSUS BHAGWAN MADHAV PANDAV AND ORS.",
+              "225.27": "Diary No. 50932-2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STAT VERSUS MAMTA PRAKASH RATHOD AND ORS.",
+              "225.28": "SLP(C) No. 28260/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS RAJESH NARAYAN CHAWHAN AND ORS.",
+              "225.29": "SLP(C) No. 28289/2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STA VERSUS SHOBHABAI KESHAV BABHULKAR AND ORS.",
+              "225.30": "SLP(C) No. 29273/2025 MUMBAI BRANCH AT MAHAL NAGPUR THE MAHARASHTRA ST VERSUS SURESH RAJABHAU JOSHI AND ORS. AMOL NIRMALKUMAR",
+              "225.31": "SLP(C) No. 29131/2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STA VERSUS KHANDU SHAMRAO CHAWHAN AND ORS.",
+              "225.32": "SLP(C) No. 29140/2025 MUMBAI THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS SAHEBRAO NATHUJI PULATE AND ORS.",
+              "225.33": "SLP(C) No. 28256/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS ABDUL RIYAZ ABDUL SATTAR AND ORS.",
+              "225.34": "SLP(C) No. 29248/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS SHIVAJI TYAMBAKRAO DESHMUKH AND ORS.",
+              "225.35": "SLP(C) No. 28220/2025 BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE SAHAKA VERSUS PRAKASH BHAGWAT KHANDARE AND ORS.",
+              "225.36": "SLP(C) No. 29124/2025 MUMBAI THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS GOVINDA GOPA JADHAV AND ORS.",
+              "225.37": "SLP(C) No. 29209/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS SHANKAR NAMDEO JAGTAP AND ORS. AMOL NIRMALKUMAR",
+              "225.38": "SLP(C) No. 29024/2025 MUMBAI THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS BABURAO RAJU RATHOD AND ORS.",
+              "225.39": "SLP(C) No. 29173/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD. VERSUS GURUSING PARSHRAM CHAWHAN AND ORS.",
+              "225.40": "SLP(C) No. 29047/2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STA VERSUS AMRUTRAO DADARAO DESHMUKH AND ORS.",
+              "225.41": "SLP(C) No. 28550/2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STA VERSUS SHAIKH AFSAR SHAIKH DIWAN AND ORS.",
+              "225.42": "SLP(C) No. 29255/2025 MUMBAI BRANCH THE MAHARASHTRA STATE SAHAKARI BAN VERSUS SHAIKH NOOR MAHEBUB AND ORS.",
+              "225.43": "SLP(C) No. 29174/2025 MUMBAI, BRANCH MAHAL, NAGPUR THE MAHARASHTRA STA VERSUS SAHEBRAO SOMALA CHAWHAN AND ORS.",
+              "225.44": "SLP(C) No. 29226/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS TANAJI DHONDIBA MAHULKAR AND ORS. AMOL NIRMALKUMAR",
+              "225.45": "SLP(C) No. 29278/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS SHISHANKAR TUKARAM KOTAWAR AND ORS.",
+              "225.46": "SLP(C) No. 30568/2025 MUMBAI BRANCH MAHAL NAGPUR THE MAHARASHTRA STATE VERSUS BHIKAJI MAROTRAO DAKHORE AND ORS.",
+              "225.47": "SLP(C) No. 36987/2025 MUMBAI BRANCH THE MAHARASHTRA STATE SAHAKARI BAN VERSUS AMBADAS NIVRUTI KAMBLE AND ORS.",
+              "225.48": "SLP(C) No. 33800/2025 THE MAHARASHTRA STATE SAHAKARI BANK LTD VERSUS SANJAY LALSING RATHOD AND ORS."
             },
             "advocates": {
               "1": {
@@ -8522,10 +8577,13 @@
               "224": {
                 "pet": "SANJAY JAIN",
                 "resp": "VIDHI PANKAJ THAKER"
+              },
+              "225": {
+                "pet": "OMKAR JAYANT DESHPANDE"
               }
             },
             "main": 49,
-            "supp": 0
+            "supp": 1
           },
           "3": {
             "coram": "HON'BLE MRS. JUSTICE B.V. NAGARATHNA HON'BLE MR. JUSTICE R. MAHADEVAN",
@@ -9937,7 +9995,7 @@
               "219": "T.P.(C) No. 2208/2025 DEEPIKA VERMA VERSUS DEEPAK BOONLA",
               "220": "T.P.(C) No. 2212/2025 SWATI VERSUS GAGAN KUMAR",
               "221": "SLP(Crl) No. UPENDRA KUMAR SINGH VERSUS THE STATE OF UTTAR PRADESH AND ANR.",
-              "222": "T.P.(C) No. 2307/2025 SAGRI PATEL VERSUS SANJEEV KUMAR",
+              "222": "SLP(Crl) No. 5565/2026 UMASHANKAR YADAV VERSUS STATE OF U.P. AND ANR.",
               "223": "T.P.(C) No. 2410/2025 SHIKHA SINGH VERSUS RAKESH KUMAR SINGH",
               "224": "SLP(C) No. M. PERIYA KARUPPAN VERSUS AL.VISALAKSHI"
             },
@@ -10122,7 +10180,7 @@
           },
           "10": {
             "coram": "HON'BLE MR. JUSTICE ARAVIND KUMAR HON'BLE MR. JUSTICE VIPUL M. PANCHOLI",
-            "total": "48",
+            "total": "51",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 9770/2026 DEEPAK KUMAR VERSUS STATE OF BIHAR AND ANR.",
@@ -10175,10 +10233,15 @@
               "217": "Diary No. 17063-2025 MOHAMMAD AYUB AND ANR. VERSUS RAHMATBI AND ORS.",
               "218": "SLP(Crl) No. M/S SHREE SAMBHAV PAPERS PVT LTD VERSUS M/S SHREE RAM STRAW PRODUCTS LTD. AND ORS.",
               "219": "T.P.(C) No. 2616/2025 NAGA CHANDRA VATHANA VERSUS S RAMESH ARVIND",
-              "220": "T.P.(Crl.) No. 866/2025 SADHNA KUMARI VERSUS AMIT MISHRA",
+              "220": "Vs. Item No. 224 DELETED.",
               "221": "T.P.(C) No. 2605/2025 NEHA KUMARI VERSUS VISHAL KUMAR SINGH",
               "222": "T.P.(C) No. 2463/2025 SHUBHA DWIVEDI VERSUS MANISH DWIVEDI",
-              "223": "T.P.(C) No. 2652/2025 SHELLY AJAY DOGRA VERSUS AJAY DOGRA"
+              "223": "T.P.(C) No. 2652/2025 SHELLY AJAY DOGRA VERSUS AJAY DOGRA",
+              "224": "T.P.(Crl.) No. 866/2025 SADHNA KUMARI VERSUS AMIT MISHRA",
+              "224.1": "T.P.(Crl.) No. 879/2025 SADHNA KUMARI VERSUS AMIT MISHRA",
+              "224.2": "T.P.(C) No. 2795/2025 SADHNA KUMARI VERSUS AMIT MISHRA",
+              "225": "T.P.(Crl.) No. 1069/2025 POOJA SRIVASTAVA VERSUS MANI BHUSHAN VERMA AND ORS.",
+              "226": "T.P.(C) No. 897/2026 PINKI KUMARI VERSUS RAJESH KUMAR"
             },
             "advocates": {
               "1": {
@@ -10373,14 +10436,26 @@
               "223": {
                 "pet": "ANIL KUMAR",
                 "resp": "PRANAV GUPTA"
+              },
+              "224": {
+                "pet": "MITHILESH JHA",
+                "resp": "NEELAM SINGH"
+              },
+              "225": {
+                "pet": "RAMESHWAR PRASAD",
+                "resp": "NITESH RANJAN"
+              },
+              "226": {
+                "pet": "AMRITA PANDA",
+                "resp": "M/S RAVI CHANDRA PRAKASH & CO"
               }
             },
             "main": 48,
-            "supp": 0
+            "supp": 3
           },
           "11": {
             "coram": "HON'BLE MR. JUSTICE PRASHANT KUMAR MISHRA HON'BLE MR. JUSTICE SHREE CHANDRASHEKHAR",
-            "total": "50",
+            "total": "51",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. SANTOSH MAHABALA SHETTY VERSUS STATE OF MAHARASHTRA AND ORS.",
@@ -10446,7 +10521,8 @@
               "222": "MA 1878/2025 in TAVINDER KAUR@SACHI VERSUS HARINDER SINGH",
               "223": "SLP(C) No. 29175/2025 LEELA DEVI AND ORS. VERSUS SHYAM LAL AND ORS.",
               "224": "T.P.(C) No. 222/2026 SHUBHANI JAIN VERSUS DARSHAN KISHORE CHHEDA",
-              "225": "Diary No. 57676-2025 ROHIT GOPAL TRIPATHI VERSUS DIPALI ROHIT TRIPATHI"
+              "225": "Diary No. 57676-2025 ROHIT GOPAL TRIPATHI VERSUS DIPALI ROHIT TRIPATHI",
+              "226": "T.P.(Crl.) No. 183/2026 NAGINA MISHRA AND ANR. VERSUS JYOTI AND ORS."
             },
             "advocates": {
               "1": {
@@ -10658,10 +10734,14 @@
               },
               "225": {
                 "pet": "SHREY KAPOOR"
+              },
+              "226": {
+                "pet": "RIDDHI SANCHETI",
+                "resp": "PRADEEP KUMAR MATHUR"
               }
             },
             "main": 50,
-            "supp": 0
+            "supp": 1
           },
           "12": {
             "coram": "HON'BLE MR. JUSTICE K.V. VISWANATHAN HON'BLE MR. JUSTICE ARUN PALLI",
@@ -10932,7 +11012,7 @@
           },
           "13": {
             "coram": "HON'BLE MR. JUSTICE UJJAL BHUYAN HON'BLE MR. JUSTICE ATUL S. CHANDURKAR",
-            "total": "46",
+            "total": "49",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. 5366/2025 GENDALAL VERSUS STATE OF U.P.",
@@ -10981,7 +11061,10 @@
               "218": "SLP(Crl) No. 4169/2026 M.JANAT AMALA ARUL JOTHI VERSUS P.RAJESH SAMUEL",
               "219": "SLP(Crl) No. 5525/2026 MOHAMMED SAMEEULLA VERSUS SAYED ZABEEULLA",
               "220": "SLP(C) No. 11888/2026 MISHRI @ MISHARI DEVI VERSUS PAPPU RAM",
-              "221": "SLP(Crl) No. 3116/2026 M/S.NEW EVEREST TRADERS AND ANR. VERSUS A.ARUN"
+              "221": "SLP(Crl) No. 3116/2026 M/S.NEW EVEREST TRADERS AND ANR. VERSUS A.ARUN",
+              "222": "C.A. No. 8309/2019 THE DIRECTORATE GENERAL ALL INDIA RADIO VERSUS RAVINDRA VITTAL PARMAR AND ANR.",
+              "223": "T.P.(C) No. 553/2026 SAKSHI SHARMA VERSUS AMAN SINHA",
+              "224": "T.P.(C) No. 1049/2026 SAPANA FALGUN OZA VERSUS FALGUN UPENDRABHAI OZA"
             },
             "advocates": {
               "1": {
@@ -11144,14 +11227,26 @@
               "221": {
                 "pet": "VAIRAWAN A.S",
                 "resp": "M. VEERARAGAVAN"
+              },
+              "222": {
+                "pet": "SAHIL BHALAIK",
+                "resp": "VISHAL ARUN MISHRA"
+              },
+              "223": {
+                "pet": "DISHA SINGH",
+                "resp": "RASHI BANSAL"
+              },
+              "224": {
+                "pet": "RANJIT BALASAHEB RAUT",
+                "resp": "CHARULATA CHAUDHARY"
               }
             },
             "main": 46,
-            "supp": 0
+            "supp": 3
           },
           "14": {
             "coram": "HON'BLE MR. JUSTICE S.V.N. BHATTI HON'BLE MR. JUSTICE N.V. ANJARIA",
-            "total": "36",
+            "total": "37",
             "fresh": "",
             "items": {
               "1": "Diary No. 17021-2026 S. CHANDRA BASKARA MARTHANDAN VERSUS THE GOVERNMENT OF TAMIL NADU AND ORS.",
@@ -11203,7 +11298,8 @@
               "208": "T.P.(C) No. 3599/2025 DIKSHA KUMARI VERSUS SONU KUMAR @ SHASHI",
               "209": "SLP(Crl) No. 5626/2026 AMARJEET MANKOTIA VERSUS BHAGWAN DASS AND ANR.",
               "210": "SLP(C) No. 10851/2026 SHARANAPPA AND ORS. VERSUS BASAVARAJ AND ORS.",
-              "211": "SLP(Crl) No. 4524/2026 S. SHANTHI VERSUS S. PREMKUMAR"
+              "211": "SLP(Crl) No. 4524/2026 S. SHANTHI VERSUS S. PREMKUMAR",
+              "212": "SLP(C) No. 15798/2025 SHREYASH ALUMINIUM AND ALLOYS PVT. LTD. VERSUS STATE OF WEST BENGAL AND ORS."
             },
             "advocates": {
               "1": {
@@ -11335,10 +11431,14 @@
               },
               "211": {
                 "pet": "PARIJAT KISHORE"
+              },
+              "212": {
+                "pet": "SAURAV GUPTA",
+                "resp": "KUNAL MIMANI"
               }
             },
             "main": 36,
-            "supp": 0
+            "supp": 1
           },
           "15": {
             "coram": "HON'BLE MR. JUSTICE SATISH CHANDRA SHARMA HON'BLE MR. JUSTICE NONGMEIKAPAM KOTISWAR SINGH",
@@ -11721,7 +11821,7 @@
         "Registrar": {
           "1": {
             "coram": "SH. APOORV SINGH, REGISTRAR",
-            "total": "33",
+            "total": "34",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. SANTRAM AND ANR. VERSUS STATE OF CHHATTISGARH",
@@ -11761,7 +11861,8 @@
               "30": "SLP(C) No. 10954/2026 ASHOK S DHARIWAL VERSUS AJIT RANKA AND ORS.",
               "31": "SLP(C) No. 21471/2026 SHOBHA DEVELOPERS VERSUS STATE OF U.P. AND ORS.",
               "32": "SLP(Crl) No. ABHISHEK SHARMA AND ORS. VERSUS THE STATE OF UTTARAKHAND AND ANR.",
-              "33": "T.P.(C) No. 2033/2026 RAGINI @ ROSY VERSUS BALWINDER SINGH"
+              "33": "T.P.(C) No. 2033/2026 RAGINI @ ROSY VERSUS BALWINDER SINGH",
+              "34": "Diary No. 27477-2026 MAHADEO SAHKARI DOODH VYAVSAYIK SANTHA VERSUS THE STATE OF MAHARASHTRA AND ORS."
             },
             "advocates": {
               "1": {
@@ -11888,10 +11989,13 @@
               },
               "33": {
                 "pet": "SHAGUN MATTA"
+              },
+              "34": {
+                "pet": "PULKIT AGARWAL"
               }
             },
             "main": 33,
-            "supp": 0
+            "supp": 1
           },
           "2": {
             "coram": "MS. GRACY L. BAWITLUNG, REGISTRAR",
@@ -12074,7 +12178,9 @@
     },
     "2026-08-21": {
       "M_J_1": 894630,
-      "M_R_1": 524482
+      "M_J_2": 532659,
+      "M_R_1": 524482,
+      "M_R_2": 504984
     }
   },
   "note": "Per-court bench + per-item case line from the SC published lists. Drafting aid only — the court's published list is authoritative."
