@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T15:06:34.391595Z",
+  "generated_at": "2026-08-20T15:29:57.348886Z",
   "parser_version": 8,
   "window": [
     "2026-08-20",
@@ -7536,7 +7536,7 @@
         "Miscellaneous": {
           "1": {
             "coram": "HON'BLE THE CHIEF JUSTICE HON'BLE MR. JUSTICE JOYMALYA BAGCHI HON'BLE MRS. JUSTICE V. MOHANA",
-            "total": "100",
+            "total": "102",
             "fresh": "",
             "items": {
               "1": "SLP(Crl) No. N UDAY RAO VERSUS STATE OF CHHATTISGARH",
@@ -7790,6 +7790,8 @@
               "237.4": "Diary No. 61514-2025 TAX AND ORS. THE PRINCIPAL CHIEF COMMISSIONER OF  VERSUS LINGA REDDY CHINNINTI",
               "63": "W.P.(C) No. 1028/2026 JUVVADI PRANAY SIMHA RAO VERSUS THE STATE OF TELANGANA AND ORS.",
               "238": "SLP(C) No. 13917/2025 THE ORIENTAL INSURANCE CO. LTD. VERSUS PRAVTI DEVI AND ORS.",
+              "1501": "W.P.(C) No. 1110/2025 BHUMIKA TRUST VERSUS UNION OF INDIA AND ORS.",
+              "1502": "W.P.(C) No. 1022/1989 ALL INDIA JUDGES ASSOCIATION AND ORS. VERSUS UNION OF INDIA AND ORS.",
               "26.1": "Connected SUNIL DUTT BHARDWAJ VERSUS FRANCINA BHARDWAJ AND ORS."
             },
             "advocates": {
@@ -8292,12 +8294,18 @@
               "238": {
                 "pet": "SUDHIR NAAGAR"
               },
+              "1501": {
+                "pet": "KUNAL YADAV"
+              },
+              "1502": {
+                "pet": "AKHILESH KUMAR PANDEY"
+              },
               "26.1": {
                 "pet": "DEEPAK GOEL"
               }
             },
             "main": 98,
-            "supp": 2
+            "supp": 4
           },
           "2": {
             "coram": "HON'BLE MR. JUSTICE VIKRAM NATH HON'BLE MR. JUSTICE SANDEEP MEHTA",
@@ -12962,7 +12970,7 @@
     },
     "2026-08-21": {
       "M_J_1": 894630,
-      "M_J_2": 590037,
+      "M_J_2": 603211,
       "M_R_1": 524482,
       "M_R_2": 504984
     },
