@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-21T19:24:56.671531Z",
+  "generated_at": "2026-08-22T11:47:38.548871Z",
   "parser_version": 8,
   "window": [
     "2026-08-24",
@@ -20,6 +20,7 @@
       "lists_found": [
         "Miscellaneous (main)",
         "Chamber (main)",
+        "Chamber (supp)",
         "Single Judge (main)",
         "Registrar (main)"
       ],
@@ -4115,7 +4116,7 @@
           },
           "14": {
             "coram": "HON'BLE MR. JUSTICE ATUL S. CHANDURKAR",
-            "total": "32",
+            "total": "33",
             "fresh": "",
             "items": {
               "1701": "Diary No. 46178-2026 RANI KAUR VERSUS STATE OF PUNJAB",
@@ -4149,7 +4150,8 @@
               "1728": "Diary No. 43065-2025 MANOJ KUMAR VERMA VERSUS VIKASH GAURAV AND ORS.",
               "1729": "SLP(C) No. 27276/2025 UNION OF INDIA AND ORS. VERSUS TILAK RAJ DHINGRA AND ANR.",
               "1730": "T.P.(C) No. 37/2026 NIKITA PODDAR VERSUS SUMIT RAJKUMAR AGRAWAL",
-              "1731": "SLP(C) No. 2773/2026 PUSHPALATHA H. AND ANR. VERSUS G. DHANANJAYA AND ORS."
+              "1731": "SLP(C) No. 2773/2026 PUSHPALATHA H. AND ANR. VERSUS G. DHANANJAYA AND ORS.",
+              "1732": "Diary No. 50980-2026 NILESH DAHANUKAR VERSUS SIEMENS INDUSTRY SOFTWARE INC. AND ANR."
             },
             "advocates": {
               "1701": {
@@ -4254,10 +4256,14 @@
               "1731": {
                 "pet": "SUDHANSHU PRAKASH",
                 "resp": "VAIJAYANTHI GIRISH"
+              },
+              "1732": {
+                "pet": "SACHIN GUPTA",
+                "resp": "SWIKRITI SINGHANIA"
               }
             },
             "main": 32,
-            "supp": 0
+            "supp": 1
           }
         },
         "Single Judge": {
@@ -12824,6 +12830,7 @@
     "2026-08-24": {
       "M_J_1": 832318,
       "M_C_1": 576068,
+      "M_C_2": 505348,
       "M_S_1": 531278,
       "M_R_1": 522174
     },
