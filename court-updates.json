@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23T13:39:39.489084Z",
+  "generated_at": "2026-08-23T16:55:19.933118Z",
   "parser_version": 8,
   "window": [
     "2026-08-24",
@@ -21,7 +21,6 @@
         "Miscellaneous (main)",
         "Miscellaneous (supp)",
         "Chamber (main)",
-        "Chamber (supp)",
         "Single Judge (main)",
         "Single Judge (supp)",
         "Registrar (main)",
@@ -4067,7 +4066,7 @@
         "Chamber": {
           "5": {
             "coram": "HON'BLE MR. JUSTICE ALOK ARADHE",
-            "total": "33",
+            "total": "32",
             "fresh": "",
             "items": {
               "1701": "Diary No. 40650-2026 J. SARAVANAN VERSUS M/S.HANDMADE FILMS",
@@ -4101,8 +4100,7 @@
               "1729": "Diary No. 36310-2026 SHOBHIT @ CHOTI VERSUS STATE OF CHHATTISGARH",
               "1730": "Diary No. 39002-2026 SUMAN ARORA VERSUS SANGEETA ARORA",
               "1731": "C.A. No. S SADASHIVAPPA VERSUS SRI. M. SHASHIDHARAN AND ORS.",
-              "1732": "SLP(C) No. 29812/2024 SUJATHA AND ORS. VERSUS KESHAVAMURTHY AND ORS.",
-              "1733": "Diary No. 50909-2026 TARUNJIT TEJPAL VERSUS THE STATE OF GOA"
+              "1732": "SLP(C) No. 29812/2024 SUJATHA AND ORS. VERSUS KESHAVAMURTHY AND ORS."
             },
             "advocates": {
               "1701": {
@@ -4208,13 +4206,10 @@
               "1732": {
                 "pet": "V. N. RAGHUPATHY",
                 "resp": "ADEEBA MUJAHID AC"
-              },
-              "1733": {
-                "pet": "ADITYA SAMADDAR"
               }
             },
             "main": 32,
-            "supp": 1
+            "supp": 0
           },
           "7": {
             "coram": "HON'BLE MR. JUSTICE SHEEL NAGU",
@@ -4373,7 +4368,7 @@
           },
           "14": {
             "coram": "HON'BLE MR. JUSTICE ATUL S. CHANDURKAR",
-            "total": "33",
+            "total": "32",
             "fresh": "",
             "items": {
               "1701": "Diary No. 46178-2026 RANI KAUR VERSUS STATE OF PUNJAB",
@@ -4407,8 +4402,7 @@
               "1728": "Diary No. 43065-2025 MANOJ KUMAR VERMA VERSUS VIKASH GAURAV AND ORS.",
               "1729": "SLP(C) No. 27276/2025 UNION OF INDIA AND ORS. VERSUS TILAK RAJ DHINGRA AND ANR.",
               "1730": "T.P.(C) No. 37/2026 NIKITA PODDAR VERSUS SUMIT RAJKUMAR AGRAWAL",
-              "1731": "SLP(C) No. 2773/2026 PUSHPALATHA H. AND ANR. VERSUS G. DHANANJAYA AND ORS.",
-              "1732": "Diary No. 50980-2026 NILESH DAHANUKAR VERSUS SIEMENS INDUSTRY SOFTWARE INC. AND ANR."
+              "1731": "SLP(C) No. 2773/2026 PUSHPALATHA H. AND ANR. VERSUS G. DHANANJAYA AND ORS."
             },
             "advocates": {
               "1701": {
@@ -4513,18 +4507,14 @@
               "1731": {
                 "pet": "SUDHANSHU PRAKASH",
                 "resp": "VAIJAYANTHI GIRISH"
-              },
-              "1732": {
-                "pet": "SACHIN GUPTA",
-                "resp": "SWIKRITI SINGHANIA"
               }
             },
             "main": 32,
-            "supp": 1
+            "supp": 0
           },
           "17": {
             "coram": "HON'BLE MR. JUSTICE VIPUL M. PANCHOLI",
-            "total": "49",
+            "total": "31",
             "fresh": "",
             "items": {
               "1701": "Diary No. 21878-2026 NISHU KUMARI VERSUS THE STATE OF JHARKHAND AND ORS.",
@@ -4557,25 +4547,7 @@
               "1728": "MA 1581/2026 in C.A. M/S GARDENIA INDIA LTD. VERSUS MOHIT KATARIA",
               "1729": "Diary No. 13817-2026 SAROJINI AND ORS. VERSUS GUNAMONY AND ORS.",
               "1730": "Diary No. 23192-2026 VEMULA RAMGOPAL ANAND (DEAD) VERSUS A LALITHA",
-              "1731": "Diary No. 44452-2026 KALLURU VENKATA MANOJ REDDY VERSUS THE STATE OF ANDHRA PRADESH AND ORS.",
-              "1732": "Diary No. 50356-2024 MANISH TIWARI VERSUS SAVITA TIWARI AND ORS AND ORS.",
-              "1733": "Diary No. 55271-2024 JANARDHANAN VERSUS VIKRAMAN NAIR AND ORS.",
-              "1734": "Diary No. 20848-2025 STATE OF ODISHA AND ORS. VERSUS PABITRA MOHAN MAHAPATRA",
-              "1735": "Diary No. 37771-2025 T.G. SAROJA AND ORS. VERSUS JAYAMMA AND ORS.",
-              "1736": "MA 2675-2679/2025 in M/S IREO GRACE REALTECH PVT. LTD. VERSUS VIVEK CHOPRA AND ANR.",
-              "1737": "MA 162/2026 in C.A. GOREGAON PEARL CO-OPERATIVE HOUSING VERSUS SANDEEP GROVER AND ORS.",
-              "1738": "MA 2661/2025 in C.A. EMAAR INDIA LIMITED (EARLIER KNOWN AS EMAAR VERSUS PARVESH MALHOTRA",
-              "1739": "MA 2669/2025 in C.A. DLF HOME DEVELOPERS LTD (EARLIER KNOWN AS VERSUS MOHINDER SINGH PANESAR AND ANR.",
-              "1740": "MA 2668/2025 M/S. AMARPALI HIRISE (P) LTD. AND ANR. VERSUS SRI SRI ISWAR MADAN MOHAN JEW THAKUR",
-              "1741": "MA 2664/2025 M/S IREO GRACE REALTECH PVT. LTD VERSUS M/S SIMTECH INFRASTRUCTURE PVT. LTD. AND",
-              "1742": "MA 2659/2025 M/S IREO GRACE REALTECH PRIVATE LIMITED VERSUS M/S HBR CHEMICALS PVT. LTD. AND ANR.",
-              "1743": "MA 2736/2025 in C.A. PARSVNATH HESSA DEVELOPERS PVT LTD VERSUS LT COL. SHAILENDRA SINGH AND ORS.",
-              "1744": "MA 2733/2025 in C.A. M/S. LOKHANDWALA KATARIA CONSTRUCTION PVT. VERSUS BELA MITTAL",
-              "1745": "MA 2727/2025 in C.A. SAHARA INDIA MEDICAL INSTITUTE LIMITED AND VERSUS GYAN MISHRA (DECEASED) THROUGH LEGAL HEIRS",
-              "1746": "Diary No. 61936-2025 RAM KUMAR AND ORS. VERSUS KHUSHWANT KAUR AND ORS.",
-              "1747": "Diary No. 64486-2025 KENDRIYA VIDYALAYA SANGATHAN (HQ) VERSUS HARI BALLABH MALAV",
-              "1748": "Diary No. 65345-2025 GREATER MOHALI AREA DEVELOPMENT AUTHORITY VERSUS RANJIT SINGH GILL AND ORS.",
-              "1749": "Diary No. 66252-2025 THE STATE OF CHHATTISGARH AND ORS. VERSUS MOHD AMAN"
+              "1731": "Diary No. 44452-2026 KALLURU VENKATA MANOJ REDDY VERSUS THE STATE OF ANDHRA PRADESH AND ORS."
             },
             "advocates": {
               "1701": {
@@ -4678,69 +4650,10 @@
               },
               "1731": {
                 "pet": "VIKRAM HEGDE"
-              },
-              "1732": {
-                "pet": "SANDEEP KUMAR SEN"
-              },
-              "1733": {
-                "pet": "SUBHASH CHANDRAN K.R"
-              },
-              "1734": {
-                "pet": "PRASENJEET MOHAPATRA"
-              },
-              "1735": {
-                "pet": "NULI & NULI"
-              },
-              "1736": {
-                "pet": "ROOH-E-HINA DUA",
-                "resp": "AMRITA SARKAR"
-              },
-              "1737": {
-                "resp": "AMAN RAJ GANDHI"
-              },
-              "1738": {
-                "pet": "NIRANJAN SAHU"
-              },
-              "1739": {
-                "pet": "KARANJAWALA & CO",
-                "resp": "DEEPAK GOEL"
-              },
-              "1740": {
-                "pet": "REKHA PANDEY",
-                "resp": "ANIL KUMAR"
-              },
-              "1741": {
-                "pet": "ROOH-E-HINA DUA",
-                "resp": "SANTOSH KUMAR PANDEY"
-              },
-              "1742": {
-                "pet": "ROOH-E-HINA DUA"
-              },
-              "1743": {
-                "pet": "RAJESH P",
-                "resp": "PRITHU GARG"
-              },
-              "1744": {
-                "resp": "ABHINAV HANSARIA"
-              },
-              "1745": {
-                "pet": "RABIN MAJUMDER"
-              },
-              "1746": {
-                "pet": "BHARAT BHUSHAN"
-              },
-              "1747": {
-                "pet": "AMARJIT SINGH BEDI"
-              },
-              "1748": {
-                "pet": "SHUBHAM BHALLA"
-              },
-              "1749": {
-                "pet": "ANKITA SHARMA"
               }
             },
             "main": 31,
-            "supp": 18
+            "supp": 0
           }
         },
         "Single Judge": {
@@ -13455,7 +13368,6 @@
       "M_J_1": 825197,
       "M_J_2": 586822,
       "M_C_1": 576071,
-      "M_C_2": 514571,
       "M_S_1": 531207,
       "M_S_2": 517269,
       "M_R_1": 522174,
